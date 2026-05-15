@@ -26,12 +26,12 @@ Each item has a **status** and an optional **`review`** flag:
       `.hero-heading`, `.display-heading`, `.body-text`, `.body-lede`, `.mono-label`,
       `.eyebrow`, `code`, `pre`). Source: `colors_and_type.css` from design bundle.
 
-- [ ] **B3: Layout helpers** — status: `in-progress`
+- [x] **B3: Layout helpers** — status: `done` — commit: `a587de4`
       CSS-only layout utilities from `layout.css` and `patterns.css`:
       container variants, grid system, split/aside layouts, stack/inline/spread
       flex helpers, rule dividers, padding/surface/border/visibility helpers.
 
-- [ ] **B4: Primitive components** — status: `todo` — flags: `review`
+- [ ] **B4: Primitive components** — status: `in-progress` — flags: `review`
       Svelte components: `Button` (5 variants: primary, cta, ghost, back, del),
       `Led` (ok/amber/cyan/danger/off, blink animation), `TagPill` (default/amber/cyan).
       Full type props + Storybook stories.

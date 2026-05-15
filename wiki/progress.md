@@ -51,3 +51,6 @@ it records the reason here AND states it in chat.
 ## 2026-05-15 — B3: Layout helpers
 - manager: set in-progress, delegating to spec-writer
 - spec-writer: wrote wiki/specs/B3-layout-helpers.md (82 acceptance criteria, 14-story plan) → done
+- test-writer: wrote layout.stories.svelte (14 stories) → all 18 tests green (CSS already existed)
+- reviewer: PASS — 82 AC covered, 2 minor soft findings (grid-auto column template, kv-row padding assertions weak but CSS correct)
+- result: done — commit `a587de4`

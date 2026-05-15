@@ -20,7 +20,10 @@
       "WebFetch(domain:github.com)",
       "WebSearch",
       "Bash(find /home/dexter/Projects/typescript/zod4-mock/playground -type f | sort)",
-      "Read(//home/dexter/Projects/typescript/zod4-mock/playground/**)"
+      "Read(//home/dexter/Projects/typescript/zod4-mock/playground/**)",
+      "Bash(curl -s https://api.github.com/repos/hipstersmoothie/storybook-dark-mode/contents)",
+      "Bash(git -C /home/dexter/Projects/Web/dxlb-design diff --name-only HEAD)",
+      "Bash(git -C /home/dexter/Projects/Web/dxlb-design status)"
     ],
     "deny": []
   },
