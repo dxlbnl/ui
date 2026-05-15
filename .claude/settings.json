@@ -1,4 +1,22 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(pwd)",
+      "Bash(git status:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "WebFetch(domain:dexterlabs.nl)",
+      "Bash(pnpm *)",
+      "Read(//home/dexter/Projects/typescript/test/**)",
+      "Skill(manager)",
+      "Skill(manager:*)"
+    ],
+    "deny": []
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -46,18 +64,5 @@
         ]
       }
     ]
-  },
-  "permissions": {
-    "allow": [
-      "Bash(ls:*)",
-      "Bash(cat:*)",
-      "Bash(pwd)",
-      "Bash(git status:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)"
-    ],
-    "deny": []
   }
 }

@@ -1,0 +1,96 @@
+/* =========================================================
+   DEXTERLABS // DESIGN TOKENS
+   Two palettes: phosphor (dark default) + paper (light)
+   Toggle via [data-palette="paper"] on <html>
+   ========================================================= */
+
+/* ── Phosphor palette (dark default) ──────────────────── */
+:root {
+
+  /* Surfaces */
+  --bg:         #0b0d0c;   /* page background */
+  --bg-rail:    #0f1211;   /* cards, nav, sidebars */
+  --bg-elev:    #141817;   /* elevated surfaces, inline-code bg */
+  --bg-sunken:  #070908;   /* code blocks, status bar, sunken wells */
+
+  /* Ink */
+  --ink:        #d6e2dc;   /* primary text */
+  --ink-dim:    #a4b0a9;   /* secondary / muted text */
+  --ink-faint:  #7a8580;   /* metadata, tertiary, placeholders */
+
+  /* Rules */
+  --rule:        #1d2321;  /* default borders — barely visible */
+  --rule-strong: #2a3330;  /* emphasised borders */
+
+  /* Accents */
+  --amber:  #ffb347;       /* primary accent — CTAs, prices, active, LED */
+  --cyan:   #7cc7d1;       /* secondary — code functions, kind labels, LED */
+  --danger: #ff7a6b;       /* error / destructive */
+  --ok:     #8fd48a;       /* success / online status */
+
+  /* Font stacks */
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --sans: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale */
+  --t-micro:    12px;
+  --t-mono:     14px;
+  --t-body:     16px;
+  --t-lede:     19px;
+  --t-h3:       24px;
+  --t-h2:       36px;
+  --t-h1:       72px;
+  --t-display:  140px;
+  --t-hero:     clamp(48px, 8vw, 112px);
+  --t-title:    clamp(36px, 5vw, 56px);
+  --t-subtitle: clamp(22px, 3.5vw, 40px);
+
+  /* Spacing — base unit 8px */
+  --u:   8px;
+  --u2:  16px;
+  --u3:  24px;
+  --u4:  32px;
+  --u5:  40px;
+  --u6:  48px;
+  --u7:  56px;
+  --u10: 80px;
+
+  /* Radius */
+  --radius:      2px;   /* buttons, pills, inline code */
+  --radius-card: 4px;   /* cards */
+
+  /* Transitions — color/background only, no transforms */
+  --transition: 0.15s;
+
+  /* Shiki syntax highlighting */
+  --shiki-foreground:              var(--ink);
+  --shiki-background:              var(--bg-sunken);
+  --shiki-token-keyword:           var(--amber);
+  --shiki-token-function:          var(--cyan);
+  --shiki-token-constant:          var(--amber);
+  --shiki-token-string:            #7ec8a0;
+  --shiki-token-string-expression: #7ec8a0;
+  --shiki-token-comment:           var(--ink-faint);
+  --shiki-token-parameter:         var(--ink-dim);
+  --shiki-token-punctuation:       var(--ink-dim);
+  --shiki-token-link:              var(--cyan);
+}
+
+/* ── Paper palette (light) ─────────────────────────────── */
+[data-palette="paper"] {
+  --bg:          #efece4;
+  --bg-rail:     #e6e2d6;
+  --bg-elev:     #f5f2ea;
+  --bg-sunken:   #dfdbce;
+  --ink:         #14110b;
+  --ink-dim:     #3f3b30;
+  --ink-faint:   #5f5a4a;
+  --rule:        #cfcabc;
+  --rule-strong: #a8a192;
+  --amber:       #a04e00;
+  --cyan:        #030304;
+  --danger:      #a83224;
+  --ok:          #356b31;
+  --shiki-token-string:            #2d7a50;
+  --shiki-token-string-expression: #2d7a50;
+}

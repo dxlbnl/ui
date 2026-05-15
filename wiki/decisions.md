@@ -18,4 +18,71 @@
 
 ---
 
-<!-- entries start here -->
+## D1: Tests are Storybook play functions only
+- **Date**: 2026-05-15
+- **By**: bootstrap (user clarification)
+- **Context**: User specified Storybook-based testing. User clarified: no separate
+  `.test.ts` files; use CSF format stories with `play` functions; run via
+  `@storybook/addon-vitest`.
+- **Decision**: Every component's test harness is its `.stories.ts` file. Play functions
+  use `@testing-library/svelte` + `@storybook/test` assertions. `@storybook/addon-vitest`
+  runs them in Vitest browser mode (`npm test`). `@storybook/addon-a11y` audits
+  accessibility in every Story.
+- **Consequences**: No `*.test.ts` files anywhere. `test-writer` agent writes Stories
+  with play functions; `implementer` makes them pass. Red state = play function
+  assertion fails or a11y violation. Stories double as documentation.
+- **Supersedes**: none
+
+## D3: Fonts self-hosted via Fontsource, not Google CDN
+- **Date**: 2026-05-15
+- **By**: user
+- **Context**: Design bundle referenced Google Fonts CDN for Inter Tight and JetBrains
+  Mono. User preference is to avoid external CDN requests.
+- **Decision**: Load both fonts via Fontsource npm packages (`@fontsource/inter-tight`,
+  `@fontsource/jetbrains-mono`). Import in `src/app.css` (or `+layout.svelte`).
+  The local `fonts/JetBrainsMono-Bold.ttf` from the design bundle is superseded by
+  the Fontsource package.
+- **Consequences**: No Google Fonts `<link>` in `<head>`. Font files are bundled with
+  the app. Fontsource packages must be added as dependencies in B1 scaffold.
+- **Supersedes**: none
+
+## D4: Chakra-style composable components + strict TypeScript
+- **Date**: 2026-05-15
+- **By**: user
+- **Context**: User wants components to be composable in the spirit of Chakra UI —
+  compound sub-components, polymorphic `as` prop, full HTML attribute forwarding.
+  Also: strict TypeScript (`noImplicitAny`, no `any` anywhere).
+- **Decision**:
+  1. **Compound components** — complex components export named sub-components as
+     properties of the parent (e.g. `Card.Header`, `Card.Body`, `Card.Footer`).
+     Implemented via named Svelte component exports from the category `index.ts`.
+  2. **Polymorphic `as` prop** — interactive elements (Button, Card, etc.) accept
+     an `as` prop (default `"button"` / `"div"`) and render via `<svelte:element
+     this={as}>`, so `<Button as="a" href="...">` renders a semantically correct anchor.
+  3. **HTML attribute forwarding** — every component destructures `...rest` from
+     `$props()` and spreads it onto the root element, so all native HTML attributes
+     work without explicit declaration.
+  4. **Strict TypeScript** — `tsconfig.json` sets `strict: true`. Props are typed
+     against the relevant `HTMLElementAttributes` type (e.g. `ButtonProps extends
+     HTMLButtonAttributes`). No `any`, no `@ts-ignore`. Polymorphic props use a
+     generic or union type to keep the `as` prop and its attribute set consistent.
+  5. **Clean HTML** — minimal nesting, semantic elements, no wrapper divs unless
+     structurally necessary. Class lists are computed, not concatenated strings.
+- **Consequences**: Components are slightly more complex to author (generic types,
+  `svelte:element`) but much more flexible to consume. The `as` prop requires care
+  with ARIA roles when the element type changes. Stories must cover polymorphic usage.
+  `@ts-ignore` is banned; if TypeScript fights, fix the types.
+- **Supersedes**: none
+
+## D2: Stack and architecture choices
+- **Date**: 2026-05-15
+- **By**: bootstrap (user interview)
+- **Context**: Bootstrapping a personal Svelte component library implementing the
+  Dexterlabs design system (claude.ai/design export).
+- **Decision**: SvelteKit + TypeScript, Svelte 5 runes API, CSS custom properties for
+  tokens (no Tailwind), Storybook 8 (`@storybook/svelte-vite`) for visual dev. No
+  external UI primitive libraries. SSR-compatible, WCAG 2.1 AA.
+- **Consequences**: Components must never use browser globals in render paths. All
+  component props must be typed. Token changes are CSS-only. Cannot lean on Bits UI /
+  Radix for accessibility — must implement ARIA patterns manually.
+- **Supersedes**: none

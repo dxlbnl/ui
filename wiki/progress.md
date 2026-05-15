@@ -18,3 +18,8 @@ it records the reason here AND states it in chat.
 ---
 
 <!-- entries start here -->
+
+## 2026-05-15 — Bootstrap
+- bootstrap: interviewed user, populated wiki (vision, requirements, architecture, backlog, decisions) → done
+- bootstrap: scaffolded SvelteKit + Storybook 9 + Vitest 4, token CSS, static assets → done
+- result: scaffold complete, `pnpm check` passes 0 errors — ready for manager

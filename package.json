@@ -1,0 +1,58 @@
+{
+  "name": "dxlb-design",
+  "version": "0.0.1",
+  "type": "module",
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "!dist/**/*.test.*", "!dist/**/*.spec.*"],
+  "sideEffects": ["**/*.css"],
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  },
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build && pnpm prepack",
+    "preview": "vite preview",
+    "prepare": "svelte-kit sync || echo ''",
+    "prepack": "svelte-kit sync && svelte-package && publint",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "test": "vitest",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "10.4.0",
+    "@storybook/addon-docs": "10.4.0",
+    "@storybook/addon-svelte-csf": "5.1.2",
+    "@storybook/addon-vitest": "10.4.0",
+    "@storybook/sveltekit": "10.4.0",
+    "@sveltejs/adapter-auto": "7.0.1",
+    "@sveltejs/kit": "2.60.1",
+    "@sveltejs/package": "2.5.7",
+    "@sveltejs/vite-plugin-svelte": "7.1.2",
+    "@types/node": "25.8.0",
+    "@vitest/browser-playwright": "4.1.6",
+    "publint": "0.3.18",
+    "storybook": "10.4.0",
+    "svelte": "5.55.7",
+    "svelte-check": "4.4.8",
+    "typescript": "6.0.3",
+    "vite": "8.0.13",
+    "vitest": "4.1.6",
+    "vitest-browser-svelte": "2.1.0"
+  },
+  "dependencies": {
+    "@fontsource/inter-tight": "5.2.7",
+    "@fontsource/jetbrains-mono": "5.2.8"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  }
+}
