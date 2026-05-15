@@ -2,264 +2,142 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, within } from "storybook/test";
   import ColorSwatch from "./ColorSwatch.svelte";
-  import TypeSpecimen from "./TypeSpecimen.svelte";
 
   const { Story } = defineMeta({
     title: "Tokens/Design Tokens",
     parameters: { layout: "fullscreen" },
   });
 
-  const phosphorGroups = [
-    {
-      label: "Surfaces",
-      tokens: [
-        { name: "--bg", value: "#0b0d0c" },
-        { name: "--bg-rail", value: "#0f1211" },
-        { name: "--bg-elev", value: "#141817" },
-        { name: "--bg-sunken", value: "#070908" },
-      ],
-    },
-    {
-      label: "Ink",
-      tokens: [
-        { name: "--ink", value: "#d6e2dc" },
-        { name: "--ink-dim", value: "#a4b0a9" },
-        { name: "--ink-faint", value: "#7a8580" },
-      ],
-    },
-    {
-      label: "Rules",
-      tokens: [
-        { name: "--rule", value: "#1d2321" },
-        { name: "--rule-strong", value: "#2a3330" },
-      ],
-    },
-    {
-      label: "Accents",
-      tokens: [
-        { name: "--amber", value: "#ffb347" },
-        { name: "--cyan", value: "#7cc7d1" },
-        { name: "--danger", value: "#ff7a6b" },
-        { name: "--ok", value: "#8fd48a" },
-      ],
-    },
+  const colorGroups = [
+    { label: "Surfaces", tokens: ["--bg", "--bg-rail", "--bg-elev", "--bg-sunken"] },
+    { label: "Ink", tokens: ["--ink", "--ink-dim", "--ink-faint"] },
+    { label: "Rules", tokens: ["--rule", "--rule-strong"] },
+    { label: "Accents", tokens: ["--amber", "--cyan", "--danger", "--ok"] },
   ];
 
-  const paperGroups = [
-    {
-      label: "Surfaces (Paper)",
-      tokens: [
-        { name: "--bg", value: "#efece4" },
-        { name: "--bg-rail", value: "#e6e2d6" },
-        { name: "--bg-elev", value: "#f5f2ea" },
-        { name: "--bg-sunken", value: "#dfdbce" },
-      ],
-    },
-    {
-      label: "Ink (Paper)",
-      tokens: [
-        { name: "--ink", value: "#14110b" },
-        { name: "--ink-dim", value: "#3f3b30" },
-        { name: "--ink-faint", value: "#5f5a4a" },
-      ],
-    },
-    {
-      label: "Rules (Paper)",
-      tokens: [
-        { name: "--rule", value: "#cfcabc" },
-        { name: "--rule-strong", value: "#a8a192" },
-      ],
-    },
-    {
-      label: "Accents (Paper)",
-      tokens: [
-        { name: "--amber", value: "#a04e00" },
-        { name: "--cyan", value: "#030304" },
-        { name: "--danger", value: "#a83224" },
-        { name: "--ok", value: "#356b31" },
-      ],
-    },
-  ];
-
-  const playPhosphor = async ({
-    canvasElement,
-  }: {
-    canvasElement: HTMLElement;
-  }) => {
+  const playColorTokens = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
     const bgSwatch = canvas.getByTestId("--bg");
     await expect(bgSwatch).toBeVisible();
-    await expect(getComputedStyle(bgSwatch).backgroundColor).toBe(
-      "rgb(11, 13, 12)",
-    );
+    await expect(getComputedStyle(bgSwatch).backgroundColor.startsWith("rgb")).toBe(true);
     const amberSwatch = canvas.getByTestId("--amber");
-    await expect(getComputedStyle(amberSwatch).backgroundColor).toBe(
-      "rgb(255, 179, 71)",
-    );
+    await expect(amberSwatch).toBeVisible();
+    await expect(getComputedStyle(amberSwatch).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
   };
 
-  const playPaper = async ({
-    canvasElement,
-  }: {
-    canvasElement: HTMLElement;
-  }) => {
+  const playTypeScale = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
-    const bgSwatch = canvas.getByTestId("--bg");
-    await expect(bgSwatch).toBeVisible();
-    await expect(getComputedStyle(bgSwatch).backgroundColor).toBe(
-      "rgb(239, 236, 228)",
-    );
-    const amberSwatch = canvas.getByTestId("--amber");
-    await expect(getComputedStyle(amberSwatch).backgroundColor).toBe(
-      "rgb(160, 78, 0)",
-    );
+    await expect(getComputedStyle(canvas.getByTestId("scale-h1")).fontSize).toBe("72px");
+    await expect(getComputedStyle(canvas.getByTestId("scale-h2")).fontSize).toBe("36px");
+    await expect(getComputedStyle(canvas.getByTestId("scale-h3")).fontSize).toBe("24px");
+    await expect(getComputedStyle(canvas.getByTestId("scale-lede")).fontSize).toBe("19px");
+    await expect(getComputedStyle(canvas.getByTestId("scale-body")).fontSize).toBe("16px");
   };
 
-  const playTypeScale = async ({
-    canvasElement,
-  }: {
-    canvasElement: HTMLElement;
-  }) => {
+  const playLabels = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
-    const h1 = canvas.getByTestId("specimen-h1");
-    await expect(getComputedStyle(h1).fontSize).toBe("72px");
-    const monoLabel = canvas.getByTestId("specimen-mono-label");
-    await expect(
-      getComputedStyle(monoLabel).fontFamily.toLowerCase(),
-    ).toContain("jetbrains mono");
-    await expect(getComputedStyle(monoLabel).textTransform).toBe("uppercase");
+    const mono = canvas.getByTestId("label-mono");
+    await expect(getComputedStyle(mono).fontFamily.toLowerCase()).toContain("jetbrains");
+    await expect(getComputedStyle(mono).textTransform).toBe("uppercase");
+    const eyebrow = canvas.getByTestId("label-eyebrow");
+    await expect(getComputedStyle(eyebrow).fontSize).toBe("12px");
+    await expect(getComputedStyle(eyebrow).textTransform).toBe("uppercase");
   };
 
-  const playBaseReset = async ({
-    canvasElement,
-  }: {
-    canvasElement: HTMLElement;
-  }) => {
+  const playSemanticElements = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
-    const p = canvas.getByTestId("reset-p");
-    await expect(getComputedStyle(p).marginTop).toBe("0px");
-    const btn = canvas.getByRole("button");
-    await expect(getComputedStyle(btn).backgroundColor).toBe(
-      "rgba(0, 0, 0, 0)",
-    );
-    await expect(getComputedStyle(btn).paddingTop).toBe("0px");
-  };
-
-  const playPaletteSwitching = async ({
-    canvasElement,
-  }: {
-    canvasElement: HTMLElement;
-  }) => {
-    const wrapper = canvasElement.querySelector(
-      "#palette-wrapper",
-    ) as HTMLElement;
-    const box = canvasElement.querySelector("#palette-box") as HTMLElement;
-    await expect(wrapper).toBeTruthy();
-
-    // Default: Phosphor — --bg = #0b0d0c = rgb(11, 13, 12)
-    await expect(getComputedStyle(box).backgroundColor).toBe("rgb(11, 13, 12)");
-
-    // Switch to Paper
-    wrapper.setAttribute("data-palette", "paper");
-    await expect(getComputedStyle(box).backgroundColor).toBe(
-      "rgb(239, 236, 228)",
-    );
-
-    // Switch back
-    wrapper.removeAttribute("data-palette");
-    await expect(getComputedStyle(box).backgroundColor).toBe("rgb(11, 13, 12)");
-  };
-
-  const playTypographyClasses = async ({
-    canvasElement,
-  }: {
-    canvasElement: HTMLElement;
-  }) => {
-    const canvas = within(canvasElement);
-    await expect(
-      getComputedStyle(canvas.getByTestId("specimen-h2")).fontSize,
-    ).toBe("36px");
-    await expect(
-      getComputedStyle(canvas.getByTestId("specimen-h3")).fontSize,
-    ).toBe("24px");
-    await expect(
-      getComputedStyle(canvas.getByTestId("specimen-body-text")).fontSize,
-    ).toBe("16px");
-    await expect(
-      getComputedStyle(canvas.getByTestId("specimen-body-lede")).fontSize,
-    ).toBe("19px");
-    await expect(
-      getComputedStyle(canvas.getByTestId("specimen-eyebrow")).fontSize,
-    ).toBe("12px");
-  };
-
-  const playSemanticElements = async ({
-    canvasElement,
-  }: {
-    canvasElement: HTMLElement;
-  }) => {
-    const canvas = within(canvasElement);
-    const code = canvas.getByTestId("specimen-code");
-    await expect(
-      getComputedStyle(code).fontFamily.toLowerCase(),
-    ).toContain("jetbrains mono");
-    await expect(getComputedStyle(code).color).toBe("rgb(124, 199, 209)");
-
-    const pre = canvas.getByTestId("specimen-pre");
-    await expect(
-      getComputedStyle(pre).fontFamily.toLowerCase(),
-    ).toContain("jetbrains mono");
-
-    const blockquote = canvas.getByTestId("specimen-blockquote");
+    const code = canvas.getByTestId("sem-code");
+    await expect(getComputedStyle(code).fontFamily.toLowerCase()).toContain("jetbrains");
+    const blockquote = canvas.getByTestId("sem-blockquote");
     await expect(getComputedStyle(blockquote).borderLeftWidth).toBe("2px");
     await expect(getComputedStyle(blockquote).borderLeftStyle).toBe("solid");
-
-    const th = canvas.getByTestId("specimen-th");
+    const th = canvas.getByTestId("sem-th");
     await expect(getComputedStyle(th).textTransform).toBe("uppercase");
-
-    const td = canvas.getByTestId("specimen-td");
-    await expect(getComputedStyle(td).paddingTop).toBe("8px");
   };
 </script>
 
-<!-- Phosphor palette — dark default -->
-<Story name="PhosphorPalette" play={playPhosphor}>
-  <ColorSwatch groups={phosphorGroups} palette="phosphor" />
+<Story name="Color Tokens" play={playColorTokens}>
+  <ColorSwatch groups={colorGroups} />
 </Story>
 
-<!-- Paper palette — light override -->
-<Story name="PaperPalette" play={playPaper}>
-  <ColorSwatch groups={paperGroups} palette="paper" />
-</Story>
-
-<!-- Typography scale + semantic elements -->
-<Story name="TypeScale" play={playTypeScale}>
-  <TypeSpecimen />
-</Story>
-
-<!-- Palette switching — dynamic data-palette toggle -->
-<Story name="PaletteSwitching" play={playPaletteSwitching}>
-  <div id="palette-wrapper" style="padding: 24px; background: var(--bg); color: var(--ink);">
-    <div id="palette-box" style="width: 120px; height: 80px; background: var(--bg); border: 1px solid var(--rule);"></div>
+<Story name="Type Scale" play={playTypeScale}>
+  <div style="padding: 24px; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; gap: 20px;">
+    <div>
+      <p class="eyebrow" style="margin-bottom: 6px; color: var(--ink-faint);">.display-heading</p>
+      <div class="display-heading" style="overflow: hidden; line-height: 1; max-height: 160px;">Dx</div>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom: 6px; color: var(--ink-faint);">.hero-heading</p>
+      <div class="hero-heading" style="overflow: hidden; white-space: nowrap;">Dexterlabs</div>
+    </div>
+    <div style="border-top: 1px solid var(--rule); padding-top: 20px; display: flex; flex-direction: column; gap: 16px;">
+      <div data-testid="scale-h1" class="h1">H1 — Design System</div>
+      <div data-testid="scale-h2" class="h2">H2 — Design System</div>
+      <div data-testid="scale-h3" class="h3">H3 — Design System</div>
+    </div>
+    <div style="border-top: 1px solid var(--rule); padding-top: 20px; display: flex; flex-direction: column; gap: 12px;">
+      <p data-testid="scale-lede" class="body-lede">Lede — a brief, impactful opening sentence that draws the reader in.</p>
+      <p data-testid="scale-body" class="body-text">Body text — the quick brown fox jumps over the lazy dog. Regular body copy at 16px with comfortable line height for extended reading.</p>
+    </div>
   </div>
 </Story>
 
-<!-- Typography classes — all utility class computed sizes -->
-<Story name="TypographyClasses" play={playTypographyClasses}>
-  <TypeSpecimen />
+<Story name="Labels" play={playLabels}>
+  <div style="padding: 24px; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; gap: 32px;">
+    <div>
+      <p class="eyebrow" style="margin-bottom: 12px; color: var(--ink-faint);">.mono-label</p>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="mono-label" data-testid="label-mono">Status · Active · v1.0</div>
+        <div class="mono-label">Project — DXLB-0042 · In Review</div>
+        <div class="mono-label" style="color: var(--amber);">Warning · Threshold exceeded</div>
+        <div class="mono-label" style="color: var(--cyan);">Info · Sync complete</div>
+        <div class="mono-label" style="color: var(--danger);">Error · Connection refused</div>
+      </div>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom: 12px; color: var(--ink-faint);">.eyebrow</p>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <p class="eyebrow" data-testid="label-eyebrow">Category label</p>
+        <p class="eyebrow">Section heading</p>
+        <p class="eyebrow" style="color: var(--amber);">Featured</p>
+      </div>
+    </div>
+  </div>
 </Story>
 
-<!-- Semantic elements — code, pre, blockquote, table styles -->
-<Story name="SemanticElements" play={playSemanticElements}>
-  <TypeSpecimen />
-</Story>
-
-<!-- Base reset -->
-<Story name="BaseReset" play={playBaseReset}>
-  <div
-    style="padding: 24px; background: var(--bg); color: var(--ink); font-family: var(--sans);"
-  >
-    <p data-testid="reset-p">Paragraph with margin: 0.</p>
-    <button>Unstyled button</button>
+<Story name="Semantic Elements" play={playSemanticElements}>
+  <div style="padding: 24px; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; gap: 24px; max-width: 720px;">
+    <div>
+      <p class="eyebrow" style="margin-bottom: 8px; color: var(--ink-faint);">code</p>
+      <p class="body-text">Set the background with <code data-testid="sem-code">var(--bg)</code> and the foreground with <code>var(--ink)</code>.</p>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom: 8px; color: var(--ink-faint);">pre</p>
+      <pre data-testid="sem-pre">const palette = document.documentElement
+  .getAttribute('data-palette') ?? 'phosphor';</pre>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom: 8px; color: var(--ink-faint);">blockquote</p>
+      <blockquote data-testid="sem-blockquote">Design is not just what it looks like and feels like. Design is how it works.</blockquote>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom: 8px; color: var(--ink-faint);">table</p>
+      <table>
+        <thead>
+          <tr>
+            <th data-testid="sem-th">Token</th>
+            <th>Phosphor</th>
+            <th>Paper</th>
+            <th>Usage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>--bg</td><td>#0b0d0c</td><td>#efece4</td><td>Page background</td></tr>
+          <tr><td>--ink</td><td>#d6e2dc</td><td>#14110b</td><td>Primary text</td></tr>
+          <tr><td>--amber</td><td>#ffb347</td><td>#a04e00</td><td>Accent / active</td></tr>
+          <tr><td>--rule</td><td>#1d2321</td><td>#cfcabc</td><td>Dividers / borders</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </Story>

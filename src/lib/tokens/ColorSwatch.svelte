@@ -1,79 +1,73 @@
 <script lang="ts">
-  interface SwatchGroup {
-    label: string;
-    tokens: { name: string; value: string }[];
-  }
+	interface TokenGroup {
+		label: string;
+		tokens: string[];
+	}
 
-  interface Props {
-    groups: SwatchGroup[];
-    palette?: 'paper' | 'phosphor';
-  }
+	interface Props {
+		groups: TokenGroup[];
+	}
 
-  let { groups, palette = 'phosphor' }: Props = $props();
+	let { groups }: Props = $props();
 </script>
 
-<div class="swatch-root" data-palette={palette === 'paper' ? 'paper' : undefined}>
-  {#each groups as group}
-    <div class="swatch-group">
-      <h3 class="group-label">{group.label}</h3>
-      <div class="swatch-row">
-        {#each group.tokens as token}
-          <div class="swatch-item">
-            <div
-              class="swatch-color"
-              data-token={token.name}
-              data-testid={token.name}
-              style="background-color: var({token.name})"
-            ></div>
-            <span class="swatch-name">{token.name}</span>
-            <span class="swatch-value">{token.value}</span>
-          </div>
-        {/each}
-      </div>
-    </div>
-  {/each}
+<div class="swatch-root">
+	{#each groups as group}
+		<div class="swatch-group">
+			<p class="eyebrow">{group.label}</p>
+			<div class="swatch-row">
+				{#each group.tokens as token}
+					<div class="swatch-item">
+						<div
+							class="swatch-color"
+							data-testid={token}
+							style="background: var({token})"
+						></div>
+						<span class="swatch-name">{token}</span>
+					</div>
+				{/each}
+			</div>
+		</div>
+	{/each}
 </div>
 
 <style>
-  .swatch-root {
-    padding: 16px;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--mono);
-  }
-  .swatch-group {
-    margin-bottom: 24px;
-  }
-  .group-label {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin: 0 0 12px 0;
-    font-weight: 500;
-  }
-  .swatch-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .swatch-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .swatch-color {
-    width: 80px;
-    height: 48px;
-    border-radius: 4px;
-    border: 1px solid var(--rule);
-  }
-  .swatch-name {
-    font-size: 11px;
-    color: var(--ink-dim);
-  }
-  .swatch-value {
-    font-size: 10px;
-    color: var(--ink-faint);
-  }
+	.swatch-root {
+		padding: var(--u3);
+		background: var(--bg);
+		display: flex;
+		flex-direction: column;
+		gap: var(--u4);
+	}
+
+	.swatch-group {
+		display: flex;
+		flex-direction: column;
+		gap: var(--u2);
+	}
+
+	.swatch-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--u2);
+	}
+
+	.swatch-item {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.swatch-color {
+		width: 80px;
+		height: 48px;
+		border-radius: var(--radius-card);
+		border: 1px solid var(--rule);
+	}
+
+	.swatch-name {
+		font-family: var(--mono);
+		font-size: 11px;
+		color: var(--ink-dim);
+	}
 </style>
