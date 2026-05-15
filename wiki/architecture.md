@@ -37,12 +37,14 @@
 src/
   lib/
     tokens/
-      tokens.css           # CSS custom properties — both palettes
-      typography.css        # Typography classes + base element styles
-      layout.css            # Layout helpers
-      patterns.css          # Pattern component CSS
+      tokens.css           # CSS custom properties — both palettes (global)
+      typography.css        # Typography classes + base element styles (global)
+      layout.css            # Source reference only — NOT imported globally;
+                            #   CSS is absorbed into layout component <style> blocks
+      patterns.css          # Source reference only — NOT imported globally;
+                            #   CSS is absorbed into pattern component <style> blocks
     components/
-      primitives/           # Button, Led, TagPill
+      primitives/           # Button, Led, TagPill (atoms — built first)
         Button.svelte
         Button.stories.svelte
         Led.svelte
@@ -62,7 +64,7 @@ src/
     +layout.svelte           # Imports app.css globally
     +page.svelte
 
-  app.css                    # @imports all token CSS files + Fontsource fonts
+  app.css                    # Fonts + tokens.css + typography.css only (no utility classes)
 
 static/
   logo.svg
@@ -99,7 +101,10 @@ Every component follows these rules. Agents must not deviate.
 </svelte:element>
 ```
 
-1. **Compound sub-components** — `Card.Header`, `Card.Body`, `Card.Footer` etc.
+1. **Style props over utility classes** — layout components accept semantic props
+   (`gap="lg"`, `cols={3}`, `size="md"`) that map to CSS values internally. The CSS
+   lives in the component's `<style>` block; consumers never touch class strings.
+2. **Compound sub-components** — `Card.Header`, `Card.Body`, `Card.Footer` etc.
    exported from the category `index.ts` as named exports.
 2. **Polymorphic `as` prop** — `<svelte:element this={as}>` + typed via union or
    generic. Default to the most semantic element.

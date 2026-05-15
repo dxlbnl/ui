@@ -74,6 +74,31 @@
   `@ts-ignore` is banned; if TypeScript fights, fix the types.
 - **Supersedes**: none
 
+## D5: No global utility classes — CSS scoped to components
+- **Date**: 2026-05-15
+- **By**: user
+- **Context**: B3 produced `layout.stories.svelte` containing raw HTML with utility
+  class strings (`.stack`, `.grid`, etc.) imported globally via `app.css`. User
+  rejected this: "we are building a component library."
+- **Decision**:
+  1. `layout.css` and `patterns.css` are **removed from `app.css`**. Those class
+     definitions are not a public API.
+  2. CSS that drives a component lives in that component's `<style>` block —
+     scoped by Svelte's compiler, no global leakage.
+  3. Components expose **style props** (Chakra-UI style) rather than class strings:
+     `<Stack gap="lg">` not `<div class="stack stack-lg">`.
+  4. Build order is **bottom-up**: atoms (Button, Led, TagPill) → layout primitives
+     (Stack, Inline, Grid, Container, Rule) → composites (Card, Nav, etc.).
+     Each layer may only import from layers below it.
+  5. Stories import and render the **component**, never raw HTML with utility classes.
+     One `.stories.svelte` file per component.
+- **Consequences**: More component files, but the exported API is clean, typed, and
+  tree-shakeable. The raw CSS in `layout.css`/`patterns.css` becomes the
+  implementation source that implementers read when writing component `<style>` blocks.
+  `app.css` only retains fonts, token custom properties, and base element styles
+  (things that must be global).
+- **Supersedes**: none
+
 ## D2: Stack and architecture choices
 - **Date**: 2026-05-15
 - **By**: bootstrap (user interview)

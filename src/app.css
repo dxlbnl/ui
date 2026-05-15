@@ -4,8 +4,6 @@
 @import '@fontsource/jetbrains-mono/400.css';
 @import '@fontsource/jetbrains-mono/700.css';
 
-/* Design tokens */
+/* Design tokens — custom properties and base element styles only */
 @import './lib/tokens/tokens.css';
 @import './lib/tokens/typography.css';
-@import './lib/tokens/layout.css';
-@import './lib/tokens/patterns.css';
