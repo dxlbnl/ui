@@ -42,3 +42,12 @@ it records the reason here AND states it in chat.
 - reviewer: initial FAIL (missing 3 stories, stray char); re-run after fixes → PASS
 - manager: added Storybook manager theme (phosphorTheme/paperTheme) + preview toolbar palette toggle
 - result: done
+
+## 2026-05-15 — B2: post-done cleanup
+- manager: rewrote token stories (4 clean human-readable stories, inline HTML, no TypeSpecimen)
+- manager: fixed manager theme switching — addons.ready() + addons.setConfig({theme}) on globalsUpdated
+- result: committed 212486a
+
+## 2026-05-15 — B3: Layout helpers
+- manager: set in-progress, delegating to spec-writer
+- spec-writer: wrote wiki/specs/B3-layout-helpers.md (82 acceptance criteria, 14-story plan) → done

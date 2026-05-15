@@ -26,7 +26,7 @@ Each item has a **status** and an optional **`review`** flag:
       `.hero-heading`, `.display-heading`, `.body-text`, `.body-lede`, `.mono-label`,
       `.eyebrow`, `code`, `pre`). Source: `colors_and_type.css` from design bundle.
 
-- [ ] **B3: Layout helpers** — status: `todo`
+- [ ] **B3: Layout helpers** — status: `in-progress`
       CSS-only layout utilities from `layout.css` and `patterns.css`:
       container variants, grid system, split/aside layouts, stack/inline/spread
       flex helpers, rule dividers, padding/surface/border/visibility helpers.
