@@ -9,6 +9,9 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 
 export default defineConfig({
 	plugins: [sveltekit()],
+	optimizeDeps: {
+		include: ['storybook/theming', 'storybook/manager-api']
+	},
 	test: {
 		projects: [
 			{

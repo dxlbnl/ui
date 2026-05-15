@@ -13,7 +13,14 @@
       "Bash(pnpm *)",
       "Read(//home/dexter/Projects/typescript/test/**)",
       "Skill(manager)",
-      "Skill(manager:*)"
+      "Skill(manager:*)",
+      "Bash(grep -E \"^test$|^sveltekit$\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); t=d.get\\('exports',{}\\).get\\('./test',{}\\); print\\(t\\)\")",
+      "WebFetch(domain:storybook.js.org)",
+      "WebFetch(domain:github.com)",
+      "WebSearch",
+      "Bash(find /home/dexter/Projects/typescript/zod4-mock/playground -type f | sort)",
+      "Read(//home/dexter/Projects/typescript/zod4-mock/playground/**)"
     ],
     "deny": []
   },

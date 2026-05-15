@@ -20,9 +20,10 @@
 - **Test runner**: `@storybook/addon-vitest` (Vitest browser mode, driven by Story
   play functions)
 - **Test command**: `pnpm test` (runs `vitest` — `test.projects` defined inline in `vite.config.ts`)
-- **Test file location / naming**: `src/lib/components/<Name>/<Name>.stories.ts`
-  (CSF format — one stories file per component, no separate `.test.ts` files)
-- **What a "test" is**: a Story with a `play` function that uses `@storybook/test`
+- **Test file location / naming**: `src/lib/components/<category>/<Name>.stories.svelte`
+  (Svelte CSF format via `@storybook/addon-svelte-csf` — one stories file per component,
+  no separate `.test.ts` files)
+- **What a "test" is**: a `<Story>` with a `play` prop that uses `@storybook/test`
   interactions and `expect` assertions. The play function also powers the Storybook
   interaction panel and the a11y addon.
 
@@ -43,11 +44,11 @@ src/
     components/
       primitives/           # Button, Led, TagPill
         Button.svelte
-        Button.stories.ts
+        Button.stories.svelte
         Led.svelte
-        Led.stories.ts
+        Led.stories.svelte
         TagPill.svelte
-        TagPill.stories.ts
+        TagPill.stories.svelte
       cards/                # Card, ProductCard, ProjectCard, NoteCard
       navigation/           # Nav
       forms/                # Field, Input, InputWrap, Textarea, Select
@@ -115,11 +116,11 @@ Every component follows these rules. Agents must not deviate.
 
 - **Tests = Storybook play functions** — no separate test files; `@storybook/addon-vitest`
   executes play functions in Vitest browser mode (see D1)
-- **Stories in CSF format** — `.stories.ts`, one per component; play functions use
-  `@storybook/test` imports (see D1)
+- **Stories in Svelte CSF format** — `.stories.svelte` via `@storybook/addon-svelte-csf`,
+  one per component; `<Story play={...}>` uses `@storybook/test` imports (see D1)
 - **Chakra-style composability** — compound sub-components, `as` polymorphic prop,
   `...rest` HTML attribute forwarding, strict TypeScript (see D4)
-- Svelte 5 runes throughout — no Svelte 4 `export let` (see D2)
+- Svelte 5 runes throughout — no Svelte 4 `export let` (see D2). Runes mode is auto-detected per file (use of `$props()`, `$state()`, etc.); `runes: true` is NOT set globally in `svelte.config.js` to avoid breaking node_modules.
 - CSS custom properties for tokens — no JS token objects, no Tailwind (see D2)
 - No external UI primitive libraries — all components are custom (see D2)
 - SSR-safe by default — browser APIs gated behind `$effect` / `browser` guard

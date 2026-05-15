@@ -22,6 +22,8 @@ Every agent reads this page first, before doing anything else.
 | [decisions.md](decisions.md) | Append-only decision log (ADR-style). |
 | [progress.md](progress.md) | Append-only run journal — what the agents have done. |
 | [specs/](specs/) | One detailed spec page per feature. See `specs/README.md`. |
+| [specs/B2-design-tokens.md](specs/B2-design-tokens.md) | Spec: B2 Design tokens + global CSS (Phosphor/Paper palettes, reset, typography classes). |
+| [stories-guide.md](stories-guide.md) | How to write Svelte CSF stories with play functions for this project. |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
 > and restructure pages as the project grows — just link new pages in the table above.

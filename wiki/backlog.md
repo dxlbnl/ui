@@ -13,14 +13,14 @@ Each item has a **status** and an optional **`review`** flag:
 
 ## Items
 
-- [ ] **B1: Project scaffold** — status: `todo`
-      SvelteKit + TypeScript, Storybook 8 (`@storybook/svelte-vite`),
+- [x] **B1: Project scaffold** — status: `done` — commit: `5c59008`
+      SvelteKit + TypeScript, Storybook 10 (`@storybook/sveltekit`),
       `@storybook/addon-vitest` (tests = Story play functions, no separate `.test.ts`),
-      `@storybook/addon-a11y`. Folder structure: `src/lib/components/`, `src/lib/tokens/`,
-      `src/lib/index.ts`, `.storybook/`. Copy brand assets to `static/`. Verify
-      `npm test` runs and `npm run storybook` builds without errors.
+      `@storybook/addon-a11y`, `@storybook/addon-svelte-csf`. Folder structure:
+      `src/lib/components/`, `src/lib/tokens/`, `src/lib/index.ts`, `.storybook/`.
+      Brand assets in `static/`. `pnpm check` passes 0 errors.
 
-- [ ] **B2: Design tokens + global CSS** — status: `todo`
+- [x] **B2: Design tokens + global CSS** — status: `done`
       Implement both palettes (Phosphor dark + Paper light) as CSS custom properties,
       base reset, semantic element styles, typography classes (`.h1`–`.h3`,
       `.hero-heading`, `.display-heading`, `.body-text`, `.body-lede`, `.mono-label`,
@@ -31,7 +31,7 @@ Each item has a **status** and an optional **`review`** flag:
       container variants, grid system, split/aside layouts, stack/inline/spread
       flex helpers, rule dividers, padding/surface/border/visibility helpers.
 
-- [ ] **B4: Primitive components** — status: `todo`
+- [ ] **B4: Primitive components** — status: `todo` — flags: `review`
       Svelte components: `Button` (5 variants: primary, cta, ghost, back, del),
       `Led` (ok/amber/cyan/danger/off, blink animation), `TagPill` (default/amber/cyan).
       Full type props + Storybook stories.
