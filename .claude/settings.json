@@ -1,29 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls:*)",
-      "Bash(cat:*)",
+      "Bash(ls *)",
+      "Bash(cat *)",
       "Bash(pwd)",
-      "Bash(git status:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)",
-      "WebFetch(domain:dexterlabs.nl)",
+      "Bash(git *)",
+      "WebFetch(*)",
       "Bash(pnpm *)",
-      "Read(//home/dexter/Projects/typescript/test/**)",
       "Skill(manager)",
       "Skill(manager:*)",
-      "Bash(grep -E \"^test$|^sveltekit$\")",
-      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); t=d.get\\('exports',{}\\).get\\('./test',{}\\); print\\(t\\)\")",
-      "WebFetch(domain:storybook.js.org)",
-      "WebFetch(domain:github.com)",
       "WebSearch",
-      "Bash(find /home/dexter/Projects/typescript/zod4-mock/playground -type f | sort)",
-      "Read(//home/dexter/Projects/typescript/zod4-mock/playground/**)",
-      "Bash(curl -s https://api.github.com/repos/hipstersmoothie/storybook-dark-mode/contents)",
-      "Bash(git -C /home/dexter/Projects/Web/dxlb-design diff --name-only HEAD)",
-      "Bash(git -C /home/dexter/Projects/Web/dxlb-design status)"
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Agent(*)"
     ],
     "deny": []
   },

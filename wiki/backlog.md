@@ -26,13 +26,13 @@ Each item has a **status** and an optional **`review`** flag:
       `.hero-heading`, `.display-heading`, `.body-text`, `.body-lede`, `.mono-label`,
       `.eyebrow`, `code`, `pre`). Source: `colors_and_type.css` from design bundle.
 
-- [ ] **B3: Layout components** — status: `todo`
+- [ ] **B3: Layout components** — status: `in-progress`
       Svelte layout primitives with style props (Chakra-style): `Stack`, `Inline`,
       `Spread`, `Grid`, `Container`, `Rule`. CSS scoped inside each component's
       `<style>` block — no global utility classes. One `.stories.svelte` per component.
       Source reference: `src/lib/tokens/layout.css`. Built after B4 atoms exist.
 
-- [ ] **B4: Primitive components** — status: `in-progress` — flags: `review`
+- [x] **B4: Primitive components** — status: `done` — commit: `8fffee3`
       Svelte components: `Button` (5 variants: primary, cta, ghost, back, del),
       `Led` (ok/amber/cyan/danger/off, blink animation), `TagPill` (default/amber/cyan).
       Full type props + Storybook stories. True visual atoms — built first.

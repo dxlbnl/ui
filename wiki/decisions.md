@@ -111,3 +111,20 @@
   component props must be typed. Token changes are CSS-only. Cannot lean on Bits UI /
   Radix for accessibility — must implement ARIA patterns manually.
 - **Supersedes**: none
+
+## D6: B3 layout spec rewritten as Svelte component spec (supersedes CSS-only approach)
+- **Date**: 2026-05-16
+- **By**: spec-writer
+- **Context**: The original `wiki/specs/B3-layout-helpers.md` specified CSS utility
+  classes imported globally — the approach later rejected by D5. B3 is in-progress and
+  required a clean spec aligned with D5 before test-writer and implementer could proceed.
+- **Decision**: A new spec `wiki/specs/B3-layout-components.md` replaces the layout
+  helpers spec as the implementation contract for B3. It specifies six Svelte 5
+  components (`Stack`, `Inline`, `Spread`, `Grid`, `Container`, `Rule`) with style props,
+  scoped CSS, and full `...rest` forwarding. The old `B3-layout-helpers.md` is retained
+  in the wiki for reference but is marked superseded in `INDEX.md`.
+- **Consequences**: `test-writer` writes stories against the component API. The global
+  utility class tests in `B3-layout-helpers.md` are not built (they were for a rejected
+  approach). Rail layout, split, and card-grid patterns are deferred — they are either
+  composable via `Grid` or belong in later items.
+- **Supersedes**: B3-layout-helpers.md (that spec covers a CSS-only approach rejected by D5)

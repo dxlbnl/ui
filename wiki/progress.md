@@ -54,3 +54,15 @@ it records the reason here AND states it in chat.
 - test-writer: wrote layout.stories.svelte (14 stories) → all 18 tests green (CSS already existed)
 - reviewer: PASS — 82 AC covered, 2 minor soft findings (grid-auto column template, kv-row padding assertions weak but CSS correct)
 - result: done — commit `a587de4`
+
+## 2026-05-16 — B4: Primitive components
+- manager: set in-progress; spec written and approved by user
+- test-writer: wrote Button.stories.svelte (8 stories), Led.stories.svelte (7), TagPill.stories.svelte (4) → red (missing components)
+- implementer: wrote Button.svelte, Led.svelte, TagPill.svelte, index.ts; fixed CSF double-wrap (remove component: from defineMeta) → 23/23 green
+- manager: updated stories-guide.md to document defineMeta component: antipattern
+- result: done — commit `8fffee3`
+
+## 2026-05-16 — B3: Layout components
+- manager: set in-progress, delegating to spec-writer
+- spec-writer: wrote wiki/specs/B3-layout-components.md (90 ACs, 6 components) → done
+- test-writer: writing failing stories for Stack, Inline, Spread, Grid, Container, Rule
