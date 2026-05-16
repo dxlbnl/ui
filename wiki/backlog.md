@@ -62,7 +62,7 @@ Each item has a **status** and an optional **`review`** flag:
       `Accordion` (expand/collapse, SSR-safe), `Tabs` (amber active underline, panel switching),
       `Table` (mono headers, dashed row rules).
 
-- [ ] **B12: Story rewrite** — status: `todo`
+- [x] **B12: Story rewrite** — status: `done` — commit: `8158dff`
       Rewrite all `.stories.svelte` files to match the updated stories-guide pattern:
       `component:` in `defineMeta`, props via story `args`, slot for children only,
       inline play functions, accessible queries over `getByTestId`.

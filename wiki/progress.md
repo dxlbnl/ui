@@ -77,3 +77,11 @@ it records the reason here AND states it in chat.
 - implementer: wrote all 4 components + index.ts; updated src/lib/index.ts → 60/60 green
 - reviewer: initial FAIL (4 test gaps: aspect-ratio ×2, low-stock, ctaLabel override); manager fixed directly → 62/62 green
 - result: done — commit `ba50c32`
+
+## 2026-05-16 — B12: Story rewrite
+- manager: set in-progress; user requested B12 before B6 to establish clean story baseline
+- spec-writer: wrote wiki/specs/B12-story-rewrite.md (26 ACs, 17 files) → done
+- manager: skipping test-writer (no new failing tests to write — existing 62 tests are the baseline; implementer rewrites story files to match pattern)
+- implementer: created storybook-utils.ts, rewrote 14 story files, created 2 composition files → 62/62 green
+- reviewer: FAIL (Rule.stories cast not removed); manager fixed directly (getByRole('separator')) → re-run PASS
+- result: done — commit `8158dff`
