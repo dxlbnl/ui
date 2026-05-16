@@ -26,7 +26,7 @@ Each item has a **status** and an optional **`review`** flag:
       `.hero-heading`, `.display-heading`, `.body-text`, `.body-lede`, `.mono-label`,
       `.eyebrow`, `code`, `pre`). Source: `colors_and_type.css` from design bundle.
 
-- [ ] **B3: Layout components** — status: `in-progress`
+- [x] **B3: Layout components** — status: `done` — commit: `71a3e1c`
       Svelte layout primitives with style props (Chakra-style): `Stack`, `Inline`,
       `Spread`, `Grid`, `Container`, `Rule`. CSS scoped inside each component's
       `<style>` block — no global utility classes. One `.stories.svelte` per component.
@@ -37,7 +37,7 @@ Each item has a **status** and an optional **`review`** flag:
       `Led` (ok/amber/cyan/danger/off, blink animation), `TagPill` (default/amber/cyan).
       Full type props + Storybook stories. True visual atoms — built first.
 
-- [ ] **B5: Card components** — status: `todo`
+- [ ] **B5: Card components** — status: `in-progress`
       `Card` (base), `ProductCard`, `ProjectCard`, `NoteCard`.
       Diagonal hatch placeholder, amber footer hover, hex note IDs, amber card hover.
 
@@ -61,6 +61,12 @@ Each item has a **status** and an optional **`review`** flag:
 - [ ] **B10: Accordion, Tabs, Table** — status: `todo`
       `Accordion` (expand/collapse, SSR-safe), `Tabs` (amber active underline, panel switching),
       `Table` (mono headers, dashed row rules).
+
+- [ ] **B12: Story rewrite** — status: `todo`
+      Rewrite all `.stories.svelte` files to match the updated stories-guide pattern:
+      `component:` in `defineMeta`, props via story `args`, slot for children only,
+      inline play functions, accessible queries over `getByTestId`.
+      Affects: B2 token stories, B3 layout stories, B4 primitive stories, B5 card stories.
 
 - [ ] **B11: Storybook catalogue** — status: `todo`
       Storybook stories for every component (all variants + states).

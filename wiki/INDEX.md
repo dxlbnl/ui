@@ -27,6 +27,7 @@ Every agent reads this page first, before doing anything else.
 | [specs/B3-layout-components.md](specs/B3-layout-components.md) | Spec: B3 Layout components — `Stack`, `Inline`, `Spread`, `Grid`, `Container`, `Rule` as Svelte 5 style-prop components. |
 | [stories-guide.md](stories-guide.md) | How to write Svelte CSF stories with play functions for this project. |
 | [specs/B4-primitive-components.md](specs/B4-primitive-components.md) | Spec: B4 Primitive components — Button (5 variants), Led (5 colors + blink), TagPill (3 variants). |
+| [specs/B5-card-components.md](specs/B5-card-components.md) | Spec: B5 Card components — Card (base), ProductCard, ProjectCard, NoteCard. Diagonal hatch placeholder, amber footer/border hover, hex note IDs. |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
 > and restructure pages as the project grows — just link new pages in the table above.

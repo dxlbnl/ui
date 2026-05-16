@@ -65,4 +65,11 @@ it records the reason here AND states it in chat.
 ## 2026-05-16 — B3: Layout components
 - manager: set in-progress, delegating to spec-writer
 - spec-writer: wrote wiki/specs/B3-layout-components.md (90 ACs, 6 components) → done
-- test-writer: writing failing stories for Stack, Inline, Spread, Grid, Container, Rule
+- test-writer: wrote 20 failing stories (6 files, one per component) → red
+- implementer: wrote all 6 components + index.ts; updated src/lib/index.ts → 46/46 green
+- reviewer: initial FAIL (missing play-fn assertions for 14 ACs); implementer added assertions → re-run PASS
+- result: done — commit `71a3e1c`
+
+## 2026-05-16 — B5: Card components
+- manager: set in-progress, delegating to spec-writer
+- spec-writer: wrote wiki/specs/B5-card-components.md (65 ACs, 4 components) → done
