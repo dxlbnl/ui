@@ -2,6 +2,7 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, within } from "storybook/test";
   import CtaBlock from "./CtaBlock.svelte";
+  import Button from "$lib/components/primitives/Button.svelte";
   import { resolveTokenFgColor } from "$lib/storybook-utils.js";
 
   const { Story } = defineMeta({
@@ -39,4 +40,23 @@
     await expect(anchor!.tagName).toBe("A");
   }}>
   BROWSE →
+</Story>
+
+<Story name="Border Color" args={{ heading: "Check the Border" }}
+  play={async ({ canvasElement }) => {
+    const root = canvasElement.firstElementChild!;
+    const amberColor = resolveTokenFgColor("--amber");
+    await expect(getComputedStyle(root).borderColor).toBe(amberColor);
+  }} />
+
+<Story name="Full Props" args={{ eyebrow: "// CATALOGUE · HARDWARE", heading: "Conduit PDX-2", subtext: "Power your entire Eurorack from a laptop charger." }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText(/CATALOGUE · HARDWARE/i)).toBeVisible();
+    await expect(canvas.getByText("Conduit PDX-2")).toBeVisible();
+    await expect(canvas.getByText("Power your entire Eurorack from a laptop charger.")).toBeVisible();
+    await expect(canvas.getByRole("button", { name: /ORDER NOW/i })).toBeVisible();
+    await expect(canvasElement.querySelector(".cta-eyebrow")).not.toBeNull();
+  }}>
+  <Button variant="primary">ORDER NOW</Button>
 </Story>

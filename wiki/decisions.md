@@ -327,3 +327,43 @@
   (`border: none; background: transparent`). The `tablist` container uses a `<div>` with
   `role="tablist"`. Panel switching is driven by Svelte `$state` (`activeId`).
 - **Supersedes**: none
+
+## D18: B13 composition refactor — three-pattern Svelte scoping strategy
+- **Date**: 2026-05-16
+- **By**: spec-writer (B13)
+- **Context**: Svelte scoped CSS cannot style elements rendered by a child component.
+  Higher-order components that previously applied flex/grid CSS directly on a `<div>`
+  cannot simply replace that `<div>` with `<Stack>` and then use the parent's `<style>`
+  to style the Stack's root element. Three distinct situations arise: no extra styles
+  needed, static styles only, and hover/pseudo/descendent styles.
+- **Decision**: The B13 spec establishes three patterns in priority order: (1) use the
+  primitive directly (no extra styles, drop the custom class); (2) pass static CSS via
+  the `style=` prop on the primitive (no hover/pseudo-element); (3) keep a named wrapper
+  div for hover/pseudo/descendent rules and put the layout primitive inside it. The
+  implementer must choose the correct pattern per element — no single pattern fits all.
+- **Consequences**: Some elements will have a wrapper div that did not exist before (e.g.
+  `.card-cta` stays as a wrapper for the hover descendent rule; `Spread` goes inside).
+  This adds one level of nesting in those cases but keeps scoped CSS correct and avoids
+  the `:global()` escape hatch, which would leak styles.
+- **Supersedes**: none
+
+## D19: B11 tokens stories — replace 4 existing stories with 3 restructured ones
+- **Date**: 2026-05-16
+- **By**: spec-writer (B11)
+- **Context**: `tokens.stories.svelte` was written in B2 with 4 stories (`Color Tokens`,
+  `Type Scale`, `Labels`, `Semantic Elements`). B11 specifies 3 canonical catalogue
+  stories (`Color Palette`, `Typography Scale`, `Spacing Scale`). Replacing 4 with 3
+  reduces the total story count by 1 (from 156 to 155 if no new stories are added
+  elsewhere), which may conflict with the "156 tests still pass" requirement.
+- **Decision**: The 3 new token stories replace the 4 existing ones. The story count
+  drops by 1 net (before accounting for new stories added in the consistency pass). The
+  "156 tests still pass" requirement means no existing test assertions are broken, not
+  that the story count stays at exactly 156. New stories in Spread, Rule, Card,
+  ProjectCard, and CtaBlock will bring the total well above 156. OQ-3 in the spec
+  documents this interpretation.
+- **Consequences**: The existing `Color Tokens`, `Type Scale`, `Labels`, and `Semantic
+  Elements` stories are removed. Their play function assertions are partially absorbed
+  into the new `Color Palette` and `Typography Scale` stories. The `Semantic Elements`
+  and `Labels` story content is not carried forward (out of scope per the spec's
+  Out of scope section).
+- **Supersedes**: none

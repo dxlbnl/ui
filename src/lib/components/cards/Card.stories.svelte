@@ -54,3 +54,29 @@
   }}>
   <span>View demo</span>
 </Story>
+
+<Story name="Computed Styles"
+  play={async ({ canvasElement }) => {
+    const root = canvasElement.firstElementChild!;
+    const bgRail = resolveTokenColor("--bg-rail");
+    await expect(getComputedStyle(root).backgroundColor).toBe(bgRail);
+    const ruleColor = resolveTokenFgColor("--rule");
+    await expect(getComputedStyle(root).borderTopColor).toBe(ruleColor);
+    await expect(getComputedStyle(root).borderTopWidth).toBe("1px");
+    await expect(getComputedStyle(root).borderTopStyle).toBe("solid");
+    await expect(getComputedStyle(root).overflow).toBe("hidden");
+  }}>
+  <p>Card with computed style assertions.</p>
+</Story>
+
+<Story name="Hover Border"
+  play={async ({ canvasElement }) => {
+    // Card base component has no :hover CSS rule — hover behaviour lives in
+    // composite cards (ProjectCard, ProductCard, NoteCard).
+    // This story verifies the card renders correctly.
+    // On hover: composite cards transition border-color to var(--amber).
+    const root = canvasElement.firstElementChild!;
+    await expect(root).toBeVisible();
+  }}>
+  <p>Hover documentation story — card renders and is visible.</p>
+</Story>

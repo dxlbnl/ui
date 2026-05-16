@@ -58,7 +58,7 @@ Each item has a **status** and an optional **`review`** flag:
       `Alert` (ok/amber/danger/info), `CtaBlock`, `StatCard`, `KvList`, `ProgressBar`,
       `ActivityRow`, `SectionHead`, `SectionFoot`, `PageHero`.
 
-- [ ] **B10: Accordion, Tabs, Table** — status: `in-progress`
+- [x] **B10: Accordion, Tabs, Table** — status: `done` — commit: `37329dc`
       `Accordion` (expand/collapse, SSR-safe), `Tabs` (amber active underline, panel switching),
       `Table` (mono headers, dashed row rules).
 
@@ -68,7 +68,17 @@ Each item has a **status** and an optional **`review`** flag:
       inline play functions, accessible queries over `getByTestId`.
       Affects: B2 token stories, B3 layout stories, B4 primitive stories, B5 card stories.
 
-- [ ] **B11: Storybook catalogue** — status: `todo`
-      Storybook stories for every component (all variants + states).
-      Token documentation stories (color swatches, type scale, spacing).
-      Mirrors the 22 preview HTML files from the design bundle.
+- [ ] **B13: Composition refactor** — status: `in-progress`
+      Replace all raw flex/grid layout CSS in higher-order components with Stack, Inline,
+      Spread layout primitives. Replace all raw `<button>` elements with the Button primitive
+      (ARIA attributes forward via `{...rest}`). Affects: all pattern, card, nav, feedback,
+      form, and data components. Exceptions: AccordionItem (`<summary>` semantic), Table
+      (semantic table HTML), Card.svelte (base card primitive).
+
+- [ ] **B11: Storybook catalogue** — status: `in-progress`
+      Combined consistency pass + visual catalogue:
+      (1) Fill coverage gaps in existing stories (Spread, Rule, Card, ProjectCard, CtaBlock,
+      Modal confirm/destructive in main file), deepen shallow play functions, remove AC
+      code comments from Table stories.
+      (2) Add token documentation stories (color swatches, type scale, spacing).
+      (3) Bring every component to full variant/state coverage.

@@ -34,6 +34,8 @@ Every agent reads this page first, before doing anything else.
 | [specs/B8-modal.md](specs/B8-modal.md) | Spec: B8 Modal — `Modal` dialog: header + body + footer; confirm/destructive variant with danger icon. Backdrop overlay, SSR-safe mount. |
 | [specs/B9-pattern-components.md](specs/B9-pattern-components.md) | Spec: B9 Pattern components — `Alert`, `CtaBlock`, `StatCard`, `KvList`, `ProgressBar`, `ActivityRow`, `SectionHead`, `SectionFoot`, `PageHero`. |
 | [specs/B10-accordion-tabs-table.md](specs/B10-accordion-tabs-table.md) | Spec: B10 Data components — `Accordion` + `AccordionItem` (native `<details>`, SSR-safe), `Tabs` (underline + pill variants, amber active, ARIA tabpanel), `Table` (mono headers, dashed row rules, snippet rows). |
+| [specs/B11-storybook-catalogue.md](specs/B11-storybook-catalogue.md) | Spec: B11 Storybook catalogue — consistency pass on Spread, Rule, Card, ProjectCard, CtaBlock, Modal, Table stories; token documentation stories (Color Palette, Typography Scale, Spacing Scale). |
+| [specs/B13-composition-refactor.md](specs/B13-composition-refactor.md) | Spec: B13 Composition refactor — replace raw flex/grid CSS in all higher-order components with `Stack`, `Inline`, `Spread` layout primitives; replace raw `<button>` elements with `Button`. Exceptions: `AccordionItem`, `Table`, `Card.svelte`. |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
 > and restructure pages as the project grows — just link new pages in the table above.

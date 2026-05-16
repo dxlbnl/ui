@@ -68,3 +68,13 @@
     <Rule aria-hidden="true" data-testid="rule-hidden" />
   </Stack>
 </Story>
+
+<Story name="With Margin Override"
+  play={async ({ canvasElement }) => {
+    const hr = canvasElement.querySelector("hr")!;
+    const style = getComputedStyle(hr);
+    await expect(style.marginTop).toBe("24px");
+    await expect(style.marginBottom).toBe("24px");
+  }}>
+  <Rule style="margin-top: 24px; margin-bottom: 24px" />
+</Story>

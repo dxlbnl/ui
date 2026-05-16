@@ -62,3 +62,27 @@
     await expect(root.tagName).toBe("DIV");
     await expect(root).toBeVisible();
   }} />
+
+<Story name="Many Tags" args={{ href: "#many-tags", slug: "many-tags", title: "Many Tags Project", description: "A project with many technology tags.", tags: ["TypeScript", "Open Source", "SvelteKit", "Rust", "Embedded", "Hardware"] }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("TypeScript")).toBeVisible();
+    await expect(canvas.getByText("Open Source")).toBeVisible();
+    await expect(canvas.getByText("SvelteKit")).toBeVisible();
+    await expect(canvas.getByText("Rust")).toBeVisible();
+    await expect(canvas.getByText("Embedded")).toBeVisible();
+    await expect(canvas.getByText("Hardware")).toBeVisible();
+    await expect(canvasElement.querySelector(".card-tags")).not.toBeNull();
+    await expect(canvasElement.querySelectorAll(".card-tags span").length).toBeGreaterThanOrEqual(6);
+  }} />
+
+<Story name="No Description" args={{ href: "#no-desc", slug: "no-desc", title: "No Description Project", description: "" }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const root = canvasElement.firstElementChild;
+    await expect(root).toBeVisible();
+    await expect(canvas.getByText("No Description Project")).toBeVisible();
+    const desc = canvasElement.querySelector(".card-desc");
+    await expect(desc).not.toBeNull();
+    await expect(desc!.textContent!.trim()).toBe("");
+  }} />

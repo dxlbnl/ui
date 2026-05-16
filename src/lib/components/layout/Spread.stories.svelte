@@ -43,3 +43,27 @@
   </span>
   <TagPill variant="amber">Live</TagPill>
 </Story>
+
+<Story name="With Gap"
+  play={async ({ canvasElement }) => {
+    const root = canvasElement.firstElementChild!;
+    await expect(getComputedStyle(root).display).toBe("flex");
+    await expect(getComputedStyle(root).justifyContent).toBe("space-between");
+    const gap = getComputedStyle(root).gap || getComputedStyle(root).columnGap;
+    await expect(gap).not.toBe("0px");
+  }}>
+  <span class="mono-label">Left Item</span>
+  <span class="mono-label">Center Item</span>
+  <span class="mono-label">Right Item</span>
+</Story>
+
+<Story name="Vertical Stack" args={{ as: "section", "aria-label": "stack-region" }}
+  play={async ({ canvasElement }) => {
+    const root = canvasElement.firstElementChild!;
+    await expect(root.tagName).toBe("SECTION");
+    await expect(getComputedStyle(root).display).toBe("flex");
+    await expect(root.getAttribute("aria-label")).toBe("stack-region");
+  }}>
+  <span>Item A</span>
+  <span>Item B</span>
+</Story>

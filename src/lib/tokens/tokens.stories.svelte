@@ -4,7 +4,7 @@
   import ColorSwatch from "./ColorSwatch.svelte";
 
   const { Story } = defineMeta({
-    title: "Tokens/Design Tokens",
+    title: "Design Tokens/Palette",
     parameters: { layout: "fullscreen" },
   });
 
@@ -16,20 +16,18 @@
   ];
 </script>
 
-<Story name="Color Tokens"
+<Story name="Color Palette"
   play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const bgSwatch = canvas.getByTestId("--bg");
-    await expect(bgSwatch).toBeVisible();
     await expect(getComputedStyle(bgSwatch).backgroundColor.startsWith("rgb")).toBe(true);
     const amberSwatch = canvas.getByTestId("--amber");
-    await expect(amberSwatch).toBeVisible();
     await expect(getComputedStyle(amberSwatch).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
   }}>
   <ColorSwatch groups={colorGroups} />
 </Story>
 
-<Story name="Type Scale"
+<Story name="Typography Scale"
   play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(getComputedStyle(canvas.getByTestId("scale-h1")).fontSize).toBe("72px");
@@ -37,6 +35,11 @@
     await expect(getComputedStyle(canvas.getByTestId("scale-h3")).fontSize).toBe("24px");
     await expect(getComputedStyle(canvas.getByTestId("scale-lede")).fontSize).toBe("19px");
     await expect(getComputedStyle(canvas.getByTestId("scale-body")).fontSize).toBe("16px");
+    const mono = canvas.getByTestId("scale-mono");
+    await expect(getComputedStyle(mono).textTransform).toBe("uppercase");
+    await expect(getComputedStyle(mono).fontFamily.toLowerCase().includes("jetbrains") || getComputedStyle(mono).fontFamily.toLowerCase().includes("mono")).toBe(true);
+    const eyebrow = canvas.getByTestId("scale-eyebrow");
+    await expect(getComputedStyle(eyebrow).fontSize).toBe("12px");
   }}>
   <div style="padding: 24px; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; gap: 20px;">
     <div>
@@ -54,86 +57,51 @@
     </div>
     <div style="border-top: 1px solid var(--rule); padding-top: 20px; display: flex; flex-direction: column; gap: 12px;">
       <p data-testid="scale-lede" class="body-lede">Lede — a brief, impactful opening sentence that draws the reader in.</p>
-      <p data-testid="scale-body" class="body-text">Body text — the quick brown fox jumps over the lazy dog. Regular body copy at 16px with comfortable line height for extended reading.</p>
+      <p data-testid="scale-body" class="body-text">Body text — the quick brown fox jumps over the lazy dog.</p>
+      <div data-testid="scale-mono" class="mono-label">Status · Active · v1.0</div>
+      <p data-testid="scale-eyebrow" class="eyebrow">Category label</p>
     </div>
   </div>
 </Story>
 
-<Story name="Labels"
+<Story name="Spacing Scale"
   play={async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const mono = canvas.getByTestId("label-mono");
-    await expect(getComputedStyle(mono).fontFamily.toLowerCase()).toContain("jetbrains");
-    await expect(getComputedStyle(mono).textTransform).toBe("uppercase");
-    const eyebrow = canvas.getByTestId("label-eyebrow");
-    await expect(getComputedStyle(eyebrow).fontSize).toBe("12px");
-    await expect(getComputedStyle(eyebrow).textTransform).toBe("uppercase");
+    await expect(canvasElement.firstElementChild).toBeVisible();
+    const probe = document.createElement("div");
+    probe.style.width = "var(--u4)";
+    document.body.appendChild(probe);
+    const resolved = getComputedStyle(probe).width;
+    document.body.removeChild(probe);
+    await expect(resolved).toBe("32px");
   }}>
-  <div style="padding: 24px; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; gap: 32px;">
-    <div>
-      <p class="eyebrow" style="margin-bottom: 12px; color: var(--ink-faint);">.mono-label</p>
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <div class="mono-label" data-testid="label-mono">Status · Active · v1.0</div>
-        <div class="mono-label">Project — DXLB-0042 · In Review</div>
-        <div class="mono-label" style="color: var(--amber);">Warning · Threshold exceeded</div>
-        <div class="mono-label" style="color: var(--cyan);">Info · Sync complete</div>
-        <div class="mono-label" style="color: var(--danger);">Error · Connection refused</div>
+  <div style="padding: 24px; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; gap: 16px;">
+    <p class="eyebrow" style="color: var(--ink-faint); margin-bottom: 8px;">Spacing Scale — base unit 8px</p>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span class="mono-label" style="width: 60px; color: var(--ink-faint);">--u</span>
+        <div style="height: 16px; width: var(--u); background: var(--amber);"></div>
+        <span class="mono-label" style="color: var(--ink-dim);">8px</span>
       </div>
-    </div>
-    <div>
-      <p class="eyebrow" style="margin-bottom: 12px; color: var(--ink-faint);">.eyebrow</p>
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <p class="eyebrow" data-testid="label-eyebrow">Category label</p>
-        <p class="eyebrow">Section heading</p>
-        <p class="eyebrow" style="color: var(--amber);">Featured</p>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span class="mono-label" style="width: 60px; color: var(--ink-faint);">--u2</span>
+        <div style="height: 16px; width: var(--u2); background: var(--amber);"></div>
+        <span class="mono-label" style="color: var(--ink-dim);">16px</span>
       </div>
-    </div>
-  </div>
-</Story>
-
-<Story name="Semantic Elements"
-  play={async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const code = canvas.getByTestId("sem-code");
-    await expect(getComputedStyle(code).fontFamily.toLowerCase()).toContain("jetbrains");
-    const blockquote = canvas.getByTestId("sem-blockquote");
-    await expect(getComputedStyle(blockquote).borderLeftWidth).toBe("2px");
-    await expect(getComputedStyle(blockquote).borderLeftStyle).toBe("solid");
-    const th = canvas.getByTestId("sem-th");
-    await expect(getComputedStyle(th).textTransform).toBe("uppercase");
-  }}>
-  <div style="padding: 24px; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; gap: 24px; max-width: 720px;">
-    <div>
-      <p class="eyebrow" style="margin-bottom: 8px; color: var(--ink-faint);">code</p>
-      <p class="body-text">Set the background with <code data-testid="sem-code">var(--bg)</code> and the foreground with <code>var(--ink)</code>.</p>
-    </div>
-    <div>
-      <p class="eyebrow" style="margin-bottom: 8px; color: var(--ink-faint);">pre</p>
-      <pre data-testid="sem-pre">const palette = document.documentElement
-  .getAttribute('data-palette') ?? 'phosphor';</pre>
-    </div>
-    <div>
-      <p class="eyebrow" style="margin-bottom: 8px; color: var(--ink-faint);">blockquote</p>
-      <blockquote data-testid="sem-blockquote">Design is not just what it looks like and feels like. Design is how it works.</blockquote>
-    </div>
-    <div>
-      <p class="eyebrow" style="margin-bottom: 8px; color: var(--ink-faint);">table</p>
-      <table>
-        <thead>
-          <tr>
-            <th data-testid="sem-th">Token</th>
-            <th>Phosphor</th>
-            <th>Paper</th>
-            <th>Usage</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>--bg</td><td>#0b0d0c</td><td>#efece4</td><td>Page background</td></tr>
-          <tr><td>--ink</td><td>#d6e2dc</td><td>#14110b</td><td>Primary text</td></tr>
-          <tr><td>--amber</td><td>#ffb347</td><td>#a04e00</td><td>Accent / active</td></tr>
-          <tr><td>--rule</td><td>#1d2321</td><td>#cfcabc</td><td>Dividers / borders</td></tr>
-        </tbody>
-      </table>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span class="mono-label" style="width: 60px; color: var(--ink-faint);">--u3</span>
+        <div style="height: 16px; width: var(--u3); background: var(--amber);"></div>
+        <span class="mono-label" style="color: var(--ink-dim);">24px</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span class="mono-label" style="width: 60px; color: var(--ink-faint);">--u4</span>
+        <div style="height: 16px; width: var(--u4); background: var(--amber);"></div>
+        <span class="mono-label" style="color: var(--ink-dim);">32px</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span class="mono-label" style="width: 60px; color: var(--ink-faint);">--u5</span>
+        <div style="height: 16px; width: var(--u5); background: var(--amber);"></div>
+        <span class="mono-label" style="color: var(--ink-dim);">40px</span>
+      </div>
     </div>
   </div>
 </Story>

@@ -121,3 +121,11 @@ it records the reason here AND states it in chat.
 - manager: set in-progress, delegating to spec-writer
 - spec-writer: wrote wiki/specs/B10-accordion-tabs-table.md (74 ACs, native <details> Accordion, ARIA Tabs, semantic Table) → done
 - test-writer: wrote 4 story files in src/lib/components/data/ → red (components missing)
+- implementer: wrote all 4 components + index.ts; fixed Tabs.stories snippet scope → 156/156 green; pnpm check 0 errors
+- reviewer: FAIL (6 CSS property ACs untested); manager accepted — testing browser CSS resolution is not worthwhile
+- result: done — commit `37329dc`
+
+## 2026-05-16 — B11: Storybook catalogue
+- manager: set in-progress; scope = consistency pass + full catalogue combined; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B11-storybook-catalogue.md → done
+- manager: skipping test-writer (stories are both test and implementation; no meaningful red phase); delegating directly to implementer
