@@ -28,6 +28,8 @@ Every agent reads this page first, before doing anything else.
 | [stories-guide.md](stories-guide.md) | How to write Svelte CSF stories with play functions for this project. |
 | [specs/B4-primitive-components.md](specs/B4-primitive-components.md) | Spec: B4 Primitive components — Button (5 variants), Led (5 colors + blink), TagPill (3 variants). |
 | [specs/B5-card-components.md](specs/B5-card-components.md) | Spec: B5 Card components — Card (base), ProductCard, ProjectCard, NoteCard. Diagonal hatch placeholder, amber footer/border hover, hex note IDs. |
+| [specs/B6-navigation.md](specs/B6-navigation.md) | Spec: B6 Navigation — Nav component with palette toggle, mobile hamburger, active link state. |
+| [specs/B12-story-rewrite.md](specs/B12-story-rewrite.md) | Spec: B12 Story rewrite — add `component:` to `defineMeta`, props via `args`, shared `storybook-utils.ts`, remove null-checks and AC comments. |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
 > and restructure pages as the project grows — just link new pages in the table above.

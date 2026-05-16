@@ -2,31 +2,13 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, within } from "storybook/test";
   import Button from "./Button.svelte";
+  import { resolveTokenColor } from "$lib/storybook-utils.js";
 
   const { Story } = defineMeta({
     title: "Primitives/Button",
+    component: Button,
     tags: ["autodocs"],
   });
-
-  // Helper: resolve a CSS custom property value from the document root.
-  const resolveToken = (token: string): string => {
-    return getComputedStyle(document.documentElement)
-      .getPropertyValue(token)
-      .trim();
-  };
-
-  // Helper: get RGB string for a CSS custom property by rendering it on a
-  // throw-away element. Returns the computed backgroundColor string.
-  const resolveTokenColor = (token: string): string => {
-    const el = document.createElement("div");
-    el.style.backgroundColor = `var(${token})`;
-    el.style.position = "absolute";
-    el.style.opacity = "0";
-    document.body.appendChild(el);
-    const value = getComputedStyle(el).backgroundColor;
-    document.body.removeChild(el);
-    return value;
-  };
 
   // ── Primary ──────────────────────────────────────────────────────────────
   const playPrimary = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
@@ -113,34 +95,34 @@
   };
 </script>
 
-<Story name="Primary" play={playPrimary}>
-  <Button variant="primary">Order Now</Button>
+<Story name="Primary" args={{ variant: "primary" }} play={playPrimary}>
+  Order Now
 </Story>
 
-<Story name="Primary Disabled" play={playPrimaryDisabled}>
-  <Button variant="primary" disabled>Disabled</Button>
+<Story name="Primary Disabled" args={{ variant: "primary", disabled: true }} play={playPrimaryDisabled}>
+  Disabled
 </Story>
 
-<Story name="CTA" play={playCTA}>
-  <Button variant="cta">View Project →</Button>
+<Story name="CTA" args={{ variant: "cta" }} play={playCTA}>
+  View Project →
 </Story>
 
-<Story name="CTA Disabled" play={playCTADisabled}>
-  <Button variant="cta" disabled>Disabled</Button>
+<Story name="CTA Disabled" args={{ variant: "cta", disabled: true }} play={playCTADisabled}>
+  Disabled
 </Story>
 
-<Story name="Ghost" play={playGhost}>
-  <Button variant="ghost">View All Hardware →</Button>
+<Story name="Ghost" args={{ variant: "ghost" }} play={playGhost}>
+  View All Hardware →
 </Story>
 
-<Story name="Back" play={playBack}>
-  <Button variant="back">← Back to Catalogue</Button>
+<Story name="Back" args={{ variant: "back" }} play={playBack}>
+  ← Back to Catalogue
 </Story>
 
-<Story name="Del" play={playDel}>
-  <Button variant="del">Remove</Button>
+<Story name="Del" args={{ variant: "del" }} play={playDel}>
+  Remove
 </Story>
 
-<Story name="As Link" play={playAsLink}>
-  <Button as="a" href="#demo" variant="ghost">View Demo →</Button>
+<Story name="As Link" args={{ as: "a", href: "#demo", variant: "ghost" }} play={playAsLink}>
+  View Demo →
 </Story>

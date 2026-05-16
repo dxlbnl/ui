@@ -3,30 +3,14 @@
   import { expect, within } from "storybook/test";
   import Rule from "./Rule.svelte";
   import Stack from "./Stack.svelte";
+  import { resolveTokenFgColor } from "$lib/storybook-utils.js";
 
   const { Story } = defineMeta({
     title: "Layout/Rule",
     tags: ["autodocs"],
   });
 
-  // Helper: resolve a CSS custom property to its computed color (foreground channel).
-  // Used to compare border-top-color against token values.
-  const resolveTokenBorderColor = (token: string): string => {
-    const el = document.createElement("div");
-    el.style.color = `var(${token})`;
-    el.style.position = "absolute";
-    el.style.opacity = "0";
-    document.body.appendChild(el);
-    const value = getComputedStyle(el).color;
-    document.body.removeChild(el);
-    return value;
-  };
-
   // ── All Variants ──────────────────────────────────────────────────────────
-  // AC 62, 63, 64, 65, 89:
-  //   first hr  → border-top-style solid, color = var(--rule)
-  //   second hr → border-top-style dashed, color = var(--rule)
-  //   third hr  → border-top-style solid, color = var(--rule-strong) ≠ var(--rule)
   const playAllVariants = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const hrs = canvasElement.querySelectorAll("hr");
     await expect(hrs.length).toBe(3);
@@ -37,7 +21,7 @@
     const solidStyle = getComputedStyle(solid);
     await expect(solidStyle.borderTopStyle).toBe("solid");
     await expect(solidStyle.borderTopWidth).toBe("1px");
-    const ruleColor = resolveTokenBorderColor("--rule");
+    const ruleColor = resolveTokenFgColor("--rule");
     await expect(solidStyle.borderTopColor).toBe(ruleColor);
 
     // Dashed variant
@@ -49,25 +33,22 @@
     // Strong variant — same style but different color from solid
     const strongStyle = getComputedStyle(strong);
     await expect(strongStyle.borderTopStyle).toBe("solid");
-    const ruleStrongColor = resolveTokenBorderColor("--rule-strong");
+    const ruleStrongColor = resolveTokenFgColor("--rule-strong");
     await expect(strongStyle.borderTopColor).toBe(ruleStrongColor);
     await expect(strongStyle.borderTopColor).not.toBe(ruleColor);
   };
 
   // ── In Context ────────────────────────────────────────────────────────────
-  // AC 66, 68, 90: hr is visible, margin = 0px on all sides, aria-hidden forwarded
   const playInContext = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const hr = canvasElement.querySelector("hr") as HTMLElement;
-    await expect(hr).not.toBeNull();
+    const hr = within(canvasElement).getAllByRole("separator")[0];
     await expect(hr).toBeVisible();
     const style = getComputedStyle(hr);
     await expect(style.marginTop).toBe("0px");
     await expect(style.marginBottom).toBe("0px");
     await expect(style.marginLeft).toBe("0px");
     await expect(style.marginRight).toBe("0px");
-    // AC 68: aria-hidden forwarded via ...rest
+    // aria-hidden forwarded via ...rest
     const hiddenHr = canvasElement.querySelector("[data-testid='rule-hidden']") as HTMLElement;
-    await expect(hiddenHr).not.toBeNull();
     await expect(hiddenHr.getAttribute("aria-hidden")).toBe("true");
   };
 </script>

@@ -128,3 +128,57 @@
   approach). Rail layout, split, and card-grid patterns are deferred — they are either
   composable via `Grid` or belong in later items.
 - **Supersedes**: B3-layout-helpers.md (that spec covers a CSS-only approach rejected by D5)
+
+## D7: SSR-safe palette persistence via $effect + browser guard
+- **Date**: 2026-05-16
+- **By**: spec-writer
+- **Context**: The `Nav` component must read and write `localStorage` (key
+  `'dxlb-palette'`) and set `data-palette` on `document.documentElement`. These are
+  browser-only APIs. The component must also SSR without errors.
+- **Decision**: All `localStorage` and `document` access is placed inside:
+  1. `$effect(() => { if (browser) { ... } })` — fires only after hydration in the
+     browser; never runs on the server.
+  2. Event handler functions — which are only invoked by user interaction in the browser.
+  The initial `palette` state is `'phosphor'` (dark default), so the server-rendered
+  HTML always reflects the dark theme. A brief flash on first load for Paper-preference
+  users is a known trade-off; a `<head>` inline script mitigation is a SvelteKit layout
+  concern out of scope for this component.
+  The `browser` import comes from `$app/environment` (available in SvelteKit projects).
+- **Consequences**: No `ReferenceError` during SSR. The component is portable to
+  Storybook (which runs in a browser anyway). The `localStorage` key `'dxlb-palette'`
+  is the shared contract between `Nav` and any future palette-aware components — it must
+  not change without updating all consumers.
+- **Supersedes**: none
+
+## D9: Composition stories split into separate files to preserve `component:` in primary story file
+- **Date**: 2026-05-16
+- **By**: spec-writer (B12)
+- **Context**: The `stories-guide.md` requires `component:` in `defineMeta` so that
+  Storybook auto-generates a prop table. But when a story renders multiple instances of
+  the same component (e.g. "Multiple Pills", "Paired With Text"), adding `component:`
+  causes a double-render: the CSF adaptor wraps the slot with the component AND the
+  slot itself contains another instance.
+- **Decision**: Stories that render multiple component instances are moved to a sibling
+  `<Name>.composition.stories.svelte` file with no `component:` in its `defineMeta`.
+  The primary `<Name>.stories.svelte` retains `component:` and covers all single-instance
+  stories. This applies to `Led` ("Paired With Text") and `TagPill` ("Multiple Pills").
+  `Rule.stories.svelte` omits `component:` entirely because both of its stories are
+  composition-style.
+- **Consequences**: Two new files are created (`Led.composition.stories.svelte`,
+  `TagPill.composition.stories.svelte`). Play function counts and coverage are unchanged.
+  The autodocs prop table is available for every primary story file.
+- **Supersedes**: none
+
+## D8: Nav breadcrumb descoped from B6
+- **Date**: 2026-05-16
+- **By**: spec-writer
+- **Context**: R5 lists "breadcrumb support" and the design bundle shows `// ~ / SECTION`
+  inline in the brand area. Implementing this requires route awareness (SvelteKit
+  `$page` store or a `crumbs` prop array) and non-trivial brand-area markup that differs
+  from the wordmark-only brand.
+- **Decision**: B6 delivers the `Nav` component with the wordmark brand area only (no
+  breadcrumb path). A `crumbs` prop / snippet can be added in a follow-up item (B6b or
+  B11). This keeps B6 focused and avoids coupling `Nav` to SvelteKit internals.
+- **Consequences**: The brand area is simpler. The breadcrumb requirement remains open
+  in `requirements.md` R5. `Nav` does not import from `$app/navigation` or `$app/stores`.
+- **Supersedes**: none
