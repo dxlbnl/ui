@@ -25,6 +25,7 @@ Every agent reads this page first, before doing anything else.
 | [specs/B2-design-tokens.md](specs/B2-design-tokens.md) | Spec: B2 Design tokens + global CSS (Phosphor/Paper palettes, reset, typography classes). |
 | [specs/B3-layout-helpers.md](specs/B3-layout-helpers.md) | Spec: B3 Layout helpers — container variants, grid, split, flex stacks, dividers, padding/surface/border/visibility utilities, and pattern CSS classes. |
 | [stories-guide.md](stories-guide.md) | How to write Svelte CSF stories with play functions for this project. |
+| [specs/B4-primitive-components.md](specs/B4-primitive-components.md) | Spec: B4 Primitive components — Button (5 variants), Led (5 colors + blink), TagPill (3 variants). |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
 > and restructure pages as the project grows — just link new pages in the table above.

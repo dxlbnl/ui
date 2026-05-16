@@ -20,64 +20,68 @@ src/lib/components/primitives/
 ```svelte
 <script module lang="ts">
   import { defineMeta } from '@storybook/addon-svelte-csf';
+  import { expect, within } from 'storybook/test';
   import Button from './Button.svelte';
 
   const { Story } = defineMeta({
     title: 'Primitives/Button',
-    component: Button,
     tags: ['autodocs'],
+    // ⚠️  Do NOT set `component:` here — see warning below
   });
 </script>
 
-<Story name="Primary" args={{ variant: 'primary' }} />
+<Story name="Primary">
+  <Button variant="primary">Order Now</Button>
+</Story>
 
-<Story name="Ghost" args={{ variant: 'ghost' }} />
+<Story name="Ghost">
+  <Button variant="ghost">View All →</Button>
+</Story>
 ```
 
 Always use `lang="ts"` on the `<script module>` block.
 
-## Passing args to components
+## ⚠️  Never set `component:` in `defineMeta`
 
-When `component` is set in `defineMeta`, `args` are forwarded automatically — no
-template needed for simple cases:
+Setting `component: MyComponent` in `defineMeta` causes `@storybook/addon-svelte-csf`
+to wrap every story's children with that component. When the story slot already contains
+`<MyComponent>`, the result is a double-render:
 
-```svelte
-<Story name="Primary" args={{ variant: 'primary', disabled: false }} />
+```html
+<!-- WRONG — causes two <button> elements, getByRole('button') throws -->
+<button class="btn-primary">        <!-- CSF wrapper from component: Button -->
+  <button class="btn-primary">...   <!-- explicit <Button> in the Story slot -->
+  </button>
+</button>
 ```
 
-For custom slot content or composition, use `{@render template(args)}` inside the
-`<Story>` tag. Define the template as a snippet bound to `args`:
+**Always omit `component:`**. Put the component directly in the `<Story>` slot.
+The `tags: ['autodocs']` line is still useful for autodoc generation and can stay.
+
+## Putting markup directly in Story slots
+
+Every story renders its markup directly in the slot — no args system, no template
+snippets needed:
 
 ```svelte
-<script module lang="ts">
-  import { defineMeta } from '@storybook/addon-svelte-csf';
-  import Button from './Button.svelte';
+<Story name="Primary Disabled">
+  <Button variant="primary" disabled>Disabled</Button>
+</Story>
 
-  const { Story } = defineMeta({
-    title: 'Primitives/Button',
-    component: Button,
-    args: { variant: 'primary' },
-  });
-</script>
+<Story name="As Link">
+  <Button as="a" href="/docs" variant="ghost">Read the docs →</Button>
+</Story>
 
-{#snippet template(args)}
-  <Button {...args}>Custom label</Button>
-{/snippet}
-
-<Story name="WithLabel" {template} args={{ variant: 'cta' }} />
-```
-
-The `{template}` shorthand passes the snippet as the `template` prop. Storybook merges
-`meta.args` with story-level `args` before passing them to the snippet.
-
-For stories that need completely different markup per variant, skip the shared template
-and put markup directly in the `<Story>` slot:
-
-```svelte
-<Story name="IconOnly">
-  <Button variant="ghost" aria-label="Close">×</Button>
+<Story name="Pill Row">
+  <div style="display:flex;gap:8px;">
+    <TagPill>Utility</TagPill>
+    <TagPill variant="amber">Latest</TagPill>
+  </div>
 </Story>
 ```
+
+For token / CSS documentation stories with no component at all, this is the same
+pattern — just put the HTML directly in the slot.
 
 ## Play functions (interaction tests)
 
@@ -93,7 +97,6 @@ Do **not** write inline arrow functions in the `play={...}` attribute — TypeSc
 
   const { Story } = defineMeta({
     title: 'Primitives/Button',
-    component: Button,
   });
 
   const playClick = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
@@ -121,33 +124,6 @@ Do **not** write inline arrow functions in the `play={...}` attribute — TypeSc
   };
   ```
 
-## Token / no-component stories
-
-For documentation stories with no single component, omit `component` from `defineMeta`
-and put content directly in the `<Story>` slot:
-
-```svelte
-<script module lang="ts">
-  import { defineMeta } from '@storybook/addon-svelte-csf';
-  import { expect, within } from 'storybook/test';
-  import ColorSwatch from './ColorSwatch.svelte';
-
-  const { Story } = defineMeta({
-    title: 'Tokens/Colors',
-    parameters: { layout: 'fullscreen' },
-  });
-
-  const playPhosphor = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const canvas = within(canvasElement);
-    const swatch = canvas.getByTestId('--bg');
-    await expect(getComputedStyle(swatch).backgroundColor).toBe('rgb(11, 13, 12)');
-  };
-</script>
-
-<Story name="Phosphor" play={playPhosphor}>
-  <ColorSwatch name="--bg" value="#0b0d0c" />
-</Story>
-```
 
 ## A11y
 
