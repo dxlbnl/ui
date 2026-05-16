@@ -46,11 +46,11 @@ Each item has a **status** and an optional **`review`** flag:
       palette toggle (◑/◐), mobile hamburger (≡/×), breadcrumb slot.
       Palette toggle persists preference to localStorage (SSR-safe).
 
-- [ ] **B7: Form components** — status: `in-progress`
+- [x] **B7: Form components** — status: `done` — commit: `49b5b37`
       `Field` (label + input + hint/error), `Input` (base input: focus/error/disabled),
       `InputWrap` (icon prefix, addon, clear button), `Textarea`, `Select`.
 
-- [ ] **B8: Modal** — status: `todo`
+- [ ] **B8: Modal** — status: `in-progress`
       `Modal` dialog: header + body + footer; confirm/destructive variant with
       danger icon. Backdrop overlay, SSR-safe mount.
 

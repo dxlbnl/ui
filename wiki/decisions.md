@@ -206,6 +206,44 @@
   trade-off for B7.
 - **Supersedes**: none
 
+## D12: Modal uses native `<dialog>` element with `showModal()`
+- **Date**: 2026-05-16
+- **By**: spec-writer (B8)
+- **Context**: R7 specifies a backdrop overlay and SSR-safe mount. Options are: (a) a
+  `<div role="dialog" aria-modal="true">` with a sibling backdrop div and manual focus
+  trap, or (b) the native `<dialog>` element opened via `showModal()`.
+- **Decision**: Use the native `<dialog>` element opened via `dialogElement.showModal()`
+  inside `$effect`. This provides: built-in focus trapping, native Escape key handling
+  (`cancel` event), native `::backdrop` pseudo-element, correct `role="dialog"` semantics
+  without manual ARIA, and automatic focus restoration on close. The HTML `open` attribute
+  is NOT used (that attribute creates a non-modal, non-trapped dialog without backdrop);
+  only `showModal()` is used. `close()` is called to close. All `showModal()` / `close()`
+  calls live inside `$effect` (SSR-safe: `$effect` runs only in the browser).
+- **Consequences**: The component requires a `bind:this` reference to the `<dialog>` DOM
+  element. The `::backdrop` pseudo-element cannot inherit CSS custom properties in most
+  browsers (the backdrop colour is hardcoded as `rgba(7, 9, 8, 0.85)`). Storybook renders
+  in a browser context, so `showModal()` is available in all test environments. No custom
+  focus-trap JavaScript is needed.
+- **Supersedes**: none
+
+## D13: Modal CSS uses `.modal[open]` selector for flex layout to avoid overriding UA hidden state
+- **Date**: 2026-05-16
+- **By**: implementer (B8)
+- **Context**: The `<dialog>` element is hidden by the browser UA stylesheet when it does
+  not have the `open` attribute (`display:none`). Applying `display:flex` unconditionally
+  on `.modal` overrides that UA rule, making closed dialogs visible in the DOM (breaking
+  the "Closed" story test and WCAG visibility requirements).
+- **Decision**: The `display:flex` (and `align-items`/`justify-content`) rules that centre
+  `.modal-inner` are placed on `.modal[open]` rather than `.modal`. The `.modal` base rule
+  retains `position:fixed`, `inset:0`, `border:none`, `padding:0`, `background:transparent`,
+  `max-width`, and `max-height`. This lets the UA `display:none` rule remain active for
+  the closed state while still providing correct flex-centering when the dialog is shown.
+- **Consequences**: Correct `toBeVisible()` / `not.toBeVisible()` test results in Storybook.
+  No visual change when the dialog is open. CSS is still fully scoped. The `showModal()`
+  call sets the `open` attribute on the `<dialog>` automatically, so the selector is
+  always in sync with the controlled state.
+- **Supersedes**: none
+
 ## D8: Nav breadcrumb descoped from B6
 - **Date**: 2026-05-16
 - **By**: spec-writer

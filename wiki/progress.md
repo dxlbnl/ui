@@ -97,3 +97,11 @@ it records the reason here AND states it in chat.
 - manager: set in-progress, delegating to spec-writer
 - spec-writer: wrote wiki/specs/B7-form-components.md (75 ACs, 5 components: Input, Textarea, Select, InputWrap, Field) → done
 - test-writer: wrote 6 story files (Input, Textarea, Select, InputWrap, InputWrap.composition, Field) → red (components missing)
+- implementer: wrote all 5 components + index.ts; fixed type errors (Select: removed $app/environment, Omit onchange conflict; Textarea stories: getByRole('textbox'); Select stories: ! assertion; InputWrap.composition: top-level snippet) → 92/92 green
+- reviewer: initial FAIL (9 type errors, pnpm check); fixes applied → re-run PASS
+- result: done — commit `49b5b37`
+
+## 2026-05-16 — B8: Modal
+- manager: set in-progress, delegating to spec-writer
+- spec-writer: wrote wiki/specs/B8-modal.md (56 ACs, native <dialog>, controlled open prop, SSR-safe $effect) → done
+- test-writer: wrote Modal.stories.svelte + Modal.composition.stories.svelte in src/lib/components/feedback/ → red (Modal.svelte missing)

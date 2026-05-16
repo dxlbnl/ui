@@ -31,6 +31,7 @@ Every agent reads this page first, before doing anything else.
 | [specs/B6-navigation.md](specs/B6-navigation.md) | Spec: B6 Navigation — Nav component with palette toggle, mobile hamburger, active link state. |
 | [specs/B12-story-rewrite.md](specs/B12-story-rewrite.md) | Spec: B12 Story rewrite — add `component:` to `defineMeta`, props via `args`, shared `storybook-utils.ts`, remove null-checks and AC comments. |
 | [specs/B7-form-components.md](specs/B7-form-components.md) | Spec: B7 Form components — `Input`, `Textarea`, `Select` (custom), `InputWrap` (icon/addon/clear), `Field` (label + a11y wiring). |
+| [specs/B8-modal.md](specs/B8-modal.md) | Spec: B8 Modal — `Modal` dialog: header + body + footer; confirm/destructive variant with danger icon. Backdrop overlay, SSR-safe mount. |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
 > and restructure pages as the project grows — just link new pages in the table above.

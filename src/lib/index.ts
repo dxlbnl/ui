@@ -4,3 +4,4 @@ export { Stack, Inline, Spread, Grid, Container, Rule } from './components/layou
 export { Card, ProductCard, ProjectCard, NoteCard } from './components/cards/index.js'
 export { Nav } from './components/navigation/index.js'
 export { Input, Textarea, Select, InputWrap, Field } from './components/forms/index.js'
+export { Modal } from './components/feedback/index.js'
