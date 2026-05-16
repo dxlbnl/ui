@@ -85,3 +85,7 @@ it records the reason here AND states it in chat.
 - implementer: created storybook-utils.ts, rewrote 14 story files, created 2 composition files → 62/62 green
 - reviewer: FAIL (Rule.stories cast not removed); manager fixed directly (getByRole('separator')) → re-run PASS
 - result: done — commit `8158dff`
+
+## 2026-05-16 — B6: Navigation
+- manager: set in-progress; spec already written (wiki/specs/B6-navigation.md); user approved via "continue"
+- test-writer: wrote Nav.stories.svelte (5 stories) → red (Nav.svelte missing)
