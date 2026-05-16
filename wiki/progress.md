@@ -113,3 +113,11 @@ it records the reason here AND states it in chat.
 - manager: set in-progress, delegating to spec-writer
 - spec-writer: wrote wiki/specs/B9-pattern-components.md (98 ACs, 9 components) → done
 - test-writer: wrote 10 story files (9 + ActivityRow.composition) in src/lib/components/patterns/ → red (components missing)
+- implementer: wrote all 9 components + index.ts → 135/135 green; pnpm check 0 errors
+- reviewer: PASS — all 98 ACs met
+- result: done — commit `93b5f56`
+
+## 2026-05-16 — B10: Accordion, Tabs, Table
+- manager: set in-progress, delegating to spec-writer
+- spec-writer: wrote wiki/specs/B10-accordion-tabs-table.md (74 ACs, native <details> Accordion, ARIA Tabs, semantic Table) → done
+- test-writer: wrote 4 story files in src/lib/components/data/ → red (components missing)

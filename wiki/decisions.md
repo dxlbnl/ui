@@ -290,3 +290,40 @@
 - **Consequences**: The brand area is simpler. The breadcrumb requirement remains open
   in `requirements.md` R5. `Nav` does not import from `$app/navigation` or `$app/stores`.
 - **Supersedes**: none
+
+## D16: Accordion uses native `<details>`/`<summary>` — no JS expand/collapse
+- **Date**: 2026-05-16
+- **By**: spec-writer (B10)
+- **Context**: R10 specifies "SSR-safe (no layout shift on hydration)". The reference
+  HTML (`17-components-accordion.html`) uses a JavaScript click handler toggling `.open`
+  and `.hidden` classes. Two implementation options were considered: (a) the JS class-
+  toggle approach wrapped in a Svelte `$state`/`$effect`, or (b) native `<details>`/
+  `<summary>` elements which expand/collapse without any JavaScript.
+- **Decision**: Use native `<details>`/`<summary>`. The `<details>` element's `open`
+  HTML attribute controls expand/collapse state. Initial open state is set via the
+  `open` prop, which hydrates without JS. No `$state` or `$effect` is needed in
+  `AccordionItem`. The CSS icon rotation uses `details[open] .acc-icon` selectors
+  (no JS). This is the simplest SSR-safe approach: the component renders correctly on
+  the server and requires zero JavaScript for the fundamental open/close behaviour.
+- **Consequences**: Svelte does not need to manage open/close state in `AccordionItem`.
+  After hydration the browser owns the open state (native DOM behaviour). Consumers who
+  need full programmatic control can pass a reactive `open` prop from a parent `$state`.
+  CSS `interpolate-size` animations for smooth height transitions are not possible with
+  pure `<details>` in all current browsers — animated expand/collapse is explicitly out
+  of scope for B10.
+- **Supersedes**: none
+
+## D17: Tabs uses `<button role="tab">` — not `<div>` click targets
+- **Date**: 2026-05-16
+- **By**: spec-writer (B10)
+- **Context**: The reference HTML (`20-components-tabs.html`) uses `<div class="tab">`
+  elements as click targets. Divs require manual `tabindex`, `role="tab"`, and keyboard
+  handlers to be accessible.
+- **Decision**: Each tab is a `<button>` element with `role="tab"`. This gives native
+  keyboard focus, Enter/Space activation, and correct AT semantics at zero extra cost.
+  The ARIA tab-panel pattern (arrow-key navigation) is a known gap (OQ-2 in the B10
+  spec) and is non-blocking for B10.
+- **Consequences**: Tab buttons can be styled to look like the reference divs via CSS
+  (`border: none; background: transparent`). The `tablist` container uses a `<div>` with
+  `role="tablist"`. Panel switching is driven by Svelte `$state` (`activeId`).
+- **Supersedes**: none

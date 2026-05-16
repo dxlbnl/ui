@@ -33,6 +33,7 @@ Every agent reads this page first, before doing anything else.
 | [specs/B7-form-components.md](specs/B7-form-components.md) | Spec: B7 Form components — `Input`, `Textarea`, `Select` (custom), `InputWrap` (icon/addon/clear), `Field` (label + a11y wiring). |
 | [specs/B8-modal.md](specs/B8-modal.md) | Spec: B8 Modal — `Modal` dialog: header + body + footer; confirm/destructive variant with danger icon. Backdrop overlay, SSR-safe mount. |
 | [specs/B9-pattern-components.md](specs/B9-pattern-components.md) | Spec: B9 Pattern components — `Alert`, `CtaBlock`, `StatCard`, `KvList`, `ProgressBar`, `ActivityRow`, `SectionHead`, `SectionFoot`, `PageHero`. |
+| [specs/B10-accordion-tabs-table.md](specs/B10-accordion-tabs-table.md) | Spec: B10 Data components — `Accordion` + `AccordionItem` (native `<details>`, SSR-safe), `Tabs` (underline + pill variants, amber active, ARIA tabpanel), `Table` (mono headers, dashed row rules, snippet rows). |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
 > and restructure pages as the project grows — just link new pages in the table above.

@@ -54,11 +54,11 @@ Each item has a **status** and an optional **`review`** flag:
       `Modal` dialog: header + body + footer; confirm/destructive variant with
       danger icon. Backdrop overlay, SSR-safe mount.
 
-- [ ] **B9: Pattern components** — status: `in-progress`
+- [x] **B9: Pattern components** — status: `done` — commit: `93b5f56`
       `Alert` (ok/amber/danger/info), `CtaBlock`, `StatCard`, `KvList`, `ProgressBar`,
       `ActivityRow`, `SectionHead`, `SectionFoot`, `PageHero`.
 
-- [ ] **B10: Accordion, Tabs, Table** — status: `todo`
+- [ ] **B10: Accordion, Tabs, Table** — status: `in-progress`
       `Accordion` (expand/collapse, SSR-safe), `Tabs` (amber active underline, panel switching),
       `Table` (mono headers, dashed row rules).
 
