@@ -1,3 +1,5 @@
 export { default as Button } from './Button.svelte'
 export { default as Led } from './Led.svelte'
 export { default as TagPill } from './TagPill.svelte'
+export { default as Text } from './Text.svelte'
+export { default as Heading } from './Heading.svelte'

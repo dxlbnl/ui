@@ -68,7 +68,7 @@ Each item has a **status** and an optional **`review`** flag:
       inline play functions, accessible queries over `getByTestId`.
       Affects: B2 token stories, B3 layout stories, B4 primitive stories, B5 card stories.
 
-- [ ] **B13: Composition refactor** — status: `in-progress`
+- [x] **B13: Composition refactor** — status: `done` — commit: `038ed7e`
       Replace all raw flex/grid layout CSS in higher-order components with Stack, Inline,
       Spread layout primitives. Replace all raw `<button>` elements with the Button primitive
       (ARIA attributes forward via `{...rest}`). Affects: all pattern, card, nav, feedback,
@@ -82,3 +82,74 @@ Each item has a **status** and an optional **`review`** flag:
       code comments from Table stories.
       (2) Add token documentation stories (color swatches, type scale, spacing).
       (3) Bring every component to full variant/state coverage.
+
+- [x] **B14: Typography primitives** — status: `done`
+      `Text` (variant: body/lede/mono/eyebrow, color prop maps to design tokens, polymorphic
+      `as` prop) and `Heading` (level: 1–6, variant: display/hero/h1/h2/h3, same color prop).
+      Zero-CSS components: wrap existing global typography classes from `typography.css`.
+      Enables higher-order components to eliminate their scoped typography CSS entirely.
+
+- [ ] **B15: Keyboard navigation** — status: `todo`
+      Full ARIA keyboard patterns for the two interactive widgets that currently lack them.
+      `Select`: arrow keys cycle options, Home/End jump to first/last, Escape closes, Enter
+      confirms — completing the ARIA listbox pattern (WAI-ARIA 1.2 § Listbox). `Tabs`:
+      left/right arrow moves focus between tabs and activates the target panel, Home/End
+      jump to first/last — completing the WAI-ARIA tabpanel pattern. Both are WCAG 2.1 AA
+      requirements for publicly distributed components.
+
+- [ ] **B16: Form primitives** — status: `todo`
+      Boolean and selection controls missing from the current form layer.
+      `Checkbox` (checked/indeterminate/disabled, linked label, design-token accent), `Radio`
+      + `RadioGroup` (exclusive selection, keyboard arrow-key nav within group), `Switch`
+      (toggle boolean, amber when on, SSR-safe). `Field` enhancement: auto-inject
+      `aria-invalid` and `aria-describedby` from its `error` prop so consumers get correct
+      ARIA wiring without manual plumbing.
+
+- [ ] **B17: Navigation enhancements** — status: `todo`
+      Two deferred navigation features. `Breadcrumb`: a `<nav aria-label="breadcrumb">`
+      component that renders a list of `{ label, href }` crumbs with `aria-current="page"`
+      on the last item; designed for the slot already present in `Nav`. `AnimatedAccordion`:
+      smooth height transition on `AccordionItem` open/close using CSS `interpolate-size:
+      allow-keywords` with a `@starting-style` fallback; gated behind `@supports` so the
+      native `<details>` fallback remains instant on unsupported browsers.
+
+- [ ] **B18: Toast notifications** — status: `todo`
+      A transient notification system: `Toast` component (icon + message, ok/amber/danger
+      variants, auto-dismiss after N seconds, manual close button) rendered in a
+      `ToastRegion` portal anchored to a corner of the viewport. SSR-safe (region mounts
+      client-side via `$effect`). ARIA: `role="status"` for ok/amber, `role="alert"` for
+      danger. Distinct from `Alert` (which is static and inline). Stack of up to N toasts;
+      oldest dismissed first when limit is exceeded.
+
+- [ ] **B20: Prose component** — status: `todo`
+      A `Prose` wrapper component that applies design-system typography to raw HTML
+      rendered by mdsvex (or any markdown processor). Targets dynamically inserted child
+      elements via `.prose :global(element)` — Svelte's scoped CSS cannot reach markdown
+      children otherwise. Polymorphic `as` prop (default `article`). All styles use design
+      tokens so both Phosphor and Paper palettes work automatically.
+      Elements styled: `h1`–`h4` (typography classes from tokens), `p` (body-text spacing),
+      `a` (ink-faint, amber hover, no underline by default), `ul`/`ol`/`li` (list-style,
+      indent), `code` (inline mono, bg-rail pill), `pre`/`pre code` (block mono, bg-sunken,
+      border: rule, padding — reusing shiki token vars for syntax highlights), `blockquote`
+      (amber left border, ink-dim text, italic), `table`/`th`/`td` (mirrors Table component
+      styles: mono headers, dashed row rules), `img` (max-width 100%, border: rule),
+      `hr` (matches Rule component). Max prose width ~72ch. Gap between block elements
+      via adjacent-sibling selectors or `> * + *` spacing.
+
+- [ ] **B21: AI-readable docs** — status: `todo`
+      Markdown documentation in `docs/` — machine-parseable by AI assistants and renderable
+      by mdsvex on a future documentation site. Storybook covers interactive/visual reference;
+      `docs/` covers prop tables, usage examples, and design rationale in plain text.
+      Files: `docs/index.md` (overview, install, palette setup), `docs/design-tokens.md`
+      (full token reference with values for both palettes), `docs/layout.md`,
+      `docs/primitives.md`, `docs/cards.md`, `docs/navigation.md`, `docs/forms.md`,
+      `docs/feedback.md`, `docs/patterns.md`, `docs/data.md`. Each file: component purpose,
+      props table (name / type / default / description), minimal usage example, notable
+      behaviour. No generated content — hand-written, accurate to the source.
+
+- [ ] **B19: Package documentation** — status: `todo`
+      Minimum viable documentation for the library. `README.md`: installation (`pnpm add
+      dxlb-design`), peer deps, global CSS import, usage example, Storybook link. `CHANGELOG.md`:
+      starting from v0.1.0, covering B1–B14. JSDoc `@param` / `@default` annotations on
+      exported component props (feeds Storybook autodocs). Version bump from 0.0.1 → 0.1.0
+      in `package.json` once B13 is confirmed stable.

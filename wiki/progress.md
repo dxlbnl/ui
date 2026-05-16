@@ -19,6 +19,14 @@ it records the reason here AND states it in chat.
 
 <!-- entries start here -->
 
+## 2026-05-16 — B13: Composition refactor
+- manager: spec written, test-writer skipped (no new failing tests — existing 164 stories are baseline), implementer replaced raw flex/grid/button in all higher-order components
+- reviewer: PASS — Stack/Inline/Spread used throughout; exceptions documented (AccordionItem, Table, Card.svelte)
+- result: done — commit `038ed7e`
+
+## 2026-05-16 — B14: Typography primitives
+- manager: set in-progress; spec already written (wiki/specs/B14-typography-primitives.md); delegating to test-writer
+
 ## 2026-05-15 — Bootstrap
 - bootstrap: interviewed user, populated wiki (vision, requirements, architecture, backlog, decisions) → done
 - bootstrap: scaffolded SvelteKit + Storybook 9 + Vitest 4, token CSS, static assets → done
