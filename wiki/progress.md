@@ -89,3 +89,11 @@ it records the reason here AND states it in chat.
 ## 2026-05-16 — B6: Navigation
 - manager: set in-progress; spec already written (wiki/specs/B6-navigation.md); user approved via "continue"
 - test-writer: wrote Nav.stories.svelte (5 stories) → red (Nav.svelte missing)
+- implementer: wrote Nav.svelte, index.ts; fixed aria-hidden (undefined not false when open), added setTimeout tick for Mobile Menu test → 68/68 green
+- reviewer: initial FAIL (aria-hidden="false" vs null, Mobile Menu timing); manager fixed Nav.svelte + story + spec → re-run PASS
+- result: done — commit `1340c58`
+
+## 2026-05-16 — B7: Form components
+- manager: set in-progress, delegating to spec-writer
+- spec-writer: wrote wiki/specs/B7-form-components.md (75 ACs, 5 components: Input, Textarea, Select, InputWrap, Field) → done
+- test-writer: wrote 6 story files (Input, Textarea, Select, InputWrap, InputWrap.composition, Field) → red (components missing)

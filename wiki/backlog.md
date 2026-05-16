@@ -41,12 +41,12 @@ Each item has a **status** and an optional **`review`** flag:
       `Card` (base), `ProductCard`, `ProjectCard`, `NoteCard`.
       Diagonal hatch placeholder, amber footer hover, hex note IDs, amber card hover.
 
-- [ ] **B6: Navigation** — status: `in-progress` — flags: `review`
+- [x] **B6: Navigation** — status: `done` — commit: `1340c58`
       `Nav` component: fixed top bar, mono ALL-CAPS links, active amber underline,
       palette toggle (◑/◐), mobile hamburger (≡/×), breadcrumb slot.
       Palette toggle persists preference to localStorage (SSR-safe).
 
-- [ ] **B7: Form components** — status: `todo`
+- [ ] **B7: Form components** — status: `in-progress`
       `Field` (label + input + hint/error), `Input` (base input: focus/error/disabled),
       `InputWrap` (icon prefix, addon, clear button), `Textarea`, `Select`.
 

@@ -169,6 +169,43 @@
   The autodocs prop table is available for every primary story file.
 - **Supersedes**: none
 
+## D10: Select is fully custom; native `<select>` not wrapped
+- **Date**: 2026-05-16
+- **By**: spec-writer (B7)
+- **Context**: The design system reference (`15-components-forms.html`) uses a bespoke
+  dropdown (`.dxl-select` / `.dxl-trigger` / `.dxl-panel`) rather than a styled native
+  `<select>`. The native element cannot be fully styled cross-browser (arrow icon,
+  option colours).
+- **Decision**: `Select` in B7 is a fully custom component built with a `<button>`
+  trigger and a `<ul role="listbox">` panel, replacing the native element entirely.
+  The component is controlled: the consumer manages selected value state and receives
+  changes via an `onchange` callback. Full ARIA Listbox keyboard navigation (arrow keys,
+  Home/End) is deferred to a later item; B7 delivers open/close via click and Escape,
+  plus the required ARIA attributes (`aria-haspopup`, `aria-expanded`, `role="listbox"`,
+  `role="option"`, `aria-selected`).
+- **Consequences**: `label[for]` does not programmatically associate with the trigger
+  `<button>` (documented in OQ-2 of B7 spec). The a11y addon may flag incomplete
+  keyboard navigation (OQ-3). Both are known and non-blocking for B7.
+- **Supersedes**: none
+
+## D11: Field does not inject ARIA attributes into child controls via context
+- **Date**: 2026-05-16
+- **By**: spec-writer (B7)
+- **Context**: `Field` wires label to control via `label[for]` + `input[id]`. It also
+  needs `aria-invalid` and `aria-describedby` on the wrapped control. Svelte does not
+  support slot prop injection that reaches into a child component's root element. Options
+  are: (a) Svelte context (child reads context and applies attrs itself), (b) consumer
+  responsibility, (c) Field renders the control directly (coupling).
+- **Decision**: In B7, ARIA attribute application is the consumer's responsibility.
+  The convention is documented in the Field spec: the consumer passes `id={inputId}`,
+  `aria-describedby="{inputId}-hint"`, and `aria-invalid={!!error}` directly on the
+  wrapped control. This keeps `Field` as a pure layout/label wrapper with no coupling
+  to the control type. A future item may introduce a Svelte context approach for ergonomics.
+- **Consequences**: More verbose usage at the call site. Storybook stories must manually
+  set `aria-describedby` and `aria-invalid` on the inner control. This is a known
+  trade-off for B7.
+- **Supersedes**: none
+
 ## D8: Nav breadcrumb descoped from B6
 - **Date**: 2026-05-16
 - **By**: spec-writer
