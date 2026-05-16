@@ -1,20 +1,22 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
+  import type { ClassValue } from 'svelte/elements'
   import type { Snippet } from 'svelte'
 
   type GapSize = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
-  interface Props extends HTMLAttributes<HTMLDivElement> {
+  interface Props {
     as?: string
     gap?: GapSize
     children?: Snippet
+    class?: ClassValue | null
+    style?: string | null
     [key: string]: unknown
   }
 
-  let { as = 'div', gap = 'sm', children, ...rest }: Props = $props()
+  let { as = 'div', gap = 'sm', children, class: klass = '', ...rest }: Props = $props()
 </script>
 
-<svelte:element this={as} class="inline" data-gap={gap} {...rest}>
+<svelte:element this={as} class={['inline', klass]} data-gap={gap} {...rest}>
   {@render children?.()}
 </svelte:element>
 

@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import Stack from '../layout/Stack.svelte'
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
     label: string
@@ -25,7 +26,7 @@
   let hintText = $derived(error ?? hint)
 </script>
 
-<div class="field" {...rest}>
+<Stack gap="xs" style="min-width: 0;" {...rest}>
   <label for={inputId} class="field-label">{label}</label>
   {@render children()}
   {#if hintText}
@@ -33,16 +34,9 @@
       {hintText}
     </span>
   {/if}
-</div>
+</Stack>
 
 <style>
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-width: 0;
-  }
-
   .field-label {
     font-family: var(--mono);
     font-size: 10px;

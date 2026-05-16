@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import Stack from '../layout/Stack.svelte'
 
   interface Props extends HTMLAttributes<HTMLElement> {
     as?: string
@@ -22,7 +23,7 @@
 </script>
 
 <svelte:element this={as} class="cta-block" {...rest}>
-  <div class="cta-body">
+  <Stack gap="xs">
     {#if eyebrow}
       <span class="cta-eyebrow">{eyebrow}</span>
     {/if}
@@ -30,7 +31,7 @@
     {#if subtext}
       <span class="cta-desc">{subtext}</span>
     {/if}
-  </div>
+  </Stack>
   {#if children}
     <div class="cta-action">
       {@render children()}
@@ -54,12 +55,6 @@
 
   .cta-block:hover {
     background: color-mix(in srgb, var(--amber) 6%, transparent);
-  }
-
-  .cta-body {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
   }
 
   .cta-eyebrow {

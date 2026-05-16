@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import Inline from '../layout/Inline.svelte'
 
   interface Props extends HTMLAttributes<HTMLElement> {
     eyebrow?: string
@@ -23,12 +24,12 @@
   {#if eyebrow}
     <span class="section-num">{eyebrow}</span>
   {/if}
-  <div class="section-row">
+  <Inline style="align-items: baseline; gap: 16px;">
     <h2 class="section-title">{heading}</h2>
     {#if sublabel}
       <span class="section-sub">{sublabel}</span>
     {/if}
-  </div>
+  </Inline>
   {#if children}
     {@render children()}
   {/if}
@@ -48,12 +49,6 @@
     font-size: var(--t-mono);
     color: var(--ink-faint);
     letter-spacing: 0.12em;
-  }
-
-  .section-row {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
   }
 
   .section-title {

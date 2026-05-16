@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { HTMLAnchorAttributes } from 'svelte/elements'
+  import Stack from '../layout/Stack.svelte'
+  import Spread from '../layout/Spread.svelte'
 
   interface Props extends HTMLAnchorAttributes {
     as?: string
@@ -24,10 +26,12 @@
   const hexId = $derived('0x' + idx.toString(16).padStart(2, '0').toUpperCase())
 </script>
 
-<svelte:element this={as} class="note-card" {...rest}>
+<Stack {as} gap="xs" class="note-card" style="border: 1px solid var(--rule); background: var(--bg-rail); padding: 20px; text-decoration: none; color: inherit; cursor: pointer; transition: border-color var(--transition);" {...rest}>
   <div class="note-head">
-    <span class="note-hex">{hexId}</span>
-    <span class="note-kind">{kind.toUpperCase()}</span>
+    <Spread>
+      <span class="note-hex">{hexId}</span>
+      <span class="note-kind">{kind.toUpperCase()}</span>
+    </Spread>
   </div>
   <h3 class="note-title">{title}</h3>
   {#if lede}
@@ -35,33 +39,20 @@
   {/if}
   {#if date}
     <div class="note-foot">
-      <span class="note-date">{date}</span>
-      <span class="note-read" aria-hidden="true">READ →</span>
+      <Spread>
+        <span class="note-date">{date}</span>
+        <span class="note-read" aria-hidden="true">READ →</span>
+      </Spread>
     </div>
   {/if}
-</svelte:element>
+</Stack>
 
 <style>
-  .note-card {
-    border: 1px solid var(--rule);
-    background: var(--bg-rail);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 20px;
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-    transition: border-color var(--transition);
-  }
-
-  .note-card:hover {
-    border-color: var(--amber);
+  :global(.note-card:hover) {
+    border-color: var(--amber) !important;
   }
 
   .note-head {
-    display: flex;
-    justify-content: space-between;
     font-family: var(--mono);
     font-size: var(--t-micro);
     letter-spacing: 0.1em;
@@ -92,9 +83,6 @@
   }
 
   .note-foot {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
     font-family: var(--mono);
     font-size: var(--t-micro);
     letter-spacing: 0.08em;

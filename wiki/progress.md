@@ -129,3 +129,6 @@ it records the reason here AND states it in chat.
 - manager: set in-progress; scope = consistency pass + full catalogue combined; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B11-storybook-catalogue.md → done
 - manager: skipping test-writer (stories are both test and implementation; no meaningful red phase); delegating directly to implementer
+- implementer: added 9+ stories across Spread/Rule/Card/ProjectCard/CtaBlock/Modal/Table; created token docs (Color Palette, Typography Scale, Spacing Scale); removed 4 old token stories → 164/164 green
+- reviewer: FAIL (AC-29: old token stories not removed); manager fixed directly → re-run PASS
+- result: done — commit `8b47cb2`

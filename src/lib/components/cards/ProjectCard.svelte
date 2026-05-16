@@ -1,6 +1,9 @@
 <script lang="ts">
   import type { HTMLAnchorAttributes } from 'svelte/elements'
   import TagPill from '../primitives/TagPill.svelte'
+  import Stack from '../layout/Stack.svelte'
+  import Inline from '../layout/Inline.svelte'
+  import Spread from '../layout/Spread.svelte'
 
   interface Props extends HTMLAnchorAttributes {
     as?: string
@@ -29,19 +32,21 @@
   <div class="card-img">
     <span class="card-img-label">{slug.toUpperCase()} · PROJECT</span>
   </div>
-  <div class="card-body">
+  <Stack gap="xs" style="padding: 12px 14px 10px; flex: 1;">
     {#if tags.length > 0}
-      <div class="card-tags">
+      <Inline gap="xs" class="card-tags">
         {#each tags as tag}
           <TagPill>{tag}</TagPill>
         {/each}
-      </div>
+      </Inline>
     {/if}
     <h3 class="card-title">{title}</h3>
     <p class="card-desc">{description}</p>
-  </div>
+  </Stack>
   <div class="card-cta">
-    <span>{resolvedCtaLabel} →</span>
+    <Spread>
+      <span>{resolvedCtaLabel} →</span>
+    </Spread>
   </div>
 </svelte:element>
 
@@ -78,20 +83,6 @@
     text-transform: uppercase;
   }
 
-  .card-body {
-    padding: 12px 14px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    flex: 1;
-  }
-
-  .card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-
   .card-title {
     font-weight: 500;
     font-size: var(--t-lede);
@@ -110,8 +101,6 @@
   .card-cta {
     border-top: 1px solid var(--rule);
     padding: 10px 14px;
-    display: flex;
-    justify-content: space-between;
     font-family: var(--mono);
     font-size: var(--t-mono);
     letter-spacing: 0.08em;

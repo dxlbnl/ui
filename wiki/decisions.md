@@ -347,6 +347,28 @@
   the `:global()` escape hatch, which would leak styles.
 - **Supersedes**: none
 
+## D20: Layout primitives and Button accept `class` prop via ClassValue merging
+- **Date**: 2026-05-16
+- **By**: implementer (B13)
+- **Context**: `Stack`, `Inline`, `Spread`, and `Button` originally rendered
+  `class="stack"` (etc.) as a literal string attribute. When a consumer passed
+  `class="foo"` via `...rest`, Svelte's attribute merging was overridden, so the
+  primitive class was lost. This broke B13 AC tests and prevented `<Stack class="accordion">`
+  from producing an element with both classes.
+- **Decision**: All four primitives extract `class` explicitly from `$props()` and
+  merge it with the component's own class using Svelte's array ClassValue syntax:
+  `class={['stack', klass]}`. The Props interface declares `class?: ClassValue | null`
+  (matching Svelte's own `HTMLAttributes.class` type). The `HTMLAttributes<HTMLDivElement>`
+  base is removed from layout primitive interfaces to avoid TypeScript event-handler
+  conflicts when callers pass anchor (`as="a"`) or other element attributes via `...rest`.
+  The `[key: string]: unknown` index signature remains for full `...rest` forwarding.
+- **Consequences**: Consumers can pass `class="my-class"` to any layout primitive or
+  Button and the element will have both the primitive class and the consumer class.
+  TypeScript no longer complains about anchor event types being passed to Stack/Inline/Spread.
+  The tradeoff is that the Props interface is slightly less strict (no HTMLAttributes base),
+  but `[key: string]: unknown` already provided the same effective permissiveness.
+- **Supersedes**: none
+
 ## D19: B11 tokens stories — replace 4 existing stories with 3 restructured ones
 - **Date**: 2026-05-16
 - **By**: spec-writer (B11)

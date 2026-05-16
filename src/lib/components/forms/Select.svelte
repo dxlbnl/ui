@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
+  import Button from '../primitives/Button.svelte'
 
   interface SelectOption {
     value: string
@@ -69,11 +70,10 @@
   role="presentation"
   {...rest}
 >
-  <button
+  <Button
+    variant="ghost"
     type="button"
-    class="select-trigger"
-    class:open
-    class:err={error}
+    class={[open && 'open', error && 'err'].filter(Boolean).join(' ')}
     aria-haspopup="listbox"
     aria-expanded={open}
     aria-disabled={disabled}
@@ -82,7 +82,7 @@
   >
     <span class="select-value">{displayLabel}</span>
     <span class="select-chevron" aria-hidden="true">›</span>
-  </button>
+  </Button>
   {#if open}
     <ul
       class="select-panel"
@@ -114,7 +114,7 @@
     user-select: none;
   }
 
-  .select-trigger {
+  :global(.select .btn) {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -132,21 +132,21 @@
     border-radius: 0;
   }
 
-  .select-trigger:hover {
+  :global(.select .btn:hover) {
     border-color: var(--amber);
   }
 
-  .select-trigger.open {
+  :global(.select .btn.open) {
     border-color: var(--amber);
     border-left-width: 3px;
     padding-left: 8px;
   }
 
-  .select-trigger.err {
+  :global(.select .btn.err) {
     border-color: var(--danger);
   }
 
-  .select-trigger:disabled {
+  :global(.select .btn:disabled) {
     opacity: 0.4;
     cursor: not-allowed;
   }
@@ -158,7 +158,7 @@
     transition: transform var(--transition);
   }
 
-  .select-trigger.open .select-chevron {
+  :global(.select .btn.open) .select-chevron {
     transform: rotate(90deg);
   }
 

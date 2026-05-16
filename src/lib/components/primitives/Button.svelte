@@ -12,10 +12,10 @@
     [key: string]: unknown
   }
 
-  let { as = 'button', variant = 'primary', children, ...rest }: Props = $props()
+  let { as = 'button', variant = 'primary', children, class: klass = '', ...rest }: Props = $props()
 </script>
 
-<svelte:element this={as} class="btn btn-{variant}" {...rest}>
+<svelte:element this={as} class={['btn', `btn-${variant}`, klass]} {...rest}>
   {@render children?.()}
 </svelte:element>
 

@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import Stack from '../layout/Stack.svelte'
+  import Button from '../primitives/Button.svelte'
 
   type TabsVariant = 'underline' | 'pill'
 
@@ -21,12 +23,12 @@
   let activeId = $state(active)
 </script>
 
-<div class="tabs tabs--{variant}" {...rest}>
+<Stack class="tabs tabs--{variant}" {...rest}>
   <div class="tab-bar" role="tablist">
     {#each tabs as tab}
-      <button
-        class="tab"
-        class:tab--active={activeId === tab.id}
+      <Button
+        variant="ghost"
+        class={activeId === tab.id ? 'tab tab--active' : 'tab'}
         role="tab"
         id="tab-{tab.id}"
         aria-selected={activeId === tab.id}
@@ -34,7 +36,7 @@
         onclick={() => (activeId = tab.id)}
       >
         {tab.label}
-      </button>
+      </Button>
     {/each}
   </div>
 
@@ -49,21 +51,17 @@
       {@render tab.panel()}
     </div>
   {/each}
-</div>
+</Stack>
 
 <style>
-  .tabs {
-    display: flex;
-    flex-direction: column;
-  }
-
   .tab-bar {
     display: flex;
     border-bottom: 1px solid var(--rule);
     gap: 0;
   }
 
-  .tab {
+  /* Use .btn.tab (two classes) to beat .btn-ghost (one class) in specificity */
+  :global(.btn.tab) {
     font-family: var(--mono);
     font-size: 12px;
     letter-spacing: 0.08em;
@@ -81,11 +79,11 @@
     white-space: nowrap;
   }
 
-  .tab:hover {
+  :global(.btn.tab:hover) {
     color: var(--ink);
   }
 
-  .tab--active {
+  :global(.btn.tab--active) {
     color: var(--ink);
     border-bottom-color: var(--amber);
   }
@@ -101,7 +99,7 @@
   }
 
   /* Pill variant */
-  .tabs--pill .tab-bar {
+  :global(.tabs--pill) .tab-bar {
     gap: 4px;
     padding: 4px;
     background: var(--bg-rail);
@@ -110,14 +108,14 @@
     border-bottom: 1px solid var(--rule);
   }
 
-  .tabs--pill .tab {
+  :global(.tabs--pill .btn.tab) {
     font-size: 11px;
     padding: 5px 14px;
     border-bottom: none;
     margin-bottom: 0;
   }
 
-  .tabs--pill .tab--active {
+  :global(.tabs--pill .btn.tab--active) {
     background: var(--amber);
     color: var(--bg);
     border-bottom-color: transparent;

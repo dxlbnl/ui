@@ -1,17 +1,19 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
+  import type { ClassValue } from 'svelte/elements'
   import type { Snippet } from 'svelte'
 
-  interface Props extends HTMLAttributes<HTMLDivElement> {
+  interface Props {
     as?: string
     children?: Snippet
+    class?: ClassValue | null
+    style?: string | null
     [key: string]: unknown
   }
 
-  let { as = 'div', children, ...rest }: Props = $props()
+  let { as = 'div', children, class: klass = '', ...rest }: Props = $props()
 </script>
 
-<svelte:element this={as} class="spread" {...rest}>
+<svelte:element this={as} class={['spread', klass]} {...rest}>
   {@render children?.()}
 </svelte:element>
 

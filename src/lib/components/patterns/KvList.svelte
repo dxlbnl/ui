@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
+  import Stack from '../layout/Stack.svelte'
+  import Spread from '../layout/Spread.svelte'
 
   type KvColor = 'default' | 'ok' | 'amber' | 'danger' | 'cyan'
 
@@ -20,26 +22,19 @@
   }: Props = $props()
 </script>
 
-<div class="kv-list" {...rest}>
+<Stack gap="none" {...rest}>
   {#each items as item}
     <div class="kv-row">
-      <span class="kv-key">{item.key}</span>
-      <span class="kv-val kv-val--{item.color ?? 'default'}">{item.value}</span>
+      <Spread>
+        <span class="kv-key">{item.key}</span>
+        <span class="kv-val kv-val--{item.color ?? 'default'}">{item.value}</span>
+      </Spread>
     </div>
   {/each}
-</div>
+</Stack>
 
 <style>
-  .kv-list {
-    display: flex;
-    flex-direction: column;
-  }
-
   .kv-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 16px;
     padding: 6px 0;
     border-bottom: 1px dashed var(--rule);
     font-family: var(--mono);

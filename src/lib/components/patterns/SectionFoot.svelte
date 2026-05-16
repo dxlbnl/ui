@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
+  import Spread from '../layout/Spread.svelte'
 
   interface Props extends HTMLAttributes<HTMLElement> {
     href: string
@@ -18,7 +19,7 @@
   }: Props = $props()
 </script>
 
-<footer class="section-foot" {...rest}>
+<Spread as="footer" style="border-top: 1px solid var(--rule); padding: 12px 0; font-family: var(--mono); font-size: var(--t-mono); letter-spacing: 0.06em; margin-top: 20px;" {...rest}>
   <a class="section-foot-link" {href}>{label}</a>
   {#if count !== undefined || meta}
     <span class="section-foot-meta">
@@ -31,21 +32,9 @@
       {/if}
     </span>
   {/if}
-</footer>
+</Spread>
 
 <style>
-  .section-foot {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    font-family: var(--mono);
-    font-size: var(--t-mono);
-    letter-spacing: 0.06em;
-    padding-top: 16px;
-    margin-top: 20px;
-    border-top: 1px solid var(--rule);
-  }
-
   .section-foot-link {
     color: var(--amber);
     text-transform: uppercase;

@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import Led from '../primitives/Led.svelte'
+  import Inline from '../layout/Inline.svelte'
 
   type LedStatus = 'ok' | 'amber' | 'danger' | 'off'
 
@@ -22,22 +23,21 @@
 </script>
 
 <div class="activity-row" {...rest}>
-  <span class="activity-time">{timestamp}</span>
-  <Led color={status} />
-  <span class="activity-msg">
-    {#if actor}
-      <span class="activity-actor">{actor}</span>
-      <span aria-hidden="true"> · </span>
-    {/if}
-    {description}
-  </span>
+  <Inline gap="sm">
+    <span class="activity-time">{timestamp}</span>
+    <Led color={status} />
+    <span class="activity-msg">
+      {#if actor}
+        <span class="activity-actor">{actor}</span>
+        <span aria-hidden="true"> · </span>
+      {/if}
+      {description}
+    </span>
+  </Inline>
 </div>
 
 <style>
   .activity-row {
-    display: flex;
-    gap: 12px;
-    align-items: center;
     padding: 7px 0;
     border-bottom: 1px dashed var(--rule);
     font-family: var(--mono);

@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import Stack from '../layout/Stack.svelte'
 
   type AlertVariant = 'ok' | 'amber' | 'danger' | 'info'
 
@@ -30,13 +31,13 @@
 
 <div class="alert alert--{variant}" role="status" {...rest}>
   <span class="alert-tag" aria-hidden="true">{TAG_GLYPHS[variant]}</span>
-  <div class="alert-body">
+  <Stack gap="sm">
     <span class="alert-title">{title}</span>
     {#if message}
       <span class="alert-msg">{message}</span>
     {/if}
     {@render children?.()}
-  </div>
+  </Stack>
 </div>
 
 <style>
@@ -67,12 +68,6 @@
   .alert--amber  .alert-tag { color: var(--amber); }
   .alert--danger .alert-tag { color: var(--danger); }
   .alert--info   .alert-tag { color: var(--cyan); }
-
-  .alert-body {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
 
   .alert-title {
     font-family: var(--mono);

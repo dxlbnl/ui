@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import Button from '../primitives/Button.svelte'
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
     iconPre?: Snippet
@@ -41,16 +42,14 @@
     <span class="addon addon-suf">{addonSuf}</span>
   {/if}
   {#if clearable}
-    <button
+    <Button
+      variant="ghost"
       type="button"
-      class="clear-btn"
-      class:visible={showClear}
+      class={showClear ? 'wrap-clear visible' : 'wrap-clear'}
       aria-label="Clear"
       tabindex={showClear ? 0 : -1}
       onclick={onclear}
-    >
-      ×
-    </button>
+    >×</Button>
   {/if}
 </div>
 
@@ -94,7 +93,7 @@
     border-left: none;
   }
 
-  .clear-btn {
+  :global(.wrap-clear) {
     position: absolute;
     right: 8px;
     top: 50%;
@@ -112,12 +111,12 @@
     pointer-events: none;
   }
 
-  .clear-btn.visible {
+  :global(.wrap-clear.visible) {
     opacity: 1;
     pointer-events: auto;
   }
 
-  .clear-btn:hover {
+  :global(.wrap-clear:hover) {
     color: var(--ink);
   }
 </style>

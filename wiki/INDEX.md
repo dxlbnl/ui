@@ -36,6 +36,7 @@ Every agent reads this page first, before doing anything else.
 | [specs/B10-accordion-tabs-table.md](specs/B10-accordion-tabs-table.md) | Spec: B10 Data components — `Accordion` + `AccordionItem` (native `<details>`, SSR-safe), `Tabs` (underline + pill variants, amber active, ARIA tabpanel), `Table` (mono headers, dashed row rules, snippet rows). |
 | [specs/B11-storybook-catalogue.md](specs/B11-storybook-catalogue.md) | Spec: B11 Storybook catalogue — consistency pass on Spread, Rule, Card, ProjectCard, CtaBlock, Modal, Table stories; token documentation stories (Color Palette, Typography Scale, Spacing Scale). |
 | [specs/B13-composition-refactor.md](specs/B13-composition-refactor.md) | Spec: B13 Composition refactor — replace raw flex/grid CSS in all higher-order components with `Stack`, `Inline`, `Spread` layout primitives; replace raw `<button>` elements with `Button`. Exceptions: `AccordionItem`, `Table`, `Card.svelte`. |
+| [composition-limits.md](composition-limits.md) | Reference: Svelte scoping constraints, the three workaround patterns, what remains in higher-order components post-B13, and what B14 Text+Heading will resolve. |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
 > and restructure pages as the project grows — just link new pages in the table above.

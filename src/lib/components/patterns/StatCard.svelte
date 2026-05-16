@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
+  import Stack from '../layout/Stack.svelte'
 
   type StatColor = 'default' | 'ok' | 'amber' | 'danger'
 
@@ -20,24 +21,15 @@
   }: Props = $props()
 </script>
 
-<div class="stat-card" {...rest}>
+<Stack gap="xs" class="stat-card" style="border: 1px solid var(--rule); background: var(--bg-rail); padding: 16px 20px;" {...rest}>
   <span class="stat-label">{label}</span>
   <span class="stat-value stat-value--{color}">{value}</span>
   {#if sublabel}
     <span class="stat-sub">{sublabel}</span>
   {/if}
-</div>
+</Stack>
 
 <style>
-  .stat-card {
-    border: 1px solid var(--rule);
-    background: var(--bg-rail);
-    padding: 16px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
   .stat-label {
     font-family: var(--mono);
     font-size: var(--t-micro);

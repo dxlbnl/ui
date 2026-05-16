@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
+  import Stack from '../layout/Stack.svelte'
 
   type ProgressColor = 'ok' | 'amber' | 'danger'
 
@@ -20,7 +21,7 @@
   const clampedValue = $derived(Math.min(100, Math.max(0, value)))
 </script>
 
-<div class="progress" {...rest}>
+<Stack gap="xs" style="width: 100%;" {...rest}>
   {#if label}
     <div class="progress-header" aria-hidden="true">
       <span>{label}</span>
@@ -40,16 +41,9 @@
       style="width: {clampedValue}%"
     ></div>
   </div>
-</div>
+</Stack>
 
 <style>
-  .progress {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 100%;
-  }
-
   .progress-header {
     display: flex;
     justify-content: space-between;

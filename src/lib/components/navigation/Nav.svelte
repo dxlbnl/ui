@@ -1,5 +1,8 @@
 <script lang="ts">
   import Led from '../primitives/Led.svelte'
+  import Button from '../primitives/Button.svelte'
+  import Inline from '../layout/Inline.svelte'
+  import Stack from '../layout/Stack.svelte'
 
   interface NavLink {
     href: string
@@ -39,12 +42,12 @@
 </script>
 
 <nav class="nav" {...rest}>
-  <div class="nav-inner">
-    <a class="nav-brand" href="/">
+  <Inline class="nav-inner" gap="none" style="padding: 0 24px; height: 48px; max-width: 1200px; margin: 0 auto;">
+    <Inline as="a" href="/" class="nav-brand" gap="xs" style="flex-shrink: 0; color: var(--ink); text-decoration: none; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;">
       <Led color="ok" aria-hidden="true" />
       <span class="nav-wordmark">{siteName}</span>
-    </a>
-    <ul class="nav-links">
+    </Inline>
+    <Inline as="ul" class="nav-links" gap="md" style="margin: 0 0 0 auto; padding: 0; flex-shrink: 0; text-transform: uppercase; font-size: 12px; list-style: none;">
       {#each links as link}
         <li>
           <a href={link.href} class="nav-link" class:active={link.active}
@@ -53,24 +56,19 @@
           </a>
         </li>
       {/each}
-    </ul>
-    <div class="nav-actions">
-      <button class="nav-palette-toggle" aria-label="Toggle colour palette"
-              onclick={handlePaletteToggle}>
+    </Inline>
+    <Inline class="nav-actions" gap="sm" style="flex-shrink: 0;">
+      <Button variant="ghost" class="nav-palette-toggle" aria-label="Toggle colour palette" onclick={handlePaletteToggle}>
         {palette === 'paper' ? '◑' : '◐'}
-      </button>
-      <button class="nav-hamburger"
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={menuOpen}
-              aria-controls="nav-drawer"
-              onclick={handleMenuToggle}>
+      </Button>
+      <Button variant="ghost" class="nav-hamburger" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="nav-drawer" onclick={handleMenuToggle}>
         {menuOpen ? '×' : '≡'}
-      </button>
-    </div>
-  </div>
+      </Button>
+    </Inline>
+  </Inline>
   <div id="nav-drawer" class="nav-drawer" aria-hidden={menuOpen ? undefined : 'true'}>
     {#if menuOpen}
-      <ul class="nav-drawer-links">
+      <Stack as="ul" class="nav-drawer-links" gap="sm" style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 12px; letter-spacing: 0.08em;">
         {#each links as link}
           <li>
             <a href={link.href} class="nav-drawer-link" class:active={link.active}
@@ -79,7 +77,7 @@
             </a>
           </li>
         {/each}
-      </ul>
+      </Stack>
     {/if}
   </div>
 </nav>
@@ -98,39 +96,6 @@
     letter-spacing: 0.08em;
   }
 
-  .nav-inner {
-    display: flex;
-    align-items: center;
-    gap: 28px;
-    padding: 0 24px;
-    height: 48px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--ink);
-    text-decoration: none;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    flex-shrink: 0;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-    margin: 0 0 0 auto;
-    padding: 0;
-    flex-shrink: 0;
-    text-transform: uppercase;
-    font-size: 12px;
-  }
-
   .nav-link {
     color: var(--ink-dim);
     text-decoration: none;
@@ -144,33 +109,7 @@
     border-bottom-color: var(--amber);
   }
 
-  .nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-shrink: 0;
-  }
-
-  .nav-palette-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--ink-faint);
-    font-family: var(--mono);
-    font-size: 16px;
-    line-height: 1;
-    padding: 0;
-  }
-
-  .nav-hamburger {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--ink-faint);
-    font-family: var(--mono);
-    font-size: 20px;
-    line-height: 1;
-    padding: 0;
+  :global(.nav-hamburger) {
     display: none;
   }
 
@@ -179,12 +118,12 @@
   }
 
   @media (max-width: 767px) {
-    .nav-links {
-      display: none;
+    :global(.nav-links) {
+      display: none !important;
     }
 
-    .nav-hamburger {
-      display: block;
+    :global(.nav-hamburger) {
+      display: block !important;
     }
 
     .nav-drawer {
@@ -196,18 +135,6 @@
 
     .nav-drawer[aria-hidden='true'] {
       display: none;
-    }
-
-    .nav-drawer-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      text-transform: uppercase;
-      font-size: 12px;
-      letter-spacing: 0.08em;
     }
 
     .nav-drawer-link {

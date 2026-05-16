@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { HTMLDialogAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import Stack from '../layout/Stack.svelte'
+  import Button from '../primitives/Button.svelte'
 
   type ModalVariant = 'default' | 'confirm' | 'destructive'
 
@@ -67,19 +69,14 @@
   onclick={handleDialogClick}
   {...rest}
 >
-  <div class="modal-inner">
+  <Stack class="modal-inner" style="background: var(--bg-elev); border: 1px solid var(--rule-strong); width: 100%; max-width: 480px; max-height: 80vh; overflow-y: auto;">
 
     <header class="modal-header">
       {#if variant === 'destructive' || variant === 'confirm'}
         <span class="modal-icon" aria-hidden="true">!</span>
       {/if}
       <h2 class="modal-title" id="modal-title">{title}</h2>
-      <button
-        class="modal-close"
-        type="button"
-        aria-label="Close dialog"
-        onclick={handleClose}
-      >×</button>
+      <Button variant="ghost" type="button" aria-label="Close dialog" onclick={handleClose}>×</Button>
     </header>
 
     <div class="modal-body">
@@ -87,12 +84,12 @@
     </div>
 
     {#if footer}
-      <footer class="modal-footer">
+      <footer class="modal-footer" style="display: flex; justify-content: flex-end; gap: var(--u); padding: var(--u2) var(--u3); border-top: 1px solid var(--rule);">
         {@render footer()}
       </footer>
     {/if}
 
-  </div>
+  </Stack>
 </dialog>
 
 <style>
@@ -116,17 +113,6 @@
     background: rgba(7, 9, 8, 0.85);
   }
 
-  .modal-inner {
-    background: var(--bg-elev);
-    border: 1px solid var(--rule-strong);
-    width: 100%;
-    max-width: 480px;
-    max-height: 80vh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-  }
-
   .modal-header {
     display: flex;
     align-items: center;
@@ -143,21 +129,6 @@
     color: var(--ink);
     margin: 0;
     flex: 1;
-  }
-
-  .modal-close {
-    font-family: var(--mono);
-    font-size: 18px;
-    line-height: 1;
-    color: var(--ink-faint);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0 var(--u);
-  }
-
-  .modal-close:hover {
-    color: var(--ink);
   }
 
   .modal-icon {
@@ -189,13 +160,5 @@
     font-size: var(--t-body);
     color: var(--ink-dim);
     line-height: 1.5;
-  }
-
-  .modal-footer {
-    padding: var(--u2) var(--u3);
-    border-top: 1px solid var(--rule);
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--u);
   }
 </style>

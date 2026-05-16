@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import Inline from '../layout/Inline.svelte'
 
   interface Props extends HTMLAttributes<HTMLElement> {
     eyebrow?: string
@@ -28,9 +29,9 @@
     <p class="page-hero-lede">{lede}</p>
   {/if}
   {#if children}
-    <div class="page-hero-actions">
+    <Inline gap="sm" style="margin-top: 24px;">
       {@render children()}
-    </div>
+    </Inline>
   {/if}
 </header>
 
@@ -64,12 +65,5 @@
     color: var(--ink-dim);
     line-height: 1.55;
     max-width: 62ch;
-  }
-
-  .page-hero-actions {
-    margin-top: 24px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
   }
 </style>

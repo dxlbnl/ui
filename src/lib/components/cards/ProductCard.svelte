@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { HTMLAnchorAttributes } from 'svelte/elements'
   import Led from '../primitives/Led.svelte'
+  import Stack from '../layout/Stack.svelte'
+  import Spread from '../layout/Spread.svelte'
 
   type StockStatus = 'in-stock' | 'coming-soon' | 'low-stock' | 'out-of-stock'
 
@@ -54,26 +56,30 @@
   <div class="card-img">
     <span class="card-img-label">{sku} · PRODUCT</span>
   </div>
-  <div class="card-body">
+  <Stack gap="xs" style="padding: 12px 14px 10px; flex: 1;">
     <span class="card-sku">{sku}</span>
     <h3 class="card-title">{name}</h3>
     <p class="card-desc">{description}</p>
     <div class="card-meta">
-      {#if price}
-        <span class="card-price">
-          {price}
-          <span class="card-price-sub">incl. VAT</span>
+      <Spread style="align-items: baseline; margin-top: auto; padding-top: 8px; font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.04em; text-transform: uppercase;">
+        {#if price}
+          <span class="card-price">
+            {price}
+            <span class="card-price-sub">incl. VAT</span>
+          </span>
+        {/if}
+        <span class="card-stock">
+          <Led color={ledColor} aria-hidden="true" />
+          <span class="card-stock-label">{stockLabel}</span>
         </span>
-      {/if}
-      <span class="card-stock">
-        <Led color={ledColor} aria-hidden="true" />
-        <span class="card-stock-label">{stockLabel}</span>
-      </span>
+      </Spread>
     </div>
-  </div>
+  </Stack>
   <div class="card-cta">
-    <span>{resolvedCtaLabel}</span>
-    <span aria-hidden="true">→</span>
+    <Spread>
+      <span>{resolvedCtaLabel}</span>
+      <span aria-hidden="true">→</span>
+    </Spread>
   </div>
 </svelte:element>
 
@@ -110,14 +116,6 @@
     text-transform: uppercase;
   }
 
-  .card-body {
-    padding: 12px 14px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    flex: 1;
-  }
-
   .card-sku {
     font-family: var(--mono);
     font-size: var(--t-micro);
@@ -139,18 +137,6 @@
     color: var(--ink-dim);
     line-height: 1.4;
     margin: 0;
-  }
-
-  .card-meta {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-top: auto;
-    padding-top: 8px;
-    font-family: var(--mono);
-    font-size: var(--t-micro);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
   }
 
   .card-price {
@@ -179,8 +165,6 @@
   .card-cta {
     border-top: 1px solid var(--rule);
     padding: 10px 14px;
-    display: flex;
-    justify-content: space-between;
     font-family: var(--mono);
     font-size: var(--t-mono);
     letter-spacing: 0.08em;

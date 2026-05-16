@@ -75,7 +75,7 @@ Each item has a **status** and an optional **`review`** flag:
       form, and data components. Exceptions: AccordionItem (`<summary>` semantic), Table
       (semantic table HTML), Card.svelte (base card primitive).
 
-- [ ] **B11: Storybook catalogue** — status: `in-progress`
+- [x] **B11: Storybook catalogue** — status: `done` — commit: `8b47cb2`
       Combined consistency pass + visual catalogue:
       (1) Fill coverage gaps in existing stories (Spread, Rule, Card, ProjectCard, CtaBlock,
       Modal confirm/destructive in main file), deepen shallow play functions, remove AC
