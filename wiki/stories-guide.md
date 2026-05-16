@@ -106,25 +106,37 @@ or create a separate `*.composition.stories.svelte` file without `component:`:
 
 ## Play functions
 
-Write play functions **inline** in the `play={...}` attribute. Keep them short.
+Write play functions as **named `const` variables in the `<script module>` block**. This
+allows full TypeScript annotations and keeps the template clean.
 
 ```svelte
-<Story name="Primary" args={{ variant: 'primary' }}
-  play={async ({ canvasElement }) => {
+<script module lang="ts">
+  import { defineMeta } from '@storybook/addon-svelte-csf';
+  import { expect, within } from 'storybook/test';
+  import Button from './Button.svelte';
+
+  const { Story } = defineMeta({ title: 'Primitives/Button', tags: ['autodocs'] });
+
+  const playPrimary = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: 'Order Now' });
     await expect(btn).toBeVisible();
     await expect(btn).toBeEnabled();
-  }}>
+  };
+</script>
+
+<Story name="Primary" args={{ variant: 'primary' }} play={playPrimary}>
   Order Now
 </Story>
 ```
 
+For trivial single-assertion stories, an inline arrow is acceptable — but named consts
+are preferred whenever there are two or more assertions or TypeScript types are needed.
+
 ### Rules
 
 - Import `expect` and `within` from **`'storybook/test'`** (no `@` prefix).
-- Write inline — no named constants in the script block.
-- **No TypeScript type annotations inside `play={...}`** — template expressions don't
-  support `: Type` syntax.
+- Prefer named `const` play functions in the module script — TypeScript annotations are
+  allowed there (`:` type syntax is **not** valid inside template `play={...}` expressions).
 - **No null checks.** Queries throw if the element is missing — a guard is redundant.
 - Always `await` every `expect` assertion.
 

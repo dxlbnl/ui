@@ -37,7 +37,7 @@ Each item has a **status** and an optional **`review`** flag:
       `Led` (ok/amber/cyan/danger/off, blink animation), `TagPill` (default/amber/cyan).
       Full type props + Storybook stories. True visual atoms — built first.
 
-- [ ] **B5: Card components** — status: `in-progress`
+- [x] **B5: Card components** — status: `done` — commit: `ba50c32`
       `Card` (base), `ProductCard`, `ProjectCard`, `NoteCard`.
       Diagonal hatch placeholder, amber footer hover, hex note IDs, amber card hover.
 

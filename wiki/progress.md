@@ -73,3 +73,7 @@ it records the reason here AND states it in chat.
 ## 2026-05-16 — B5: Card components
 - manager: set in-progress, delegating to spec-writer
 - spec-writer: wrote wiki/specs/B5-card-components.md (65 ACs, 4 components) → done
+- test-writer: wrote 14 failing stories (4 files) → red
+- implementer: wrote all 4 components + index.ts; updated src/lib/index.ts → 60/60 green
+- reviewer: initial FAIL (4 test gaps: aspect-ratio ×2, low-stock, ctaLabel override); manager fixed directly → 62/62 green
+- result: done — commit `ba50c32`

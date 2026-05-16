@@ -32,7 +32,7 @@
     "@storybook/addon-docs": "10.4.0",
     "@storybook/addon-svelte-csf": "5.1.2",
     "@storybook/addon-vitest": "10.4.0",
-    "@storybook/sveltekiJt": "10.4.0",
+    "@storybook/sveltekit": "10.4.0",
     "@sveltejs/adapter-auto": "7.0.1",
     "@sveltejs/kit": "2.60.1",
     "@sveltejs/package": "2.5.7",
