@@ -244,6 +244,39 @@
   always in sync with the controlled state.
 - **Supersedes**: none
 
+## D14: B9 pattern components use CSS BEM-style variant modifiers (`--variant`) rather than class suffixes (`.variant`)
+- **Date**: 2026-05-16
+- **By**: spec-writer (B9)
+- **Context**: The reference `patterns.css` uses single-word class suffixes on the root
+  element (`.alert.ok`, `.alert.amber`) rather than BEM-style modifiers
+  (`.alert--ok`, `.alert--amber`). In Svelte scoped CSS, single-word modifier classes
+  collide with Svelte's internal scoping hash and can produce hard-to-debug specificity
+  issues if a consumer also passes a class like `ok` via `...rest`.
+- **Decision**: All pattern component variant classes use BEM double-hyphen modifiers
+  on the root element (`alert--ok`, `alert--amber`, `stat-value--ok`, `kv-val--amber`,
+  `progress-fill--danger`, `cta-block`, etc.). Child element classes retain the original
+  single-segment names (`.alert-tag`, `.stat-label`, etc.). This keeps parity with the
+  reference design while avoiding root-level class collisions.
+- **Consequences**: The CSS selectors in each component's `<style>` block differ slightly
+  from `patterns.css` (modifier format only; visual output is identical). Implementers
+  must write `.alert--ok` not `.alert.ok`.
+- **Supersedes**: none
+
+## D15: Alert uses `role="status"` uniformly across all variants
+- **Date**: 2026-05-16
+- **By**: spec-writer (B9)
+- **Context**: The `danger` variant of `Alert` would be more semantically correct with
+  `role="alert"` (assertive live region), which interrupts screen reader narration
+  immediately. The other three variants (`ok`, `amber`, `info`) are correctly `role="status"`
+  (polite). Using different roles per variant adds conditional logic and a surface for bugs.
+- **Decision**: All four `Alert` variants use `role="status"` in B9. The implementer may
+  optionally set `role={variant === 'danger' ? 'alert' : 'status'}` without spec deviation.
+  This is documented in Open Questions OQ-1 of the B9 spec.
+- **Consequences**: Screen readers on `danger` alerts use polite interruption rather than
+  assertive. Acceptable for the current use cases (inline banners, not transient system
+  alerts). The a11y addon will not flag this as a violation.
+- **Supersedes**: none
+
 ## D8: Nav breadcrumb descoped from B6
 - **Date**: 2026-05-16
 - **By**: spec-writer

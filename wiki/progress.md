@@ -105,3 +105,11 @@ it records the reason here AND states it in chat.
 - manager: set in-progress, delegating to spec-writer
 - spec-writer: wrote wiki/specs/B8-modal.md (56 ACs, native <dialog>, controlled open prop, SSR-safe $effect) → done
 - test-writer: wrote Modal.stories.svelte + Modal.composition.stories.svelte in src/lib/components/feedback/ → red (Modal.svelte missing)
+- implementer: wrote Modal.svelte + index.ts; native <dialog>, showModal()/$effect, scroll lock, variants → 99/99 green
+- reviewer: PASS — all 56 ACs met, pnpm check 0 errors
+- result: done — commit `5d228c4`
+
+## 2026-05-16 — B9: Pattern components
+- manager: set in-progress, delegating to spec-writer
+- spec-writer: wrote wiki/specs/B9-pattern-components.md (98 ACs, 9 components) → done
+- test-writer: wrote 10 story files (9 + ActivityRow.composition) in src/lib/components/patterns/ → red (components missing)

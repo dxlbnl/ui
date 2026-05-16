@@ -50,11 +50,11 @@ Each item has a **status** and an optional **`review`** flag:
       `Field` (label + input + hint/error), `Input` (base input: focus/error/disabled),
       `InputWrap` (icon prefix, addon, clear button), `Textarea`, `Select`.
 
-- [ ] **B8: Modal** — status: `in-progress`
+- [x] **B8: Modal** — status: `done` — commit: `5d228c4`
       `Modal` dialog: header + body + footer; confirm/destructive variant with
       danger icon. Backdrop overlay, SSR-safe mount.
 
-- [ ] **B9: Pattern components** — status: `todo`
+- [ ] **B9: Pattern components** — status: `in-progress`
       `Alert` (ok/amber/danger/info), `CtaBlock`, `StatCard`, `KvList`, `ProgressBar`,
       `ActivityRow`, `SectionHead`, `SectionFoot`, `PageHero`.
 

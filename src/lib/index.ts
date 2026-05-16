@@ -5,3 +5,4 @@ export { Card, ProductCard, ProjectCard, NoteCard } from './components/cards/ind
 export { Nav } from './components/navigation/index.js'
 export { Input, Textarea, Select, InputWrap, Field } from './components/forms/index.js'
 export { Modal } from './components/feedback/index.js'
+export { Alert, CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero } from './components/patterns/index.js'
