@@ -9,9 +9,10 @@
     component: TagPill,
     tags: ["autodocs"],
   });
+</script>
 
-  // ── Default ───────────────────────────────────────────────────────────────
-  const playDefault = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Default" args={{ variant: "default" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const pill = canvas.getByText("Utility");
     await expect(pill).toBeVisible();
@@ -19,10 +20,12 @@
     await expect(getComputedStyle(pill).textTransform).toBe("uppercase");
     const inkFaintColor = resolveTokenFgColor("--ink-faint");
     await expect(getComputedStyle(pill).color).toBe(inkFaintColor);
-  };
+  }}>
+  Utility
+</Story>
 
-  // ── Amber ─────────────────────────────────────────────────────────────────
-  const playAmber = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Amber" args={{ variant: "amber" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const pill = canvas.getByText("Featured");
     await expect(pill).toBeVisible();
@@ -31,10 +34,12 @@
     // borderColor resolves as an RGB value; use same helper via background trick
     const amberBgColor = resolveTokenColor("--amber");
     await expect(getComputedStyle(pill).borderColor).toBe(amberBgColor);
-  };
+  }}>
+  Featured
+</Story>
 
-  // ── Cyan ──────────────────────────────────────────────────────────────────
-  const playCyan = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Cyan" args={{ variant: "cyan" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const pill = canvas.getByText("New");
     await expect(pill).toBeVisible();
@@ -42,17 +47,6 @@
     await expect(getComputedStyle(pill).color).toBe(cyanColor);
     const cyanBgColor = resolveTokenColor("--cyan");
     await expect(getComputedStyle(pill).borderColor).toBe(cyanBgColor);
-  };
-</script>
-
-<Story name="Default" args={{ variant: "default" }} play={playDefault}>
-  Utility
-</Story>
-
-<Story name="Amber" args={{ variant: "amber" }} play={playAmber}>
-  Featured
-</Story>
-
-<Story name="Cyan" args={{ variant: "cyan" }} play={playCyan}>
+  }}>
   New
 </Story>

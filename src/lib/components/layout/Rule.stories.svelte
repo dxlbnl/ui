@@ -9,9 +9,10 @@
     title: "Layout/Rule",
     tags: ["autodocs"],
   });
+</script>
 
-  // ── All Variants ──────────────────────────────────────────────────────────
-  const playAllVariants = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="All Variants"
+  play={async ({ canvasElement }) => {
     const hrs = canvasElement.querySelectorAll("hr");
     await expect(hrs.length).toBe(3);
 
@@ -36,24 +37,7 @@
     const ruleStrongColor = resolveTokenFgColor("--rule-strong");
     await expect(strongStyle.borderTopColor).toBe(ruleStrongColor);
     await expect(strongStyle.borderTopColor).not.toBe(ruleColor);
-  };
-
-  // ── In Context ────────────────────────────────────────────────────────────
-  const playInContext = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const hr = within(canvasElement).getAllByRole("separator")[0];
-    await expect(hr).toBeVisible();
-    const style = getComputedStyle(hr);
-    await expect(style.marginTop).toBe("0px");
-    await expect(style.marginBottom).toBe("0px");
-    await expect(style.marginLeft).toBe("0px");
-    await expect(style.marginRight).toBe("0px");
-    // aria-hidden forwarded via ...rest
-    const hiddenHr = canvasElement.querySelector("[data-testid='rule-hidden']") as HTMLElement;
-    await expect(hiddenHr.getAttribute("aria-hidden")).toBe("true");
-  };
-</script>
-
-<Story name="All Variants" play={playAllVariants}>
+  }}>
   <Stack gap="md">
     <span>Solid (default)</span>
     <Rule variant="solid" />
@@ -64,7 +48,19 @@
   </Stack>
 </Story>
 
-<Story name="In Context" play={playInContext}>
+<Story name="In Context"
+  play={async ({ canvasElement }) => {
+    const hr = within(canvasElement).getAllByRole("separator")[0];
+    await expect(hr).toBeVisible();
+    const style = getComputedStyle(hr);
+    await expect(style.marginTop).toBe("0px");
+    await expect(style.marginBottom).toBe("0px");
+    await expect(style.marginLeft).toBe("0px");
+    await expect(style.marginRight).toBe("0px");
+    // aria-hidden forwarded via ...rest
+    const hiddenHr = canvasElement.querySelector("[data-testid='rule-hidden']") as HTMLElement;
+    await expect(hiddenHr.getAttribute("aria-hidden")).toBe("true");
+  }}>
   <Stack gap="md">
     <h3>Section Heading</h3>
     <Rule />

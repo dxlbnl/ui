@@ -8,9 +8,10 @@
     title: "Primitives/TagPill Composition",
     tags: ["autodocs"],
   });
+</script>
 
-  // ── Multiple Pills ────────────────────────────────────────────────────────
-  const playMultiplePills = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Multiple Pills"
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const utility = canvas.getByText("Utility");
     const powerSupply = canvas.getByText("Power Supply");
@@ -21,10 +22,7 @@
     // "Latest" pill uses variant="amber" — its color must differ from --ink-faint
     const inkFaintColor = resolveTokenFgColor("--ink-faint");
     await expect(getComputedStyle(latest).color).not.toBe(inkFaintColor);
-  };
-</script>
-
-<Story name="Multiple Pills" play={playMultiplePills}>
+  }}>
   <div style="display: flex; align-items: center; gap: 8px;">
     <TagPill>Utility</TagPill>
     <TagPill>Power Supply</TagPill>

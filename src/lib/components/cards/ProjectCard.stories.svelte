@@ -8,9 +8,10 @@
     component: ProjectCard,
     tags: ["autodocs"],
   });
+</script>
 
-  // ── Open Source ───────────────────────────────────────────────────────────
-  const playOpenSource = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Open Source" args={{ href: "#zod-fixture", slug: "zod-fixture", title: "zod-fixture", description: "Creating fixtures based on zod schemas automatically.", tags: ["TypeScript", "Open Source"], ctaLabel: "OPEN SOURCE" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
     // renders as <a> by default
@@ -36,10 +37,10 @@
     const imgBg = getComputedStyle(cardImg).backgroundImage;
     await expect(imgBg).not.toBe("none");
     await expect(getComputedStyle(cardImg).aspectRatio).toBe("14 / 9");
-  };
+  }} />
 
-  // ── No Tags ───────────────────────────────────────────────────────────────
-  const playNoTags = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="No Tags" args={{ href: "#private-share", slug: "private-share", title: "Private Share", description: "Private file sharing utility." }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
     // Card renders without error
@@ -53,18 +54,11 @@
     // no .card-tags element rendered (or it has no children) when tags is empty
     const cardTags = canvasElement.querySelector(".card-tags");
     await expect(cardTags).toBeNull();
-  };
+  }} />
 
-  // ── As Div ────────────────────────────────────────────────────────────────
-  const playAsDiv = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="As Div" args={{ as: "div", slug: "zod-fixture", title: "zod-fixture", description: "Creating fixtures based on zod schemas automatically.", tags: ["TypeScript", "Open Source"], ctaLabel: "OPEN SOURCE" }}
+  play={async ({ canvasElement }) => {
     const root = canvasElement.firstElementChild as HTMLElement;
     await expect(root.tagName).toBe("DIV");
     await expect(root).toBeVisible();
-  };
-</script>
-
-<Story name="Open Source" args={{ href: "#zod-fixture", slug: "zod-fixture", title: "zod-fixture", description: "Creating fixtures based on zod schemas automatically.", tags: ["TypeScript", "Open Source"], ctaLabel: "OPEN SOURCE" }} play={playOpenSource} />
-
-<Story name="No Tags" args={{ href: "#private-share", slug: "private-share", title: "Private Share", description: "Private file sharing utility." }} play={playNoTags} />
-
-<Story name="As Div" args={{ as: "div", slug: "zod-fixture", title: "zod-fixture", description: "Creating fixtures based on zod schemas automatically.", tags: ["TypeScript", "Open Source"], ctaLabel: "OPEN SOURCE" }} play={playAsDiv} />
+  }} />

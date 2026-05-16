@@ -9,9 +9,10 @@
     component: NoteCard,
     tags: ["autodocs"],
   });
+</script>
 
-  // ── With Lede ─────────────────────────────────────────────────────────────
-  const playWithLede = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="With Lede" args={{ href: "#note-0x06", idx: 6, kind: "PROJECT-LOG", title: "Shipping the Site", lede: "Turning a messy prototype into a stable place to document the work and sell hardware.", date: "1 May 2026" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
     // renders as <a> by default
@@ -47,10 +48,10 @@
     // resting border-color matches --rule token
     const ruleColor = resolveTokenFgColor("--rule");
     await expect(getComputedStyle(root).borderColor).toBe(ruleColor);
-  };
+  }} />
 
-  // ── Minimal ───────────────────────────────────────────────────────────────
-  const playMinimal = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Minimal" args={{ href: "#note-0x01", idx: 1, kind: "LOG", title: "First entry" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
     const root = canvasElement.firstElementChild as HTMLElement;
@@ -67,27 +68,18 @@
     // no date — .note-foot element should not be present
     const footEl = canvasElement.querySelector(".note-foot");
     await expect(footEl).toBeNull();
-  };
+  }} />
 
-  // ── High Index ────────────────────────────────────────────────────────────
-  const playHighIndex = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="High Index" args={{ href: "#note-0xff", idx: 255, title: "High index" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const hexEl = canvas.getByText("0xFF");
     await expect(hexEl).toBeVisible();
-  };
+  }} />
 
-  // ── As Div ────────────────────────────────────────────────────────────────
-  const playAsDiv = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="As Div" args={{ as: "div", idx: 1, title: "Test" }}
+  play={async ({ canvasElement }) => {
     const root = canvasElement.firstElementChild as HTMLElement;
     await expect(root.tagName).toBe("DIV");
     await expect(root).toBeVisible();
-  };
-</script>
-
-<Story name="With Lede" args={{ href: "#note-0x06", idx: 6, kind: "PROJECT-LOG", title: "Shipping the Site", lede: "Turning a messy prototype into a stable place to document the work and sell hardware.", date: "1 May 2026" }} play={playWithLede} />
-
-<Story name="Minimal" args={{ href: "#note-0x01", idx: 1, kind: "LOG", title: "First entry" }} play={playMinimal} />
-
-<Story name="High Index" args={{ href: "#note-0xff", idx: 255, title: "High index" }} play={playHighIndex} />
-
-<Story name="As Div" args={{ as: "div", idx: 1, title: "Test" }} play={playAsDiv} />
+  }} />

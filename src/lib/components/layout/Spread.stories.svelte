@@ -11,9 +11,10 @@
     component: Spread,
     tags: ["autodocs"],
   });
+</script>
 
-  // ── Section Header ────────────────────────────────────────────────────────
-  const playSectionHeader = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Section Header" args={{ "aria-label": "test-label" }}
+  play={async ({ canvasElement }) => {
     const root = canvasElement.firstElementChild as HTMLElement;
     await expect(root).toBeVisible();
     const style = getComputedStyle(root);
@@ -21,10 +22,13 @@
     await expect(style.justifyContent).toBe("space-between");
     // aria-label forwarded via ...rest
     await expect(root.getAttribute("aria-label")).toBe("test-label");
-  };
+  }}>
+  <span class="mono-label">System Status</span>
+  <Button variant="ghost">View All →</Button>
+</Story>
 
-  // ── Led Status Bar ────────────────────────────────────────────────────────
-  const playLedStatusBar = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Led Status Bar"
+  play={async ({ canvasElement }) => {
     const root = canvasElement.firstElementChild as HTMLElement;
     await expect(root).toBeVisible();
     const style = getComputedStyle(root);
@@ -32,15 +36,7 @@
     // Spread always has a fixed gap of var(--u2) = 16px — non-zero
     const gap = style.gap || style.columnGap;
     await expect(gap).not.toBe("0px");
-  };
-</script>
-
-<Story name="Section Header" args={{ "aria-label": "test-label" }} play={playSectionHeader}>
-  <span class="mono-label">System Status</span>
-  <Button variant="ghost">View All →</Button>
-</Story>
-
-<Story name="Led Status Bar" play={playLedStatusBar}>
+  }}>
   <span style="display: flex; align-items: center; gap: 8px;">
     <Led color="ok" aria-label="Status: ok" />
     <span>All systems nominal</span>

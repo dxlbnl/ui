@@ -9,9 +9,10 @@
     component: Button,
     tags: ["autodocs"],
   });
+</script>
 
-  // ── Primary ──────────────────────────────────────────────────────────────
-  const playPrimary = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Primary" args={{ variant: "primary" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const btn = canvas.getByRole("button");
     await expect(btn).toBeVisible();
@@ -21,20 +22,24 @@
     await expect(getComputedStyle(btn).backgroundColor).toBe(amberColor);
     await expect(getComputedStyle(btn).color).toBe(bgColor);
     await expect(getComputedStyle(btn).textTransform).toBe("uppercase");
-  };
+  }}>
+  Order Now
+</Story>
 
-  // ── Primary Disabled ─────────────────────────────────────────────────────
-  const playPrimaryDisabled = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Primary Disabled" args={{ variant: "primary", disabled: true }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const btn = canvas.getByRole("button");
     await expect(btn).toBeVisible();
     await expect(btn).toBeDisabled();
     await expect(getComputedStyle(btn).opacity).toBe("0.5");
     await expect(getComputedStyle(btn).cursor).toBe("not-allowed");
-  };
+  }}>
+  Disabled
+</Story>
 
-  // ── CTA ──────────────────────────────────────────────────────────────────
-  const playCTA = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="CTA" args={{ variant: "cta" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const btn = canvas.getByRole("button");
     await expect(btn).toBeVisible();
@@ -42,19 +47,23 @@
     const amberColor = resolveTokenColor("--amber");
     await expect(getComputedStyle(btn).color).toBe(amberColor);
     await expect(getComputedStyle(btn).borderColor).toBe(amberColor);
-  };
+  }}>
+  View Project →
+</Story>
 
-  // ── CTA Disabled ─────────────────────────────────────────────────────────
-  const playCTADisabled = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="CTA Disabled" args={{ variant: "cta", disabled: true }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const btn = canvas.getByRole("button");
     await expect(btn).toBeVisible();
     await expect(btn).toBeDisabled();
     await expect(getComputedStyle(btn).opacity).toBe("0.5");
-  };
+  }}>
+  Disabled
+</Story>
 
-  // ── Ghost ─────────────────────────────────────────────────────────────────
-  const playGhost = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Ghost" args={{ variant: "ghost" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const btn = canvas.getByRole("button");
     await expect(btn).toBeVisible();
@@ -62,20 +71,24 @@
     await expect(getComputedStyle(btn).backgroundColor).toBe("rgba(0, 0, 0, 0)");
     const amberColor = resolveTokenColor("--amber");
     await expect(getComputedStyle(btn).color).toBe(amberColor);
-  };
+  }}>
+  View All Hardware →
+</Story>
 
-  // ── Back ──────────────────────────────────────────────────────────────────
-  const playBack = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Back" args={{ variant: "back" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const btn = canvas.getByRole("button");
     await expect(btn).toBeVisible();
     await expect(btn).toBeEnabled();
     const inkFaintColor = resolveTokenColor("--ink-faint");
     await expect(getComputedStyle(btn).color).toBe(inkFaintColor);
-  };
+  }}>
+  ← Back to Catalogue
+</Story>
 
-  // ── Del ───────────────────────────────────────────────────────────────────
-  const playDel = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Del" args={{ variant: "del" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const btn = canvas.getByRole("button");
     await expect(btn).toBeVisible();
@@ -83,46 +96,17 @@
     await expect(getComputedStyle(btn).borderStyle).not.toBe("none");
     const inkFaintColor = resolveTokenColor("--ink-faint");
     await expect(getComputedStyle(btn).color).toBe(inkFaintColor);
-  };
+  }}>
+  Remove
+</Story>
 
-  // ── As Link ───────────────────────────────────────────────────────────────
-  const playAsLink = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="As Link" args={{ as: "a", href: "#demo", variant: "ghost" }}
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const link = canvas.getByRole("link");
     await expect(link).toBeVisible();
     await expect(link).toHaveAttribute("href", "#demo");
     await expect(link.tagName).toBe("A");
-  };
-</script>
-
-<Story name="Primary" args={{ variant: "primary" }} play={playPrimary}>
-  Order Now
-</Story>
-
-<Story name="Primary Disabled" args={{ variant: "primary", disabled: true }} play={playPrimaryDisabled}>
-  Disabled
-</Story>
-
-<Story name="CTA" args={{ variant: "cta" }} play={playCTA}>
-  View Project →
-</Story>
-
-<Story name="CTA Disabled" args={{ variant: "cta", disabled: true }} play={playCTADisabled}>
-  Disabled
-</Story>
-
-<Story name="Ghost" args={{ variant: "ghost" }} play={playGhost}>
-  View All Hardware →
-</Story>
-
-<Story name="Back" args={{ variant: "back" }} play={playBack}>
-  ← Back to Catalogue
-</Story>
-
-<Story name="Del" args={{ variant: "del" }} play={playDel}>
-  Remove
-</Story>
-
-<Story name="As Link" args={{ as: "a", href: "#demo", variant: "ghost" }} play={playAsLink}>
+  }}>
   View Demo →
 </Story>

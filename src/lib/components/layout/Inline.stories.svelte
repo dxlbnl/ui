@@ -10,9 +10,10 @@
     component: Inline,
     tags: ["autodocs"],
   });
+</script>
 
-  // ── Tag Row ───────────────────────────────────────────────────────────────
-  const playTagRow = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Tag Row" args={{ gap: "sm", "aria-label": "test-label" }}
+  play={async ({ canvasElement }) => {
     const root = canvasElement.firstElementChild as HTMLElement;
     await expect(root).toBeVisible();
     const style = getComputedStyle(root);
@@ -24,33 +25,7 @@
     await expect(gap).not.toBe("0px");
     // aria-label forwarded via ...rest
     await expect(root.getAttribute("aria-label")).toBe("test-label");
-  };
-
-  // ── None Gap ─────────────────────────────────────────────────────────────
-  const playNoneGap = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const root = canvasElement.firstElementChild as HTMLElement;
-    const style = getComputedStyle(root);
-    const gap = style.gap || style.columnGap;
-    await expect(gap === "0px" || gap === "0").toBe(true);
-  };
-
-  // ── Button Row ────────────────────────────────────────────────────────────
-  const playButtonRow = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const root = canvasElement.firstElementChild as HTMLElement;
-    const buttons = root.querySelectorAll("button");
-    await expect(buttons.length).toBe(2);
-  };
-
-  // ── Large Gap ─────────────────────────────────────────────────────────────
-  const playLargeGap = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const root = canvasElement.firstElementChild as HTMLElement;
-    const style = getComputedStyle(root);
-    const gap = style.gap || style.columnGap;
-    await expect(gap.includes("32px")).toBe(true);
-  };
-</script>
-
-<Story name="Tag Row" args={{ gap: "sm", "aria-label": "test-label" }} play={playTagRow}>
+  }}>
   <TagPill>Utility</TagPill>
   <TagPill variant="amber">Featured</TagPill>
   <TagPill variant="cyan">New</TagPill>
@@ -58,17 +33,34 @@
   <TagPill variant="amber">Latest</TagPill>
 </Story>
 
-<Story name="None Gap" args={{ gap: "none" }} play={playNoneGap}>
+<Story name="None Gap" args={{ gap: "none" }}
+  play={async ({ canvasElement }) => {
+    const root = canvasElement.firstElementChild as HTMLElement;
+    const style = getComputedStyle(root);
+    const gap = style.gap || style.columnGap;
+    await expect(gap === "0px" || gap === "0").toBe(true);
+  }}>
   <TagPill>Alpha</TagPill>
   <TagPill variant="amber">Beta</TagPill>
 </Story>
 
-<Story name="Button Row" args={{ gap: "md" }} play={playButtonRow}>
+<Story name="Button Row" args={{ gap: "md" }}
+  play={async ({ canvasElement }) => {
+    const root = canvasElement.firstElementChild as HTMLElement;
+    const buttons = root.querySelectorAll("button");
+    await expect(buttons.length).toBe(2);
+  }}>
   <Button variant="ghost">View All →</Button>
   <Button variant="primary">Order Now</Button>
 </Story>
 
-<Story name="Large Gap" args={{ gap: "lg" }} play={playLargeGap}>
+<Story name="Large Gap" args={{ gap: "lg" }}
+  play={async ({ canvasElement }) => {
+    const root = canvasElement.firstElementChild as HTMLElement;
+    const style = getComputedStyle(root);
+    const gap = style.gap || style.columnGap;
+    await expect(gap.includes("32px")).toBe(true);
+  }}>
   <TagPill>Alpha</TagPill>
   <TagPill variant="amber">Beta</TagPill>
   <TagPill variant="cyan">Gamma</TagPill>

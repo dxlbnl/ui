@@ -9,9 +9,10 @@
     component: Card,
     tags: ["autodocs"],
   });
+</script>
 
-  // ── Default ───────────────────────────────────────────────────────────────
-  const playDefault = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Default"
+  play={async ({ canvasElement }) => {
     const root = canvasElement.firstElementChild as HTMLElement;
     await expect(root).toBeVisible();
 
@@ -30,33 +31,26 @@
     // display flex, flex-direction column
     await expect(style.display).toBe("flex");
     await expect(style.flexDirection).toBe("column");
-  };
-
-  // ── As Article ────────────────────────────────────────────────────────────
-  const playAsArticle = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const root = canvasElement.firstElementChild as HTMLElement;
-    await expect(root.tagName).toBe("ARTICLE");
-    await expect(root).toBeVisible();
-  };
-
-  // ── As Link ───────────────────────────────────────────────────────────────
-  const playAsLink = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const canvas = within(canvasElement);
-    const link = canvas.getByRole("link");
-    await expect(link).toBeVisible();
-    await expect(link.getAttribute("href")).toBe("#demo");
-  };
-</script>
-
-<Story name="Default" play={playDefault}>
+  }}>
   <p>A simple card body.</p>
 </Story>
 
-<Story name="As Article" args={{ as: "article" }} play={playAsArticle}>
+<Story name="As Article" args={{ as: "article" }}
+  play={async ({ canvasElement }) => {
+    const root = canvasElement.firstElementChild as HTMLElement;
+    await expect(root.tagName).toBe("ARTICLE");
+    await expect(root).toBeVisible();
+  }}>
   <h2>Title</h2>
   <p>Body.</p>
 </Story>
 
-<Story name="As Link" args={{ as: "a", href: "#demo" }} play={playAsLink}>
+<Story name="As Link" args={{ as: "a", href: "#demo" }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const link = canvas.getByRole("link");
+    await expect(link).toBeVisible();
+    await expect(link.getAttribute("href")).toBe("#demo");
+  }}>
   <span>View demo</span>
 </Story>

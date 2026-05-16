@@ -14,8 +14,10 @@
     { label: "Rules", tokens: ["--rule", "--rule-strong"] },
     { label: "Accents", tokens: ["--amber", "--cyan", "--danger", "--ok"] },
   ];
+</script>
 
-  const playColorTokens = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Color Tokens"
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const bgSwatch = canvas.getByTestId("--bg");
     await expect(bgSwatch).toBeVisible();
@@ -23,44 +25,19 @@
     const amberSwatch = canvas.getByTestId("--amber");
     await expect(amberSwatch).toBeVisible();
     await expect(getComputedStyle(amberSwatch).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
-  };
+  }}>
+  <ColorSwatch groups={colorGroups} />
+</Story>
 
-  const playTypeScale = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+<Story name="Type Scale"
+  play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(getComputedStyle(canvas.getByTestId("scale-h1")).fontSize).toBe("72px");
     await expect(getComputedStyle(canvas.getByTestId("scale-h2")).fontSize).toBe("36px");
     await expect(getComputedStyle(canvas.getByTestId("scale-h3")).fontSize).toBe("24px");
     await expect(getComputedStyle(canvas.getByTestId("scale-lede")).fontSize).toBe("19px");
     await expect(getComputedStyle(canvas.getByTestId("scale-body")).fontSize).toBe("16px");
-  };
-
-  const playLabels = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const canvas = within(canvasElement);
-    const mono = canvas.getByTestId("label-mono");
-    await expect(getComputedStyle(mono).fontFamily.toLowerCase()).toContain("jetbrains");
-    await expect(getComputedStyle(mono).textTransform).toBe("uppercase");
-    const eyebrow = canvas.getByTestId("label-eyebrow");
-    await expect(getComputedStyle(eyebrow).fontSize).toBe("12px");
-    await expect(getComputedStyle(eyebrow).textTransform).toBe("uppercase");
-  };
-
-  const playSemanticElements = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const canvas = within(canvasElement);
-    const code = canvas.getByTestId("sem-code");
-    await expect(getComputedStyle(code).fontFamily.toLowerCase()).toContain("jetbrains");
-    const blockquote = canvas.getByTestId("sem-blockquote");
-    await expect(getComputedStyle(blockquote).borderLeftWidth).toBe("2px");
-    await expect(getComputedStyle(blockquote).borderLeftStyle).toBe("solid");
-    const th = canvas.getByTestId("sem-th");
-    await expect(getComputedStyle(th).textTransform).toBe("uppercase");
-  };
-</script>
-
-<Story name="Color Tokens" play={playColorTokens}>
-  <ColorSwatch groups={colorGroups} />
-</Story>
-
-<Story name="Type Scale" play={playTypeScale}>
+  }}>
   <div style="padding: 24px; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; gap: 20px;">
     <div>
       <p class="eyebrow" style="margin-bottom: 6px; color: var(--ink-faint);">.display-heading</p>
@@ -82,7 +59,16 @@
   </div>
 </Story>
 
-<Story name="Labels" play={playLabels}>
+<Story name="Labels"
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const mono = canvas.getByTestId("label-mono");
+    await expect(getComputedStyle(mono).fontFamily.toLowerCase()).toContain("jetbrains");
+    await expect(getComputedStyle(mono).textTransform).toBe("uppercase");
+    const eyebrow = canvas.getByTestId("label-eyebrow");
+    await expect(getComputedStyle(eyebrow).fontSize).toBe("12px");
+    await expect(getComputedStyle(eyebrow).textTransform).toBe("uppercase");
+  }}>
   <div style="padding: 24px; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; gap: 32px;">
     <div>
       <p class="eyebrow" style="margin-bottom: 12px; color: var(--ink-faint);">.mono-label</p>
@@ -105,7 +91,17 @@
   </div>
 </Story>
 
-<Story name="Semantic Elements" play={playSemanticElements}>
+<Story name="Semantic Elements"
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const code = canvas.getByTestId("sem-code");
+    await expect(getComputedStyle(code).fontFamily.toLowerCase()).toContain("jetbrains");
+    const blockquote = canvas.getByTestId("sem-blockquote");
+    await expect(getComputedStyle(blockquote).borderLeftWidth).toBe("2px");
+    await expect(getComputedStyle(blockquote).borderLeftStyle).toBe("solid");
+    const th = canvas.getByTestId("sem-th");
+    await expect(getComputedStyle(th).textTransform).toBe("uppercase");
+  }}>
   <div style="padding: 24px; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; gap: 24px; max-width: 720px;">
     <div>
       <p class="eyebrow" style="margin-bottom: 8px; color: var(--ink-faint);">code</p>
