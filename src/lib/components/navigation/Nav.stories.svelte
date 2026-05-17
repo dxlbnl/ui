@@ -150,3 +150,12 @@
     const amberColor = resolveTokenFgColor('--amber');
     await expect(getComputedStyle(anchor).borderBottomColor).toBe(amberColor);
   }} />
+
+<!-- B27 AC-19: .nav-actions Inline must have no style="flex-shrink: 0" attribute -->
+<Story name="No Inline Flex Shrink Style" args={{ links: [] }}
+  play={async ({ canvasElement }) => {
+    // Before B27: <Inline class="nav-actions" style="flex-shrink: 0;"> carries a style= attribute.
+    // After B27: flex-shrink: 0 moves to scoped CSS on .nav-actions; no style= attribute.
+    const navActions = canvasElement.querySelector('.nav-actions') as HTMLElement;
+    await expect(navActions.getAttribute('style')).toBeNull();
+  }} />

@@ -75,7 +75,7 @@
       <div class="card-footer-row">
         <Spread>
           {#if price}
-            <Inline gap="xs" style="align-items: baseline;">
+            <Inline gap="xs" align="baseline">
               <Text variant="mono" color="amber" size="md">{price}</Text>
               <Text variant="mono" color="faint" size="xs" case="lower">incl. VAT</Text>
             </Inline>

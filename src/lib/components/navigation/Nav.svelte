@@ -62,7 +62,7 @@
           </li>
         {/each}
       </ul>
-      <Inline class="nav-actions" gap="xs" style="flex-shrink: 0;">
+      <Inline class="nav-actions" gap="xs">
         <Button variant="ghost" aria-label="Toggle colour palette" onclick={handlePaletteToggle}>
           {palette === 'paper' ? '◑' : '◐'}
         </Button>
@@ -172,6 +172,10 @@
   .nav-link.active {
     color: var(--ink);
     border-bottom-color: var(--amber);
+  }
+
+  .nav-right :global(.nav-actions) {
+    flex-shrink: 0;
   }
 
   .hamburger-wrap {

@@ -48,3 +48,12 @@
   play={async ({ canvasElement }) => {
     await expect(canvasElement.querySelector(".stat-sub")).toBeNull();
   }} />
+
+<!-- B27 AC-17: Stack inside StatCard must have no style="padding: 16px 20px" attribute -->
+<Story name="No Inline Padding Style" args={{ label: "Modules", value: "12" }}
+  play={async ({ canvasElement }) => {
+    // The Stack root inside the card carries style="padding: 16px 20px;" before B27.
+    // After B27 the padding moves to scoped CSS; the Stack must have no style= attribute.
+    const stackRoot = canvasElement.querySelector(".stack") as HTMLElement;
+    await expect(stackRoot.getAttribute("style")).toBeNull();
+  }} />

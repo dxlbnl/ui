@@ -27,16 +27,22 @@
 </script>
 
 <Card class="stat-card" {...rest}>
-  <Stack gap="xs" style="padding: 16px 20px;">
-    <Text variant="mono" color="faint" size="xs">{label}</Text>
-    <span class="stat-value stat-value--{color}">{value}</span>
-    {#if sublabel}
-      <Text variant="mono" color="faint" size="xs">{sublabel}</Text>
-    {/if}
-  </Stack>
+  <div class="stat-card-body">
+    <Stack gap="xs">
+      <Text variant="mono" color="faint" size="xs">{label}</Text>
+      <span class="stat-value stat-value--{color}">{value}</span>
+      {#if sublabel}
+        <Text variant="mono" color="faint" size="xs">{sublabel}</Text>
+      {/if}
+    </Stack>
+  </div>
 </Card>
 
 <style>
+  .stat-card-body {
+    padding: 16px 20px;
+  }
+
   .stat-value {
     font-family: var(--mono);
     font-size: 32px;

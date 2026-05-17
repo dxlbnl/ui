@@ -42,3 +42,21 @@
     await expect(canvas.getByText("Open source and web work.")).toBeVisible();
     await expect(canvasElement.querySelector(".page-hero-actions")).toBeNull();
   }} />
+
+<!-- B27 AC-13, AC-14, AC-15: no inline style= attributes on Text or Inline children -->
+<Story name="No Inline Styles" args={{ eyebrow: "// DEXTERLABS", heading: "Things built in the lab.", lede: "Software engineer by day; hardware builder by night." }}
+  play={async ({ canvasElement }) => {
+    const pageHero = canvasElement.querySelector(".page-hero") as HTMLElement;
+
+    // AC-13: eyebrow Text must have no style= attribute (margin-bottom moves to scoped CSS)
+    // AC-14: lede Text must have no style= attribute (margin-top + max-width move to scoped CSS)
+    // AC-15: actions Inline must have no style= attribute (margin-top moves to scoped CSS)
+    // Assert: no descendant element inside .page-hero carries a style= attribute
+    // (the only legitimate style= after B27 is the reactive fill width in ProgressBar,
+    //  which is not in PageHero — so zero style= attributes is the correct post-B27 state)
+    const styledEls = pageHero.querySelectorAll("[style]");
+    await expect(styledEls.length).toBe(0);
+  }}>
+  <Button variant="primary">View Catalogue</Button>
+  <Button variant="ghost">View Projects →</Button>
+</Story>

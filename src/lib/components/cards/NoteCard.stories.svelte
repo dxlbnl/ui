@@ -83,3 +83,12 @@
     await expect(root.tagName).toBe("DIV");
     await expect(root).toBeVisible();
   }} />
+
+<!-- B27 AC-21: .note-lede Text must have no style="flex: 1" attribute -->
+<Story name="No Inline Flex Style" args={{ href: "#note-0x03", idx: 3, title: "Bench Notes", lede: "An excerpt from the bench." }}
+  play={async ({ canvasElement }) => {
+    // Before B27: <Text class="note-lede" style="flex: 1;"> carries a style= attribute.
+    // After B27: flex: 1 moves to scoped CSS via .note-lede rule; no style= on the element.
+    const ledeEl = canvasElement.querySelector('.note-lede') as HTMLElement;
+    await expect(ledeEl.getAttribute('style')).toBeNull();
+  }} />

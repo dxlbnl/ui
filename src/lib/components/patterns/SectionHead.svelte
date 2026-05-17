@@ -26,14 +26,14 @@
 </script>
 
 <section class="section-head" {...rest}>
-  <Stack style="gap: 6px;">
+  <Stack gap="xs">
     {#if eyebrow}
       <Text variant="eyebrow">{eyebrow}</Text>
     {/if}
-    <Inline gap="sm" style="align-items: baseline;">
+    <Inline gap="sm" align="baseline">
       <Heading level={2} variant="h3">{heading}</Heading>
       {#if sublabel}
-        <Text variant="mono" style="margin-left: auto;">{sublabel}</Text>
+        <span class="sublabel"><Text variant="mono">{sublabel}</Text></span>
       {/if}
     </Inline>
     {#if children}
@@ -46,5 +46,9 @@
   .section-head {
     padding: 40px 0 12px;
     border-bottom: 1px solid var(--rule);
+  }
+
+  .sublabel {
+    margin-left: auto;
   }
 </style>

@@ -647,3 +647,58 @@
   does not break the no-prop baseline. `data-testid` queries are justified per the stories
   guide: there is no accessible role or unique visible text to distinguish the variants.
 - **Supersedes**: none
+
+## D34: B27 Inline align prop uses `data-align` attribute pattern; default is `center`
+- **Date**: 2026-05-17
+- **By**: spec-writer (B27)
+- **Context**: `Inline` hardcodes `align-items: center` in its base `.inline` CSS rule.
+  Two call sites need `align-items: baseline` and currently work around this via
+  `style="align-items: baseline;"`. A typed `align` prop removes the override.
+- **Decision**: Add `align?: AlignValue` to `Inline.svelte` where
+  `AlignValue = 'start' | 'center' | 'end' | 'baseline' | 'stretch'`. Default is
+  `'center'` — preserving the existing rendered output for all current callers. The
+  prop is forwarded as a `data-align` attribute on the root element and resolved
+  via CSS attribute selectors (`.inline[data-align="start"] { align-items: flex-start }`,
+  etc.) in the component's `<style>` block, mirroring the `data-gap` pattern from B25.
+  The hardcoded `align-items: center` in the base `.inline` rule is removed; it is
+  replaced by `.inline[data-align="center"] { align-items: center }`.
+- **Consequences**: No existing caller is broken (default is `center` = current value).
+  ProductCard and SectionHead migrate from `style="align-items: baseline;"` to
+  `align="baseline"`. The `AlignValue` type is local to `Inline.svelte` (no shared
+  module) — same convention as `GapSize` in B25.
+- **Supersedes**: none
+
+## D35: B27 test-writer strategy — `style=` absence assertions for scoped CSS migration
+- **Date**: 2026-05-17
+- **By**: test-writer (B27)
+- **Context**: Part 2 of B27 moves inline `style=` attributes on layout primitives to
+  scoped CSS inside their parent components. The net computed CSS is unchanged, so
+  assertions on computed values would trivially pass both before and after implementation.
+- **Decision**: For each scoped CSS migration, assert that the affected element's
+  `getAttribute('style')` returns `null`. This fails today (inline `style=` is present)
+  and passes after implementation (inline `style=` is removed). This is the minimal
+  provably-failing test for a value-preserving CSS move.
+- **AC-16 exception**: `Modal.svelte`'s bare `:global(.modal-title)` selector change is
+  a CSS scope fix, not an inline-style removal. There is no inline `style=` to assert
+  absent, and play functions cannot inspect CSS selector text. No failing test is written
+  for AC-16; the implementer must verify by code review and the `pnpm check` run.
+- **Consequences**: Every `style=` absence test fails before B27 implementation and
+  passes after; all 250 pre-existing tests remain green throughout.
+- **Supersedes**: none
+
+## D36: B27 — ToastVariant renamed from success/warning/error to ok/amber/danger
+- **Date**: 2026-05-17
+- **By**: implementer (B27)
+- **Context**: The `ToastVariant` in `stores/toast.ts` and `Toast.svelte` used
+  `'success' | 'warning' | 'error'` but the ToastRegion stories (and the wider design
+  token system) used `'ok' | 'amber' | 'danger'`. The mismatch caused the
+  `ToastRegion > ThreeVariants` test to fail (danger toast got `role="status"` instead
+  of `role="alert"`).
+- **Decision**: Rename `ToastVariant` to `'ok' | 'amber' | 'danger'` throughout
+  (`toast.ts`, `Toast.svelte`, `Toast.stories.svelte`). This aligns the component API
+  with the design token naming convention used by every other component (Led, Alert,
+  StatCard, ProgressBar, etc.).
+- **Consequences**: Any external caller using old names (`'success'`, `'warning'`,
+  `'error'`) must update. Only `Toast.stories.svelte` was an internal caller — updated
+  in this item.
+- **Supersedes**: none

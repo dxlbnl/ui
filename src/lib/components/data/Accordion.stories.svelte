@@ -1,18 +1,23 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, within, waitFor } from "storybook/test";
-  import { resolveTokenColor, resolveTokenFgColor } from "$lib/storybook-utils.js";
+  import {
+    resolveTokenColor,
+    resolveTokenFgColor,
+  } from "$lib/storybook-utils.js";
   import Accordion from "./Accordion.svelte";
   import AccordionItem from "./AccordionItem.svelte";
 
   const { Story } = defineMeta({
+    component: Accordion,
     title: "Data/Accordion",
     tags: ["autodocs"],
   });
 </script>
 
 <!-- AC-20: "Default" story — three items, first open -->
-<Story name="Default"
+<Story
+  name="Default"
   play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
@@ -56,27 +61,34 @@
     await waitFor(() => expect(firstBody).toBeVisible());
 
     // AC-10: body content of open item is visible
-    await waitFor(() => expect(canvas.getByText(/Start by reading the quick-start guide/)).toBeVisible());
+    await waitFor(() =>
+      expect(
+        canvas.getByText(/Start by reading the quick-start guide/),
+      ).toBeVisible(),
+    );
 
     // AC-17: summary has list-style: none (no browser disclosure triangle)
     const firstSummary = allDetails[0].querySelector("summary") as HTMLElement;
     await expect(getComputedStyle(firstSummary).listStyleType).toBe("none");
-  }}>
-  <Accordion>
-    <AccordionItem label="Getting Started" open={true}>
-      <p>Start by reading the quick-start guide and familiarising yourself with the token set.</p>
-    </AccordionItem>
-    <AccordionItem label="Installation">
-      <p>Run pnpm install to set up all dependencies.</p>
-    </AccordionItem>
-    <AccordionItem label="Configuration">
-      <p>Edit the tokens file to match your brand palette.</p>
-    </AccordionItem>
-  </Accordion>
+  }}
+>
+  <AccordionItem label="Getting Started" open={true}>
+    <p>
+      Start by reading the quick-start guide and familiarising yourself with the
+      token set.
+    </p>
+  </AccordionItem>
+  <AccordionItem label="Installation">
+    <p>Run pnpm install to set up all dependencies.</p>
+  </AccordionItem>
+  <AccordionItem label="Configuration">
+    <p>Edit the tokens file to match your brand palette.</p>
+  </AccordionItem>
 </Story>
 
 <!-- All items closed -->
-<Story name="All Closed"
+<Story
+  name="All Closed"
   play={async ({ canvasElement }) => {
     // AC-8: all details elements lack open attribute
     const allDetails = canvasElement.querySelectorAll("details.acc-item");
@@ -84,24 +96,26 @@
     for (const d of allDetails) {
       await expect(d.hasAttribute("open")).toBe(false);
     }
-  }}>
-  <Accordion>
-    <AccordionItem label="Section Alpha">
-      <p>Content for Alpha.</p>
-    </AccordionItem>
-    <AccordionItem label="Section Beta">
-      <p>Content for Beta.</p>
-    </AccordionItem>
-    <AccordionItem label="Section Gamma">
-      <p>Content for Gamma.</p>
-    </AccordionItem>
-  </Accordion>
+  }}
+>
+  <AccordionItem label="Section Alpha">
+    <p>Content for Alpha.</p>
+  </AccordionItem>
+  <AccordionItem label="Section Beta">
+    <p>Content for Beta.</p>
+  </AccordionItem>
+  <AccordionItem label="Section Gamma">
+    <p>Content for Gamma.</p>
+  </AccordionItem>
 </Story>
 
 <!-- AC-21: "Toggle Interaction" story — click to open, click again to close -->
-<Story name="Toggle Interaction"
+<Story
+  name="Toggle Interaction"
   play={async ({ canvasElement, userEvent }) => {
-    const details = canvasElement.querySelector("details.acc-item") as HTMLElement;
+    const details = canvasElement.querySelector(
+      "details.acc-item",
+    ) as HTMLElement;
     await expect(details).not.toBeNull();
 
     // AC-8: starts closed
@@ -131,21 +145,23 @@
     // AC-13: trigger background resolves to var(--bg-elev) when open
     const openTrigger = details.querySelector(".acc-trigger") as HTMLElement;
     const bgElev = resolveTokenColor("--bg-elev");
-    await waitFor(() => expect(getComputedStyle(openTrigger).backgroundColor).toBe(bgElev));
+    await waitFor(() =>
+      expect(getComputedStyle(openTrigger).backgroundColor).toBe(bgElev),
+    );
 
     // AC-9: click again → details loses open attribute
     await userEvent.click(summary);
     await expect(details.hasAttribute("open")).toBe(false);
-  }}>
-  <Accordion>
-    <AccordionItem label="Toggle Me">
-      <p>Interact with this item to test toggle behaviour.</p>
-    </AccordionItem>
-  </Accordion>
+  }}
+>
+  <AccordionItem label="Toggle Me">
+    <p>Interact with this item to test toggle behaviour.</p>
+  </AccordionItem>
 </Story>
 
 <!-- "Rich Body" — open item with structured content in the body -->
-<Story name="Rich Body"
+<Story
+  name="Rich Body"
   play={async ({ canvasElement }) => {
     // AC-6: body content rendered inside .acc-body
     const body = canvasElement.querySelector(".acc-body");
@@ -153,26 +169,35 @@
     await waitFor(() => expect(body).toBeVisible());
 
     // Body content is accessible
-    await waitFor(() => expect(within(canvasElement).getByText("VDD")).toBeVisible());
+    await waitFor(() =>
+      expect(within(canvasElement).getByText("VDD")).toBeVisible(),
+    );
     await expect(within(canvasElement).getByText("+3.3V")).toBeVisible();
     await expect(within(canvasElement).getByText("VCC")).toBeVisible();
     await expect(within(canvasElement).getByText("+5V")).toBeVisible();
-  }}>
-  <Accordion>
-    <AccordionItem label="Power Rails" open={true}>
-      <dl style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;margin:0;">
-        <dt>VDD</dt><dd>+3.3V</dd>
-        <dt>VCC</dt><dd>+5V</dd>
-        <dt>VBUS</dt><dd>+12V</dd>
-      </dl>
-    </AccordionItem>
-  </Accordion>
+  }}
+>
+  <AccordionItem label="Power Rails" open={true}>
+    <dl
+      style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;margin:0;"
+    >
+      <dt>VDD</dt>
+      <dd>+3.3V</dd>
+      <dt>VCC</dt>
+      <dd>+5V</dd>
+      <dt>VBUS</dt>
+      <dd>+12V</dd>
+    </dl>
+  </AccordionItem>
 </Story>
 
 <!-- AC-16: Accordion wrapper has 1px solid border -->
-<Story name="Wrapper Border"
+<Story
+  name="Wrapper Border"
   play={async ({ canvasElement }) => {
-    const accordionRoot = canvasElement.querySelector(".accordion") as HTMLElement;
+    const accordionRoot = canvasElement.querySelector(
+      ".accordion",
+    ) as HTMLElement;
     await expect(accordionRoot).not.toBeNull();
 
     const ruleColor = resolveTokenFgColor("--rule");
@@ -180,16 +205,16 @@
     await expect(style.borderTopStyle).toBe("solid");
     await expect(style.borderTopWidth).toBe("1px");
     await expect(style.borderTopColor).toBe(ruleColor);
-  }}>
-  <Accordion>
-    <AccordionItem label="Border Test">
-      <p>The accordion wrapper should have a 1px solid rule border.</p>
-    </AccordionItem>
-  </Accordion>
+  }}
+>
+  <AccordionItem label="Border Test">
+    <p>The accordion wrapper should have a 1px solid rule border.</p>
+  </AccordionItem>
 </Story>
 
 <!-- AC-14 / AC-15: last item has no border-bottom; non-last items do -->
-<Story name="Item Borders"
+<Story
+  name="Item Borders"
   play={async ({ canvasElement }) => {
     const allDetails = canvasElement.querySelectorAll("details.acc-item");
     await expect(allDetails.length).toBe(3);
@@ -202,25 +227,27 @@
     // AC-14: last item has no bottom border
     const lastStyle = getComputedStyle(allDetails[2] as HTMLElement);
     await expect(lastStyle.borderBottomWidth).toBe("0px");
-  }}>
-  <Accordion>
-    <AccordionItem label="First">
-      <p>First item.</p>
-    </AccordionItem>
-    <AccordionItem label="Second">
-      <p>Second item.</p>
-    </AccordionItem>
-    <AccordionItem label="Last">
-      <p>Last item — no bottom border.</p>
-    </AccordionItem>
-  </Accordion>
+  }}
+>
+  <AccordionItem label="First">
+    <p>First item.</p>
+  </AccordionItem>
+  <AccordionItem label="Second">
+    <p>Second item.</p>
+  </AccordionItem>
+  <AccordionItem label="Last">
+    <p>Last item — no bottom border.</p>
+  </AccordionItem>
 </Story>
 
 <!-- AC 41 / AC 42: "Animated" story — verifies DOM toggle behaviour of CSS animation -->
-<Story name="Animated"
+<Story
+  name="Animated"
   play={async ({ canvasElement, userEvent }) => {
     // AC 35: <details> starts without the open attribute (closed)
-    const details = canvasElement.querySelector("details.acc-item") as HTMLElement;
+    const details = canvasElement.querySelector(
+      "details.acc-item",
+    ) as HTMLElement;
     await expect(details.hasAttribute("open")).toBe(false);
 
     // AC 35: .acc-body is present in the DOM regardless of open state
@@ -238,25 +265,52 @@
     // AC 37: click summary again → <details> loses open attribute
     await userEvent.click(summary);
     await expect(details.hasAttribute("open")).toBe(false);
-  }}>
-  <Accordion>
-    <AccordionItem label="CSS Height Animation">
-      <p>This item uses a CSS-only height transition via interpolate-size and @starting-style.</p>
-    </AccordionItem>
-  </Accordion>
+  }}
+>
+  <AccordionItem label="CSS Height Animation">
+    <p>
+      This item uses a CSS-only height transition via interpolate-size and
+      @starting-style.
+    </p>
+  </AccordionItem>
+</Story>
+
+<!-- B27 AC-20: .accordion Stack root must have no style="border: 1px solid var(--rule)" attribute -->
+<Story
+  name="No Inline Border Style"
+  play={async ({ canvasElement }) => {
+    // Before B27: <Stack style="border: 1px solid var(--rule);"> carries a style= attribute.
+    // After B27: the border moves to scoped CSS on .accordion; no style= attribute on the root.
+    const accordionRoot = canvasElement.querySelector(
+      ".accordion",
+    ) as HTMLElement;
+    await expect(accordionRoot.getAttribute("style")).toBeNull();
+  }}
+>
+  <AccordionItem label="Border Style Test">
+    <p>The accordion root must not carry an inline style= attribute.</p>
+  </AccordionItem>
 </Story>
 
 <!-- AC-18: Accordion forwards ...rest attributes to root div -->
-<Story name="Attribute Forwarding"
+<Story
+  name="Attribute Forwarding"
+  args={{
+    id: "test-accordion",
+    "aria-label": "Settings sections",
+  }}
   play={async ({ canvasElement }) => {
-    const accordionRoot = canvasElement.querySelector(".accordion") as HTMLElement;
+    const accordionRoot = canvasElement.querySelector(
+      ".accordion",
+    ) as HTMLElement;
     await expect(accordionRoot).not.toBeNull();
     await expect(accordionRoot.getAttribute("id")).toBe("test-accordion");
-    await expect(accordionRoot.getAttribute("aria-label")).toBe("Settings sections");
-  }}>
-  <Accordion id="test-accordion" aria-label="Settings sections">
-    <AccordionItem label="REST Forwarding">
-      <p>The wrapper must forward id and aria-label.</p>
-    </AccordionItem>
-  </Accordion>
+    await expect(accordionRoot.getAttribute("aria-label")).toBe(
+      "Settings sections",
+    );
+  }}
+>
+  <AccordionItem label="REST Forwarding">
+    <p>The wrapper must forward id and aria-label.</p>
+  </AccordionItem>
 </Story>

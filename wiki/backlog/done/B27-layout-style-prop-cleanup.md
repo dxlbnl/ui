@@ -5,6 +5,7 @@ type: bug
 priority: medium
 flags: []
 created: 2026-05-17
+spec: wiki/specs/B27-layout-style-prop-cleanup.md
 ---
 
 ## Description

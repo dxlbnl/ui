@@ -43,7 +43,7 @@
       </Spread>
       <Heading level={3} size="lg">{title}</Heading>
       {#if lede}
-        <Text variant="body" color="dim" class="note-lede" style="flex: 1;">{lede}</Text>
+        <Text variant="body" class="note-lede">{lede}</Text>
       {/if}
       {#if date}
         <div class="note-foot">
@@ -74,6 +74,11 @@
 
   :global(.note-card):hover {
     border-color: var(--amber);
+  }
+
+  .card-body :global(.note-lede) {
+    flex: 1;
+    color: var(--ink-dim);
   }
 
   .note-foot {

@@ -179,7 +179,7 @@
     line-height: 1.5;
   }
 
-  :global(.modal-title) {
+  .modal-header :global(.modal-title) {
     flex: 1;
   }
 </style>

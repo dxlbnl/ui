@@ -71,3 +71,13 @@
     await expect(progressbar).toHaveAttribute("aria-valuenow", "0");
     await expect(canvas.getByText("0%")).toBeVisible();
   }} />
+
+<!-- B27 AC-18: Stack root must have no style="width: 100%" attribute -->
+<Story name="No Inline Width Style" args={{ value: 50, label: "Load" }}
+  play={async ({ canvasElement }) => {
+    // Before B27: <Stack style="width: 100%;"> is the root — it carries a style= attribute.
+    // After B27: width: 100% moves to scoped CSS; the Stack root must have no style= attribute.
+    // The Stack root is the first element child of the canvas (it receives {...rest}).
+    const root = canvasElement.firstElementChild as HTMLElement;
+    await expect(root.getAttribute("style")).toBeNull();
+  }} />

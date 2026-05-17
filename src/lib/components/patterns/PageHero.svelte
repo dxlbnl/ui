@@ -26,16 +26,18 @@
 
 <header class="page-hero" {...rest}>
   {#if eyebrow}
-    <Text variant="eyebrow" style="margin-bottom: 12px;">{eyebrow}</Text>
+    <div class="page-hero-eyebrow"><Text variant="eyebrow">{eyebrow}</Text></div>
   {/if}
   <Heading level={1} variant="hero">{heading}</Heading>
   {#if lede}
-    <Text variant="lede" style="margin-top: 20px; max-width: 62ch;">{lede}</Text>
+    <div class="page-hero-lede"><Text variant="lede">{lede}</Text></div>
   {/if}
   {#if children}
-    <Inline gap="sm" style="margin-top: 24px;">
-      {@render children()}
-    </Inline>
+    <div class="page-hero-actions">
+      <Inline gap="sm">
+        {@render children()}
+      </Inline>
+    </div>
   {/if}
 </header>
 
@@ -43,5 +45,18 @@
   .page-hero {
     padding: 48px 0 40px;
     border-bottom: 1px solid var(--rule);
+  }
+
+  .page-hero-eyebrow {
+    margin-bottom: 12px;
+  }
+
+  .page-hero-lede {
+    margin-top: 20px;
+    max-width: 62ch;
+  }
+
+  .page-hero-actions {
+    margin-top: 24px;
   }
 </style>
