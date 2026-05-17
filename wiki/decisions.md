@@ -369,6 +369,27 @@
   but `[key: string]: unknown` already provided the same effective permissiveness.
 - **Supersedes**: none
 
+## D21: B14 Colors story uses composition pattern (multiple Text instances in slot)
+- **Date**: 2026-05-16
+- **By**: test-writer (B14)
+- **Context**: The `Text` `Colors` story must assert inline-style output for all 7 color
+  tokens. Because `component:` in `defineMeta` renders exactly one component instance per
+  story (wrapping the slot), seven separate stories would be needed to test each color
+  value individually, or an alternative multi-instance approach is required.
+- **Decision**: The `Colors` story uses a composition pattern: `component:` is kept in
+  `defineMeta` (for autodocs), and the story slot renders multiple `<Text>` children with
+  `data-testid` attributes for each color variant plus a no-color control. The `play`
+  function queries each by `data-testid` and asserts the inline style attribute. This
+  follows the precedent set by `Led.composition.stories.svelte` and `TagPill.composition.stories.svelte`.
+- **Consequences**: The `Colors` story is a single test entry covering all 7 color ACs
+  (AC-10 through AC-14). The `data-testid` query is a last-resort per the stories guide,
+  justified here because the Text elements have no accessible role or visible-text
+  distinguisher (all contain generic colour sample text). The Colors story does NOT use
+  a separate `.composition.stories.svelte` file because the primary file keeps `component:`
+  and the slot children are additional `<Text>` instances — Storybook wraps the outermost
+  story slot, not the nested children.
+- **Supersedes**: none
+
 ## D19: B11 tokens stories — replace 4 existing stories with 3 restructured ones
 - **Date**: 2026-05-16
 - **By**: spec-writer (B11)
@@ -388,4 +409,142 @@
   into the new `Color Palette` and `Typography Scale` stories. The `Semantic Elements`
   and `Labels` story content is not carried forward (out of scope per the spec's
   Out of scope section).
+- **Supersedes**: none
+
+## D22: B15 Select keyboard — aria-activedescendant on trigger button, not on listbox
+- **Date**: 2026-05-16
+- **By**: spec-writer (B15)
+- **Context**: The WAI-ARIA Listbox pattern can be implemented with DOM focus either on
+  the listbox container (`<ul role="listbox">`) or on an external control that opens the
+  list. In `Select`, DOM focus stays on the trigger `<button>` when the panel is open
+  (users Tab to the trigger; clicking it opens the panel without moving focus away). This
+  means `aria-activedescendant` must be placed on the focus owner (the trigger) rather
+  than on the `<ul>`.
+- **Decision**: `aria-activedescendant="select-opt-{i}"` is set on the trigger `<button>`
+  when the panel is open and a highlight index is active. Each `<li role="option">` gets
+  `id="select-opt-{i}"`. This model keeps focus on the trigger throughout the panel
+  interaction. The `<ul>` itself does not receive focus or `aria-activedescendant`.
+- **Consequences**: Some screen readers may announce option changes less reliably than
+  they would with roving DOM focus on `<li>` elements (documented in OQ-1 of B15 spec).
+  A roving-tabindex refactor remains possible in a future item without a breaking API
+  change.
+- **Supersedes**: none
+
+## D23: B15 Tabs keyboard — automatic activation model chosen
+- **Date**: 2026-05-16
+- **By**: spec-writer (B15)
+- **Context**: WAI-ARIA APG describes two Tabs activation models: (a) automatic —
+  arrow keys move focus AND activate the panel immediately; (b) manual — arrow keys
+  move focus only, Space/Enter activates. The current Tabs component switches panels
+  instantly (no async loading), making automatic activation the natural choice and
+  consistent with common browser tab-bar behaviour.
+- **Decision**: ArrowLeft/ArrowRight/Home/End on a tab button both move DOM focus AND
+  set `activeId` to the target tab in the same event handler, with no intermediate
+  "focused but inactive" state.
+- **Consequences**: Simpler implementation (one state mutation per key press). Users who
+  expect to browse tabs without activating them cannot do so — this is the trade-off of
+  automatic activation. If a consumer needs manual activation, that would require a new
+  `activationMode` prop (out of scope for B15).
+- **Supersedes**: none
+
+## D24: B16 Field enhancement uses Svelte context to auto-inject ARIA attributes into child controls
+- **Date**: 2026-05-16
+- **By**: spec-writer (B16)
+- **Context**: D11 left ARIA wiring (`aria-invalid`, `aria-describedby`, `id`) as the
+  consumer's responsibility when using `Field`. B16 addresses this ergonomics gap without
+  coupling `Field` to specific control types.
+- **Decision**: `Field` calls `setContext('field', { inputId, hintId, hasHint, hasError })`
+  with reactive values. Each form control (`Input`, `Textarea`, `Select`, `Checkbox`,
+  `Radio`, `Switch`) reads this context via `getContext('field')` and — when present —
+  automatically applies `id`, `aria-describedby`, and `aria-invalid` to the rendered
+  element. This keeps `Field` as a pure layout/label wrapper with no import dependency on
+  any specific control type, while giving controls the information they need without
+  consumer boilerplate. The context key `'field'` and the `FieldContext` interface are
+  defined in a shared `src/lib/components/forms/field-context.ts` module.
+- **Consequences**: Consumers no longer need to manually pass `id`, `aria-describedby`,
+  and `aria-invalid` when using `Field`. Backward-compatible: controls outside `Field`
+  receive no context and behave as before. Dynamic error changes (error prop flipping
+  after initial mount) may not propagate reactively via context — this is documented as
+  OQ-1 in the B16 spec and requires verification by the test-writer.
+- **Supersedes**: D11 (partially — D11's consumer-responsibility approach was correct for
+  B7; D24 supersedes it for B16 onwards)
+
+## D25: B18 Toast uses `role="alert"` for danger variant, `role="status"` for ok/amber
+- **Date**: 2026-05-16
+- **By**: spec-writer (B18)
+- **Context**: B9 `Alert` deferred the `role="alert"` vs `role="status"` question (OQ-1
+  in B9 spec, D15). Static inline banners (`Alert`) are authored by the page designer and
+  are present in the DOM at load time — polite `role="status"` is acceptable because the
+  user is aware of the page context. Toasts, by contrast, appear unexpectedly at runtime
+  driven by application events. A `danger` toast represents a critical error (connection
+  lost, thermal fault) that the user must be made aware of immediately, regardless of what
+  the screen reader is currently narrating.
+- **Decision**: `Toast.svelte` computes `role` via `$derived`:
+  `const role = $derived(variant === 'danger' ? 'alert' : 'status')`.
+  The root element also gets `aria-live` set accordingly (`assertive` for danger, `polite`
+  for ok/amber). All three variants also carry `aria-atomic="true"` to ensure the full
+  message is read when the region updates.
+- **Consequences**: Danger toasts interrupt the screen reader immediately. Ok and amber
+  toasts are announced politely when the reader is idle. This matches the semantic
+  intent of the ARIA live region spec. `Alert.svelte` (B9) is not changed — it remains
+  uniformly `role="status"` for its static banner use case.
+- **Supersedes**: D15 (for the Toast context; D15 remains applicable to `Alert`)
+
+## D26: Prose component uses `.prose :global(element)` — scoped-ancestor-chained global selectors
+- **Date**: 2026-05-16
+- **By**: spec-writer (B20)
+- **Context**: mdsvex (and any markdown processor) inserts h1–h4, p, a, ul, ol, li, code, pre,
+  blockquote, table, th, td, img, and hr as dynamic children of the wrapper component.
+  Svelte's compiler cannot add its scoping attribute to these elements because they are not
+  present in the component template — they arrive at runtime as slot/children content. The
+  standard three-pattern strategy from `composition-limits.md` does not apply here because the
+  elements are neither rendered by a child Svelte component nor controlled by a layout primitive.
+- **Decision**: `Prose.svelte` uses `.prose :global(element)` selectors throughout its
+  `<style>` block. This syntax is valid in Svelte: the `.prose` part is scoped to the
+  component (only this component's root element gets the class), and `:global(element)`
+  reaches arbitrarily deep into its DOM subtree. Because `.prose` is unique to this component,
+  the global selectors are effectively scoped to the prose container and do not leak into
+  the rest of the page. All colour and typography values use `var(--token)` custom
+  properties so both palettes work without any JavaScript.
+- **Consequences**: This is the intended Svelte escape hatch for styling externally-sourced
+  DOM subtrees. The CSS is NOT global — it is restricted to descendants of the `.prose`
+  element rendered by this component. Any future global `.prose` class added to `app.css`
+  would conflict; this class name must remain reserved for this component.
+- **Supersedes**: none
+
+## D27: B21 docs are hand-written and reviewer-verified — no play-function tests
+- **Date**: 2026-05-16
+- **By**: spec-writer (B21)
+- **Context**: B21 produces only Markdown files in `docs/`. The project's testing approach
+  (D1) is Storybook play functions for component behaviour. Play functions cannot validate
+  the accuracy of prose documentation — there is nothing to render in a browser. A
+  TypeDoc or JSDoc generation approach would conflict with the "no generated content"
+  requirement and B19's responsibility for JSDoc annotations.
+- **Decision**: The `test-writer` for B21 writes a single file-presence check (Bash
+  `ls docs/` or a minimal Vitest `existsSync` assertion for all ten files). Content
+  accuracy — prop table correctness, token values, usage example validity — is a
+  **reviewer task**: the reviewer agent reads each doc file and cross-checks it against
+  the corresponding source `.svelte` file and `tokens.css`. This is explicitly called
+  out as a human/agent review task in the spec's Verification approach section.
+- **Consequences**: No play functions are added for B21. The reviewer pass is more manual
+  than for code items. If a prop changes in a future item, `docs/` must be updated
+  manually (no auto-sync). B19 handles JSDoc annotations; B21 handles narrative docs.
+- **Supersedes**: none
+
+## D28: B19 JSDoc placement — two acceptable patterns; implementer verifies autodocs render
+- **Date**: 2026-05-16
+- **By**: spec-writer (B19)
+- **Context**: Storybook autodocs for Svelte 5 components can read JSDoc from two
+  placements: (a) a `/** @param ... @default ... */` block immediately above the
+  `let { ... } = $props()` line, or (b) inline `/** ... */` comments above each field
+  in the `interface Props` declaration. The correct placement depends on what
+  `@storybook/addon-svelte-csf` version 5.x reads at runtime — this is not definitively
+  documented for Svelte 5 runes mode.
+- **Decision**: The B19 spec (AC-16) accepts either placement. The implementer must verify
+  on one component (recommended: `Button.svelte`) that the autodocs prop table renders the
+  annotation before annotating the full component set. If neither placement works, OQ-3
+  should be escalated as a blocker.
+- **Consequences**: Implementation may require a brief discovery step before the annotation
+  pass begins. The 80% annotation density requirement (AC-18) is the measurable target
+  regardless of placement style.
 - **Supersedes**: none

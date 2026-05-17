@@ -1,8 +1,12 @@
 <script lang="ts">
   import type { HTMLAnchorAttributes } from 'svelte/elements'
-  import Led from '../primitives/Led.svelte'
+  import Card from './Card.svelte'
   import Stack from '../layout/Stack.svelte'
   import Spread from '../layout/Spread.svelte'
+  import Inline from '../layout/Inline.svelte'
+  import Led from '../primitives/Led.svelte'
+  import Text from '../primitives/Text.svelte'
+  import Heading from '../primitives/Heading.svelte'
 
   type StockStatus = 'in-stock' | 'coming-soon' | 'low-stock' | 'out-of-stock'
 
@@ -52,44 +56,38 @@
   )
 </script>
 
-<svelte:element this={as} class="product-card" {...rest}>
+<Card as={as} class="product-card" {...rest}>
   <div class="card-img">
-    <span class="card-img-label">{sku} · PRODUCT</span>
+    <Text variant="mono" color="faint">{sku} · PRODUCT</Text>
   </div>
   <Stack gap="xs" style="padding: 12px 14px 10px; flex: 1;">
-    <span class="card-sku">{sku}</span>
-    <h3 class="card-title">{name}</h3>
+    <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.12em;">{sku}</Text>
+    <Heading level={3} style="font-size: var(--t-lede); letter-spacing: -0.01em; line-height: 1.2;">{name}</Heading>
     <p class="card-desc">{description}</p>
-    <div class="card-meta">
-      <Spread style="align-items: baseline; margin-top: auto; padding-top: 8px; font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.04em; text-transform: uppercase;">
-        {#if price}
-          <span class="card-price">
-            {price}
-            <span class="card-price-sub">incl. VAT</span>
-          </span>
-        {/if}
-        <span class="card-stock">
-          <Led color={ledColor} aria-hidden="true" />
-          <span class="card-stock-label">{stockLabel}</span>
-        </span>
-      </Spread>
-    </div>
+    <Spread style="align-items: baseline; margin-top: auto; padding-top: 8px;">
+      {#if price}
+        <Inline gap="xs" style="align-items: baseline;">
+          <Text variant="mono" color="amber" style="font-size: var(--t-body);">{price}</Text>
+          <Text variant="mono" color="faint" style="font-size: var(--t-micro); text-transform: lowercase; letter-spacing: 0.06em;">incl. VAT</Text>
+        </Inline>
+      {/if}
+      <Inline gap="xs">
+        <Led color={ledColor} aria-hidden="true" />
+        <Text variant="mono" style="font-size: var(--t-micro);">{stockLabel}</Text>
+      </Inline>
+    </Spread>
   </Stack>
   <div class="card-cta">
     <Spread>
-      <span>{resolvedCtaLabel}</span>
+      <Text variant="mono">{resolvedCtaLabel}</Text>
       <span aria-hidden="true">→</span>
     </Spread>
   </div>
-</svelte:element>
+</Card>
 
 <style>
-  .product-card {
-    border: 1px solid var(--rule);
-    background: var(--bg-rail);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+  /* :global needed — .product-card is on Card's root, invisible to Svelte's scoped CSS analysis */
+  :global(.product-card) {
     text-decoration: none;
     color: inherit;
     cursor: pointer;
@@ -108,72 +106,22 @@
     justify-content: center;
   }
 
-  .card-img-label {
-    font-family: var(--mono);
-    font-size: var(--t-micro);
-    color: var(--ink-faint);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .card-sku {
-    font-family: var(--mono);
-    font-size: var(--t-micro);
-    color: var(--ink-faint);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .card-title {
-    font-weight: 500;
-    font-size: var(--t-lede);
-    letter-spacing: -0.01em;
-    line-height: 1.2;
-    margin: 0;
-  }
-
+  /* mono prose without uppercase — can't use Text variant=mono which forces uppercase */
   .card-desc {
+    font-family: var(--mono);
     font-size: var(--t-mono);
     color: var(--ink-dim);
     line-height: 1.4;
     margin: 0;
   }
 
-  .card-price {
-    font-size: var(--t-body);
-    color: var(--amber);
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-  }
-
-  .card-price-sub {
-    font-size: var(--t-micro);
-    color: var(--ink-faint);
-    letter-spacing: 0.06em;
-    text-transform: lowercase;
-  }
-
-  .card-stock {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: var(--t-micro);
-    letter-spacing: 0.08em;
-  }
-
   .card-cta {
     border-top: 1px solid var(--rule);
     padding: 10px 14px;
-    font-family: var(--mono);
-    font-size: var(--t-mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-dim);
     transition: background var(--transition), color var(--transition);
   }
 
-  .product-card:hover .card-cta {
+  :global(.product-card):hover .card-cta {
     background: var(--amber);
     color: var(--bg);
   }

@@ -2,6 +2,9 @@
   import type { HTMLDialogAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import Stack from '../layout/Stack.svelte'
+  import Inline from '../layout/Inline.svelte'
+  import Spread from '../layout/Spread.svelte'
+  import Text from '../primitives/Text.svelte'
   import Button from '../primitives/Button.svelte'
 
   type ModalVariant = 'default' | 'confirm' | 'destructive'
@@ -71,22 +74,22 @@
 >
   <Stack class="modal-inner" style="background: var(--bg-elev); border: 1px solid var(--rule-strong); width: 100%; max-width: 480px; max-height: 80vh; overflow-y: auto;">
 
-    <header class="modal-header">
+    <Inline as="header" style="align-items: center; gap: var(--u); padding: var(--u2) var(--u3); border-bottom: 1px solid var(--rule);">
       {#if variant === 'destructive' || variant === 'confirm'}
         <span class="modal-icon" aria-hidden="true">!</span>
       {/if}
-      <h2 class="modal-title" id="modal-title">{title}</h2>
+      <Text variant="mono" as="h2" id="modal-title" style="font-size: var(--t-lede); letter-spacing: 0.08em; margin: 0; flex: 1;">{title}</Text>
       <Button variant="ghost" type="button" aria-label="Close dialog" onclick={handleClose}>×</Button>
-    </header>
+    </Inline>
 
     <div class="modal-body">
       {@render children?.()}
     </div>
 
     {#if footer}
-      <footer class="modal-footer" style="display: flex; justify-content: flex-end; gap: var(--u); padding: var(--u2) var(--u3); border-top: 1px solid var(--rule);">
+      <Spread as="footer" style="padding: var(--u2) var(--u3); border-top: 1px solid var(--rule);">
         {@render footer()}
-      </footer>
+      </Spread>
     {/if}
 
   </Stack>
@@ -111,24 +114,6 @@
 
   .modal::backdrop {
     background: rgba(7, 9, 8, 0.85);
-  }
-
-  .modal-header {
-    display: flex;
-    align-items: center;
-    gap: var(--u);
-    padding: var(--u2) var(--u3);
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .modal-title {
-    font-family: var(--mono);
-    font-size: var(--t-lede);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink);
-    margin: 0;
-    flex: 1;
   }
 
   .modal-icon {

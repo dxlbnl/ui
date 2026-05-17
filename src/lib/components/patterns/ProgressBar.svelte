@@ -1,10 +1,11 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import Stack from '../layout/Stack.svelte'
+  import Spread from '../layout/Spread.svelte'
+  import Text from '../primitives/Text.svelte'
 
   type ProgressColor = 'ok' | 'amber' | 'danger'
 
-  interface Props extends HTMLAttributes<HTMLDivElement> {
+  interface Props {
     value: number
     label?: string
     color?: ProgressColor
@@ -23,10 +24,10 @@
 
 <Stack gap="xs" style="width: 100%;" {...rest}>
   {#if label}
-    <div class="progress-header" aria-hidden="true">
-      <span>{label}</span>
-      <span class="progress-pct progress-pct--{color}">{clampedValue}%</span>
-    </div>
+    <Spread aria-hidden="true">
+      <Text variant="mono" color="faint" style="font-size: var(--t-micro);">{label}</Text>
+      <Text variant="mono" color={color} style="font-size: var(--t-micro);">{clampedValue}%</Text>
+    </Spread>
   {/if}
   <div
     class="progress-track"
@@ -44,20 +45,6 @@
 </Stack>
 
 <style>
-  .progress-header {
-    display: flex;
-    justify-content: space-between;
-    font-family: var(--mono);
-    font-size: var(--t-micro);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-  }
-
-  .progress-pct--ok     { color: var(--ok); }
-  .progress-pct--amber  { color: var(--amber); }
-  .progress-pct--danger { color: var(--danger); }
-
   .progress-track {
     height: 5px;
     background: var(--bg-sunken);

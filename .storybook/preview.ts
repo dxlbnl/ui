@@ -29,6 +29,21 @@ const preview: Preview = {
 		},
 	],
 	parameters: {
+		options: {
+			storySort: {
+				order: [
+					'Design Tokens',
+					'Layout',
+					'Primitives',
+					'Cards',
+					'Navigation',
+					'Forms',
+					'Feedback',
+					'Patterns',
+					'Data',
+				],
+			},
+		},
 		backgrounds: { disable: true },
 		controls: {
 			matchers: {

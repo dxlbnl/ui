@@ -1,9 +1,11 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import Stack from '../layout/Stack.svelte'
   import Inline from '../layout/Inline.svelte'
+  import Text from '../primitives/Text.svelte'
+  import Heading from '../primitives/Heading.svelte'
 
-  interface Props extends HTMLAttributes<HTMLElement> {
+  interface Props {
     eyebrow?: string
     heading: string
     sublabel?: string
@@ -20,51 +22,17 @@
   }: Props = $props()
 </script>
 
-<section class="section-head" {...rest}>
+<Stack as="section" style="gap: 6px; padding: 40px 0 12px; border-bottom: 1px solid var(--rule);" {...rest}>
   {#if eyebrow}
-    <span class="section-num">{eyebrow}</span>
+    <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.12em;">{eyebrow}</Text>
   {/if}
   <Inline style="align-items: baseline; gap: 16px;">
-    <h2 class="section-title">{heading}</h2>
+    <Heading level={2} style="font-weight: 500; font-size: var(--t-h3); letter-spacing: -0.01em; margin: 0;">{heading}</Heading>
     {#if sublabel}
-      <span class="section-sub">{sublabel}</span>
+      <Text variant="mono" style="margin-left: auto;">{sublabel}</Text>
     {/if}
   </Inline>
   {#if children}
     {@render children()}
   {/if}
-</section>
-
-<style>
-  .section-head {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 40px 0 12px;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .section-num {
-    font-family: var(--mono);
-    font-size: var(--t-mono);
-    color: var(--ink-faint);
-    letter-spacing: 0.12em;
-  }
-
-  .section-title {
-    font-weight: 500;
-    font-size: var(--t-h3);
-    letter-spacing: -0.01em;
-    margin: 0;
-    color: var(--ink);
-  }
-
-  .section-sub {
-    margin-left: auto;
-    font-family: var(--mono);
-    font-size: var(--t-mono);
-    color: var(--ink-dim);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-</style>
+</Stack>

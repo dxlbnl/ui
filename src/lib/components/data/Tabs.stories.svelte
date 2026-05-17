@@ -259,6 +259,114 @@
   {/snippet}
 </Story>
 
+<!-- B15: Keyboard Navigation story — exercises the ARIA Tabs keyboard pattern.
+     This story MUST FAIL until Tabs.svelte implements:
+       - onkeydown handler on each tab <button> for ArrowLeft / ArrowRight / Home / End
+       - automatic activation (arrow key moves focus AND activates the tab)
+-->
+<Story name="Keyboard Navigation"
+  play={async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+
+    // Step 1: click Overview tab to ensure keyboard focus is on it
+    const overviewTab = canvas.getByRole("tab", { name: /overview/i });
+    const specsTab    = canvas.getByRole("tab", { name: /specs/i });
+    const notesTab    = canvas.getByRole("tab", { name: /notes/i });
+    await userEvent.click(overviewTab);
+    await expect(overviewTab).toHaveAttribute("aria-selected", "true");
+
+    // Step 2: ArrowRight → Specs tab becomes active
+    // AC-23, AC-30, AC-35 (panel switching on keyboard nav)
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(specsTab).toHaveAttribute("aria-selected", "true");
+    await expect(overviewTab).toHaveAttribute("aria-selected", "false");
+    // Panel visibility follows keyboard activation
+    const overviewPanel = canvasElement.querySelector("#panel-overview") as HTMLElement;
+    const specsPanel    = canvasElement.querySelector("#panel-specs") as HTMLElement;
+    await expect(specsPanel.hasAttribute("hidden")).toBe(false);
+    await expect(overviewPanel.hasAttribute("hidden")).toBe(true);
+
+    // Step 3: ArrowRight → Notes tab becomes active
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(notesTab).toHaveAttribute("aria-selected", "true");
+    await expect(specsTab).toHaveAttribute("aria-selected", "false");
+
+    // Step 4: ArrowRight wraps to first tab (Overview)
+    // AC-24
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(overviewTab).toHaveAttribute("aria-selected", "true");
+    await expect(notesTab).toHaveAttribute("aria-selected", "false");
+
+    // Step 5: End → Notes tab (last)
+    // AC-29
+    await userEvent.keyboard("{End}");
+    await expect(notesTab).toHaveAttribute("aria-selected", "true");
+    await expect(overviewTab).toHaveAttribute("aria-selected", "false");
+
+    // Step 6: Home → Overview tab (first)
+    // AC-28
+    await userEvent.keyboard("{Home}");
+    await expect(overviewTab).toHaveAttribute("aria-selected", "true");
+    await expect(notesTab).toHaveAttribute("aria-selected", "false");
+
+    // Step 7: ArrowLeft wraps from first to last (Notes)
+    // AC-27
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(notesTab).toHaveAttribute("aria-selected", "true");
+    await expect(overviewTab).toHaveAttribute("aria-selected", "false");
+
+    // AC-26: ArrowLeft non-wrap — from Notes (last) to Specs (prev)
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(specsTab).toHaveAttribute("aria-selected", "true");
+    await expect(notesTab).toHaveAttribute("aria-selected", "false");
+
+    // AC-31: assert exactly one tab has aria-selected="true" at this point
+    const allTabs = canvas.getAllByRole("tab");
+    const selectedTabs = allTabs.filter(t => t.getAttribute("aria-selected") === "true");
+    await expect(selectedTabs.length).toBe(1);
+  }}>
+  {#snippet children()}
+    {#snippet overviewPanel()}
+      <p>Overview panel</p>
+    {/snippet}
+    {#snippet specsPanel()}
+      <p>Specs panel</p>
+    {/snippet}
+    {#snippet notesPanel()}
+      <p>Notes panel</p>
+    {/snippet}
+    <Tabs tabs={[
+      { id: 'overview', label: 'Overview', panel: overviewPanel },
+      { id: 'specs',    label: 'Specs',    panel: specsPanel },
+      { id: 'notes',   label: 'Notes',    panel: notesPanel },
+    ]} />
+  {/snippet}
+</Story>
+
+<!-- AC-32: single-tab edge case — arrow keys stay on the only tab, no error -->
+<Story name="Single Tab"
+  play={async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const tab = canvas.getByRole("tab");
+    await userEvent.click(tab);
+    await expect(tab).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(tab).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(tab).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{Home}");
+    await expect(tab).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{End}");
+    await expect(tab).toHaveAttribute("aria-selected", "true");
+  }}>
+  {#snippet children()}
+    {#snippet onlyPanel()}
+      <p>Only panel</p>
+    {/snippet}
+    <Tabs tabs={[{ id: 'only', label: 'Only', panel: onlyPanel }]} />
+  {/snippet}
+</Story>
+
 <!-- AC-44: Tabs forwards ...rest attributes to root div -->
 <Story name="Attribute forwarding"
   play={async ({ canvasElement }) => {

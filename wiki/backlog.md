@@ -89,7 +89,7 @@ Each item has a **status** and an optional **`review`** flag:
       Zero-CSS components: wrap existing global typography classes from `typography.css`.
       Enables higher-order components to eliminate their scoped typography CSS entirely.
 
-- [ ] **B15: Keyboard navigation** — status: `todo`
+- [x] **B15: Keyboard navigation** — status: `done`
       Full ARIA keyboard patterns for the two interactive widgets that currently lack them.
       `Select`: arrow keys cycle options, Home/End jump to first/last, Escape closes, Enter
       confirms — completing the ARIA listbox pattern (WAI-ARIA 1.2 § Listbox). `Tabs`:
@@ -146,6 +146,15 @@ Each item has a **status** and an optional **`review`** flag:
       `docs/feedback.md`, `docs/patterns.md`, `docs/data.md`. Each file: component purpose,
       props table (name / type / default / description), minimal usage example, notable
       behaviour. No generated content — hand-written, accurate to the source.
+
+- [ ] **B22: Modal story improvements** — status: `todo`
+      The current Modal stories all render with `open: true`, which causes the Storybook
+      docs page to open multiple overlapping modals at once. Each story should instead show
+      a trigger `<Button>` that opens the modal, so the docs page is clean and the interaction
+      is realistic. Escape-to-close is unreliable in the play function context because the
+      `<dialog>` element may not have focus — the play function should click the trigger to open
+      first, verify open state, then test close paths. The `open` prop default should stay
+      `false`; the story manages state internally via `$state`.
 
 - [ ] **B19: Package documentation** — status: `todo`
       Minimum viable documentation for the library. `README.md`: installation (`pnpm add

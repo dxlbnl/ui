@@ -21,11 +21,26 @@
   let { tabs, active = tabs[0]?.id, variant = 'underline', ...rest }: TabsProps = $props()
 
   let activeId = $state(active)
+
+  function handleTabKeydown(e: KeyboardEvent, index: number) {
+    const count = tabs.length
+    let target = -1
+    switch (e.key) {
+      case 'ArrowRight': e.preventDefault(); target = (index + 1) % count; break
+      case 'ArrowLeft':  e.preventDefault(); target = (index - 1 + count) % count; break
+      case 'Home':       e.preventDefault(); target = 0; break
+      case 'End':        e.preventDefault(); target = count - 1; break
+    }
+    if (target >= 0) {
+      activeId = tabs[target].id
+      document.getElementById(`tab-${tabs[target].id}`)?.focus()
+    }
+  }
 </script>
 
 <Stack class="tabs tabs--{variant}" {...rest}>
   <div class="tab-bar" role="tablist">
-    {#each tabs as tab}
+    {#each tabs as tab, i}
       <Button
         variant="ghost"
         class={activeId === tab.id ? 'tab tab--active' : 'tab'}
@@ -34,6 +49,7 @@
         aria-selected={activeId === tab.id}
         aria-controls="panel-{tab.id}"
         onclick={() => (activeId = tab.id)}
+        onkeydown={(e) => handleTabKeydown(e, i)}
       >
         {tab.label}
       </Button>

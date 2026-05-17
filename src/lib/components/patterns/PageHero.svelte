@@ -1,9 +1,10 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import Inline from '../layout/Inline.svelte'
+  import Text from '../primitives/Text.svelte'
+  import Heading from '../primitives/Heading.svelte'
 
-  interface Props extends HTMLAttributes<HTMLElement> {
+  interface Props {
     eyebrow?: string
     heading: string
     lede?: string
@@ -22,11 +23,11 @@
 
 <header class="page-hero" {...rest}>
   {#if eyebrow}
-    <div class="page-hero-eyebrow">{eyebrow}</div>
+    <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.12em; margin-bottom: 12px;">{eyebrow}</Text>
   {/if}
-  <h1 class="page-hero-heading">{heading}</h1>
+  <Heading level={1} style="font-weight: 500; font-size: var(--t-hero); line-height: 1; letter-spacing: -0.03em; margin: 0;">{heading}</Heading>
   {#if lede}
-    <p class="page-hero-lede">{lede}</p>
+    <Text color="dim" style="font-size: var(--t-lede); margin-top: 20px; line-height: 1.55; max-width: 62ch;">{lede}</Text>
   {/if}
   {#if children}
     <Inline gap="sm" style="margin-top: 24px;">
@@ -39,31 +40,5 @@
   .page-hero {
     padding: 48px 0 40px;
     border-bottom: 1px solid var(--rule);
-  }
-
-  .page-hero-eyebrow {
-    font-family: var(--mono);
-    font-size: var(--t-micro);
-    letter-spacing: 0.12em;
-    color: var(--ink-faint);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-
-  .page-hero-heading {
-    font-weight: 500;
-    font-size: var(--t-hero);
-    line-height: 1;
-    letter-spacing: -0.03em;
-    margin: 0;
-    color: var(--ink);
-  }
-
-  .page-hero-lede {
-    margin-top: 20px;
-    font-size: var(--t-lede);
-    color: var(--ink-dim);
-    line-height: 1.55;
-    max-width: 62ch;
   }
 </style>

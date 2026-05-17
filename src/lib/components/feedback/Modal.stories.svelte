@@ -2,6 +2,7 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, within } from "storybook/test";
   import Modal from "./Modal.svelte";
+  import { resolveTokenColor } from "$lib/storybook-utils.js";
 
   const { Story } = defineMeta({
     title: "Feedback/Modal",
@@ -79,4 +80,40 @@
     await expect(closeBtn).toBeInTheDocument();
   }}>
   <p>Press Escape to trigger the close callback.</p>
+</Story>
+
+<Story name="Confirm Variant"
+  args={{ open: true, title: "// CONFIRM PURCHASE", variant: "confirm" }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const dialog = canvas.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    const heading = canvas.getByRole("heading", { level: 2, name: /CONFIRM PURCHASE/i });
+    await expect(heading).toBeVisible();
+    const icon = canvasElement.querySelector(".modal-icon") as HTMLElement;
+    await expect(icon).toBeVisible();
+    await expect(icon.getAttribute("aria-hidden")).toBe("true");
+    await expect(icon.textContent?.trim()).toBe("!");
+    const amberColor = resolveTokenColor("--amber");
+    await expect(getComputedStyle(icon).backgroundColor).toBe(amberColor);
+  }}>
+  <p>You are about to place an order for 1× Conduit PDX-2 at €200. Proceed?</p>
+</Story>
+
+<Story name="Destructive Variant"
+  args={{ open: true, title: "// DELETE ITEM", variant: "destructive" }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const dialog = canvas.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    const heading = canvas.getByRole("heading", { level: 2, name: /DELETE ITEM/i });
+    await expect(heading).toBeVisible();
+    const icon = canvasElement.querySelector(".modal-icon") as HTMLElement;
+    await expect(icon).toBeVisible();
+    await expect(icon.getAttribute("aria-hidden")).toBe("true");
+    await expect(icon.textContent?.trim()).toBe("!");
+    const dangerColor = resolveTokenColor("--danger");
+    await expect(getComputedStyle(icon).backgroundColor).toBe(dangerColor);
+  }}>
+  <p>This will permanently delete the item. This action cannot be undone.</p>
 </Story>

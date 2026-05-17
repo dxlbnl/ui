@@ -26,6 +26,16 @@ it records the reason here AND states it in chat.
 
 ## 2026-05-16 — B14: Typography primitives
 - manager: set in-progress; spec already written (wiki/specs/B14-typography-primitives.md); delegating to test-writer
+- test-writer: wrote Text.stories.svelte (8 stories) + Heading.stories.svelte (7 stories) → red (components missing)
+- implementer: wrote Text.svelte + Heading.svelte + updated index.ts → 179/179 green; manager fixed null-check TS errors in story files
+- reviewer: PASS — all 30 ACs met, 0 pnpm check errors, no scope creep
+- result: done — commit `3396103`
+
+## 2026-05-16 — B15: Keyboard navigation
+- manager: set in-progress; spec written (wiki/specs/B15-keyboard-navigation.md)
+- implementer: added `highlightedIndex` + ARIA Listbox keyboard handler to Select.svelte; added `handleTabKeydown` + ARIA Tabs keyboard handler to Tabs.svelte; added "Keyboard Navigation" stories for both; fixed 6 parallel-agent regressions (class names dropped in NoteCard, ProjectCard, CtaBlock; broken composition stories in Led, Modal, ActivityRow)
+- reviewer: PASS (second pass) — all 36 ACs met, 180/180 green, 0 pnpm check errors, no scope creep
+- result: done — commit to follow
 
 ## 2026-05-15 — Bootstrap
 - bootstrap: interviewed user, populated wiki (vision, requirements, architecture, backlog, decisions) → done

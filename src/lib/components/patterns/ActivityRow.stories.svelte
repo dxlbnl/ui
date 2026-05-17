@@ -42,3 +42,4 @@
     await expect(root).toBeVisible();
     await expect(canvas.getByText("System boot")).toBeVisible();
   }} />
+

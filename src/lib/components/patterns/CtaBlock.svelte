@@ -1,9 +1,10 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import Stack from '../layout/Stack.svelte'
+  import Spread from '../layout/Spread.svelte'
+  import Text from '../primitives/Text.svelte'
 
-  interface Props extends HTMLAttributes<HTMLElement> {
+  interface Props {
     as?: string
     eyebrow?: string
     heading: string
@@ -23,28 +24,26 @@
 </script>
 
 <svelte:element this={as} class="cta-block" {...rest}>
-  <Stack gap="xs">
-    {#if eyebrow}
-      <span class="cta-eyebrow">{eyebrow}</span>
+  <Spread style="align-items: center; gap: 24px;">
+    <Stack gap="xs">
+      {#if eyebrow}
+        <Text variant="mono" color="faint" class="cta-eyebrow" style="font-size: var(--t-micro); letter-spacing: 0.12em;">{eyebrow}</Text>
+      {/if}
+      <span class="cta-heading">{heading}</span>
+      {#if subtext}
+        <span class="cta-desc">{subtext}</span>
+      {/if}
+    </Stack>
+    {#if children}
+      <div class="cta-action">
+        {@render children()}
+      </div>
     {/if}
-    <span class="cta-heading">{heading}</span>
-    {#if subtext}
-      <span class="cta-desc">{subtext}</span>
-    {/if}
-  </Stack>
-  {#if children}
-    <div class="cta-action">
-      {@render children()}
-    </div>
-  {/if}
+  </Spread>
 </svelte:element>
 
 <style>
   .cta-block {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
     border: 1px solid var(--amber);
     padding: 24px 32px;
     color: inherit;
@@ -57,14 +56,6 @@
     background: color-mix(in srgb, var(--amber) 6%, transparent);
   }
 
-  .cta-eyebrow {
-    font-family: var(--mono);
-    font-size: var(--t-micro);
-    letter-spacing: 0.12em;
-    color: var(--ink-faint);
-    text-transform: uppercase;
-  }
-
   .cta-heading {
     font-weight: 500;
     font-size: var(--t-lede);
@@ -73,6 +64,7 @@
   }
 
   .cta-desc {
+    font-family: var(--mono);
     font-size: var(--t-mono);
     color: var(--ink-dim);
     line-height: 1.4;
