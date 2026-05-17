@@ -1,41 +1,41 @@
-import { writable } from 'svelte/store'
+import { writable } from "svelte/store";
 
-export type ToastVariant = 'ok' | 'amber' | 'danger'
+export type ToastVariant = "success" | "warning" | "error";
 
 export interface ToastItem {
-  id: string
-  message: string
-  variant: ToastVariant
-  duration: number
+  id: string;
+  message: string;
+  variant: ToastVariant;
+  duration: number;
 }
 
 export interface ToastOptions {
-  variant?: ToastVariant
-  duration?: number
+  variant?: ToastVariant;
+  duration?: number;
 }
 
-const _store = writable<ToastItem[]>([])
+const _store = writable<ToastItem[]>([]);
 
-let _idCounter = 0
+let _idCounter = 0;
 
 function push(message: string, options?: ToastOptions): string {
-  const id = `toast-${++_idCounter}`
+  const id = `toast-${++_idCounter}`;
   const item: ToastItem = {
     id,
     message,
-    variant: options?.variant ?? 'ok',
+    variant: options?.variant ?? "success",
     duration: options?.duration ?? 5000,
-  }
-  _store.update((items) => [...items, item])
-  return id
+  };
+  _store.update((items) => [...items, item]);
+  return id;
 }
 
 function dismiss(id: string): void {
-  _store.update((items) => items.filter((t) => t.id !== id))
+  _store.update((items) => items.filter((t) => t.id !== id));
 }
 
 export const toast = {
   subscribe: _store.subscribe,
   push,
   dismiss,
-}
+};

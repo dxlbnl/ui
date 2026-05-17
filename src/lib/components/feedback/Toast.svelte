@@ -1,26 +1,38 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
-  import type { ToastVariant } from '$lib/stores/toast.js'
-  import Button from '$lib/components/primitives/Button.svelte'
+  import type { HTMLAttributes } from "svelte/elements";
+  import type { ToastVariant } from "$lib/stores/toast.js";
+  import Button from "$lib/components/primitives/Button.svelte";
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
     /** Unique toast ID (used by the dismiss callback). */
-    id: string
+    id: string;
     /** Text content of the notification. */
-    message: string
+    message: string;
     /** Colour variant — also sets the ARIA live region type. @default 'ok' */
-    variant?: ToastVariant
+    variant?: ToastVariant;
     /** Called with the toast `id` when the dismiss button is clicked. */
-    ondismiss: (id: string) => void
+    ondismiss: (id: string) => void;
   }
 
-  let { id, message, variant = 'ok', ondismiss, ...rest }: Props = $props()
+  let {
+    id,
+    message,
+    variant = "success",
+    ondismiss,
+    ...rest
+  }: Props = $props();
 
-  const ICONS: Record<ToastVariant, string> = { ok: 'ok', amber: '!!', danger: 'err' }
+  const ICONS: Record<ToastVariant, string> = {
+    success: "ok",
+    warning: "!!",
+    error: "err",
+  };
 
-  let role = $derived(variant === 'danger' ? 'alert' : 'status')
-  let ariaLive: 'assertive' | 'polite' = $derived(variant === 'danger' ? 'assertive' : 'polite')
-  let icon = $derived(ICONS[variant])
+  let role = $derived(variant === "error" ? "alert" : "status");
+  let ariaLive: "assertive" | "polite" = $derived(
+    variant === "error" ? "assertive" : "polite",
+  );
+  let icon = $derived(ICONS[variant]);
 </script>
 
 <div
@@ -37,8 +49,8 @@
       variant="ghost"
       type="button"
       aria-label="Dismiss notification"
-      onclick={() => ondismiss(id)}
-    >×</Button>
+      onclick={() => ondismiss(id)}>×</Button
+    >
   </div>
 </div>
 
@@ -57,9 +69,15 @@
     pointer-events: all;
   }
 
-  .toast--ok    { border-color: var(--ok); }
-  .toast--amber { border-color: var(--amber); }
-  .toast--danger { border-color: var(--danger); }
+  .toast--success {
+    border-color: var(--ok);
+  }
+  .toast--warning {
+    border-color: var(--amber);
+  }
+  .toast--error {
+    border-color: var(--danger);
+  }
 
   .toast-icon {
     font-family: var(--mono);
@@ -69,9 +87,15 @@
     flex-shrink: 0;
   }
 
-  .toast--ok    .toast-icon { color: var(--ok); }
-  .toast--amber .toast-icon { color: var(--amber); }
-  .toast--danger .toast-icon { color: var(--danger); }
+  .toast--ok .toast-icon {
+    color: var(--ok);
+  }
+  .toast--amber .toast-icon {
+    color: var(--amber);
+  }
+  .toast--danger .toast-icon {
+    color: var(--danger);
+  }
 
   .toast-message {
     flex: 1;
