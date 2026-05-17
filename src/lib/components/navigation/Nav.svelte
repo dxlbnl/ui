@@ -47,25 +47,34 @@
       <Led color="ok" aria-hidden="true" />
       <span class="nav-wordmark">{siteName}</span>
     </Inline>
-    <Inline as="ul" class="nav-links" gap="md" style="margin: 0 0 0 auto; padding: 0; flex-shrink: 0; text-transform: uppercase; font-size: 12px; list-style: none;">
-      {#each links as link}
-        <li>
-          <a href={link.href} class="nav-link" class:active={link.active}
-             aria-current={link.active ? 'page' : undefined}>
-            {link.label}
-          </a>
-        </li>
-      {/each}
-    </Inline>
-    <Inline class="nav-actions" gap="sm" style="flex-shrink: 0;">
-      <Button variant="ghost" class="nav-palette-toggle" aria-label="Toggle colour palette" onclick={handlePaletteToggle}>
-        {palette === 'paper' ? '◑' : '◐'}
-      </Button>
-      <Button variant="ghost" class="nav-hamburger" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="nav-drawer" onclick={handleMenuToggle}>
-        {menuOpen ? '×' : '≡'}
-      </Button>
+
+    <!-- Right-side group always carries margin-left:auto so it stays right-aligned
+         even when nav-links is hidden on mobile -->
+    <Inline class="nav-right" gap="sm" style="margin-left: auto; flex-shrink: 0;">
+      <Inline as="ul" class="nav-links" gap="md" style="padding: 0; margin: 0; flex-shrink: 0; text-transform: uppercase; font-size: 12px; list-style: none;">
+        {#each links as link}
+          <li>
+            <a href={link.href} class="nav-link" class:active={link.active}
+               aria-current={link.active ? 'page' : undefined}>
+              {link.label}
+            </a>
+          </li>
+        {/each}
+      </Inline>
+      <Inline class="nav-actions" gap="xs" style="flex-shrink: 0;">
+        <Button variant="ghost" aria-label="Toggle colour palette" onclick={handlePaletteToggle}>
+          {palette === 'paper' ? '◑' : '◐'}
+        </Button>
+        <!-- Scoped wrapper avoids specificity battle with Button's .btn rule -->
+        <div class="hamburger-wrap">
+          <Button variant="ghost" class="nav-hamburger" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="nav-drawer" onclick={handleMenuToggle}>
+            {menuOpen ? '×' : '≡'}
+          </Button>
+        </div>
+      </Inline>
     </Inline>
   </Inline>
+
   <div id="nav-drawer" class="nav-drawer" aria-hidden={menuOpen ? undefined : 'true'}>
     {#if menuOpen}
       <Stack as="ul" class="nav-drawer-links" gap="sm" style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 12px; letter-spacing: 0.08em;">
@@ -109,7 +118,7 @@
     border-bottom-color: var(--amber);
   }
 
-  :global(.nav-hamburger) {
+  .hamburger-wrap {
     display: none;
   }
 
@@ -122,8 +131,9 @@
       display: none !important;
     }
 
-    :global(.nav-hamburger) {
-      display: block !important;
+    .hamburger-wrap {
+      display: flex;
+      align-items: center;
     }
 
     .nav-drawer {
