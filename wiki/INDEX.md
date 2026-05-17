@@ -17,13 +17,15 @@ Every agent reads this page first, before doing anything else.
 
 | Page                               | Purpose                                                                                     |
 | ---------------------------------- | ------------------------------------------------------------------------------------------- |
-| [vision.md](vision.md)             | What the project is and why it exists.                                                      |
-| [requirements.md](requirements.md) | Functional requirements and constraints.                                                    |
-| [architecture.md](architecture.md) | Tech stack, package manager, test setup, structure.                                         |
-| [backlog/](backlog/)               | Work items, arranged in four lanes (inbox → ready → doing → done). See `backlog/README.md`. |
-| [decisions.md](decisions.md)       | Append-only decision log (ADR-style).                                                       |
-| [progress.md](progress.md)         | Append-only run journal — what the agents have done.                                        |
-| [specs/](specs/)                   | One detailed spec page per feature/bug. See `specs/README.md`.                              |
+| [vision.md](vision.md)                         | What the project is and why it exists.                                                      |
+| [requirements.md](requirements.md)             | Functional requirements and constraints.                                                    |
+| [architecture.md](architecture.md)             | Tech stack, package manager, test setup, structure.                                         |
+| [stories-guide.md](stories-guide.md)           | How to write Storybook stories — the only test artefact in this project.                    |
+| [composition-limits.md](composition-limits.md) | Svelte scoped-CSS boundary: known limits, workarounds, rationale for typography primitives. |
+| [backlog/](backlog/)                           | Work items, arranged in four lanes (inbox → ready → doing → done). See `backlog/README.md`. |
+| [decisions.md](decisions.md)                   | Append-only decision log (ADR-style).                                                       |
+| [progress.md](progress.md)                     | Append-only run journal — what the agents have done.                                        |
+| [specs/](specs/)                               | One detailed spec page per feature/bug. See `specs/README.md`.                              |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
 > and restructure pages as the project grows — just link new pages in the table above.
