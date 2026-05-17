@@ -31,7 +31,7 @@
   .stack[data-gap="none"] { gap: 0; }
   .stack[data-gap="xs"]   { gap: var(--u); }
   .stack[data-gap="sm"]   { gap: var(--u2); }
-  .stack[data-gap="md"]   { gap: var(--u2); }
+  .stack[data-gap="md"]   { gap: var(--u3); }
   .stack[data-gap="lg"]   { gap: var(--u4); }
   .stack[data-gap="xl"]   { gap: var(--u5); }
 </style>

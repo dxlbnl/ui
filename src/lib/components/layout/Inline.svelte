@@ -32,7 +32,7 @@
   .inline[data-gap="none"] { gap: 0; }
   .inline[data-gap="xs"]   { gap: var(--u); }
   .inline[data-gap="sm"]   { gap: var(--u2); }
-  .inline[data-gap="md"]   { gap: var(--u2); }
+  .inline[data-gap="md"]   { gap: var(--u3); }
   .inline[data-gap="lg"]   { gap: var(--u4); }
   .inline[data-gap="xl"]   { gap: var(--u5); }
 </style>

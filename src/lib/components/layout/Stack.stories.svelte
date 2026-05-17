@@ -58,10 +58,10 @@
   play={async ({ canvasElement }) => {
     const root = canvasElement.firstElementChild as HTMLElement;
     await expect(root.tagName).toBe("SECTION");
-    // gap="md" → var(--u2) → 16px
+    // AC-16 / AC-9: gap="md" → var(--u3) → 24px (fixed from erroneous 16px)
     const style = getComputedStyle(root);
     const gap = style.gap || style.rowGap;
-    await expect(gap.includes("16px")).toBe(true);
+    await expect(gap.includes("24px")).toBe(true);
   }}>
   <h2>Section Title</h2>
   <p>Section content paragraph text goes here.</p>
