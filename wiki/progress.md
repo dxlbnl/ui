@@ -24,7 +24,7 @@ it records the reason here AND states it in chat.
 - test-writer: added gap stories to Spread.stories.svelte (GapNone/Sm/Md/Lg + updated LedStatusBar/WithGap to assert 0px default); updated Stack "As Section" to assert 24px → 6 tests red
 - implementer: Stack/Inline md→var(--u3); Spread added gap prop + data-gap CSS; CtaBlock style="gap:24px"→gap="md" → 236/236 green
 - reviewer: PASS — all 17 ACs met, 0 pnpm check errors, no scope creep
-- result: done — commit TBD
+- result: done — commit `97daf9e`
 
 ## 2026-05-16 — B13: Composition refactor
 - manager: spec written, test-writer skipped (no new failing tests — existing 164 stories are baseline), implementer replaced raw flex/grid/button in all higher-order components
