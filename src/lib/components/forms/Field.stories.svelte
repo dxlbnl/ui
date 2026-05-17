@@ -4,6 +4,7 @@
   import Field from "./Field.svelte";
   import Input from "./Input.svelte";
   import Textarea from "./Textarea.svelte";
+  import Radio from "./Radio.svelte";
   import { resolveTokenColor } from "$lib/storybook-utils.js";
 
   const { Story } = defineMeta({
@@ -66,6 +67,26 @@
   <Textarea id="notes-field" aria-describedby="notes-field-hint" />
 </Story>
 
+<!-- AC-54 through AC-62: Field auto-injects aria-invalid + aria-describedby via context -->
+<Story name="Auto ARIA Wiring"
+  args={{ label: "Email", inputId: "auto-email", error: "Invalid email address." }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox");
+    // AC-55: id is set from Field context (no manual id on the Input)
+    await expect(input.getAttribute("id")).toBe("auto-email");
+    // AC-56: aria-invalid is "true" because Field has an error prop
+    await expect(input.getAttribute("aria-invalid")).toBe("true");
+    // AC-57: aria-describedby is "{inputId}-hint" because error is set
+    await expect(input.getAttribute("aria-describedby")).toBe("auto-email-hint");
+    // AC-61: the hint span with the error text is visible
+    const hint = canvas.getByText("Invalid email address.");
+    await expect(hint).toBeVisible();
+    await expect(hint.getAttribute("id")).toBe("auto-email-hint");
+  }}>
+  <Input />
+</Story>
+
 <Story name="Required Field"
   args={{ label: "Project Name", inputId: "project-name" }}
   play={async ({ canvasElement }) => {
@@ -75,4 +96,18 @@
     await expect(canvasElement.querySelector(".field-hint")).toBeNull();
   }}>
   <Input id="project-name" type="text" required />
+</Story>
+
+<!-- AC-60: Radio inside Field receives aria-invalid + aria-describedby from context -->
+<Story name="Auto ARIA Wiring — Radio"
+  args={{ label: "Module type", inputId: "radio-ac60", error: "Select one option." }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const radio = canvas.getByRole("radio");
+    await expect(radio.getAttribute("aria-invalid")).toBe("true");
+    await expect(radio.getAttribute("aria-describedby")).toBe("radio-ac60-hint");
+    const hint = canvas.getByText("Select one option.");
+    await expect(hint).toBeVisible();
+  }}>
+  <Radio name="mod" value="osc" label="Oscillator" />
 </Story>

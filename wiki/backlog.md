@@ -97,7 +97,7 @@ Each item has a **status** and an optional **`review`** flag:
       jump to first/last — completing the WAI-ARIA tabpanel pattern. Both are WCAG 2.1 AA
       requirements for publicly distributed components.
 
-- [ ] **B16: Form primitives** — status: `todo`
+- [x] **B16: Form primitives** — status: `done`
       Boolean and selection controls missing from the current form layer.
       `Checkbox` (checked/indeterminate/disabled, linked label, design-token accent), `Radio`
       + `RadioGroup` (exclusive selection, keyboard arrow-key nav within group), `Switch`

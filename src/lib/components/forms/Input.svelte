@@ -1,5 +1,8 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements'
+  import { getContext } from 'svelte'
+  import type { FieldContext } from './field-context.js'
+  import { FIELD_CONTEXT_KEY } from './field-context.js'
 
   interface Props extends HTMLInputAttributes {
     error?: boolean
@@ -7,9 +10,28 @@
   }
 
   let { error = false, ...rest }: Props = $props()
+
+  const fieldCtx = getContext<FieldContext | undefined>(FIELD_CONTEXT_KEY)
+
+  let resolvedId = $derived(fieldCtx ? fieldCtx.inputId : (rest.id as string | undefined))
+  // 'true' is a valid Booleanish value for aria-invalid
+  let resolvedAriaInvalid: boolean | 'true' | 'false' | 'grammar' | 'spelling' | null | undefined = $derived(
+    fieldCtx?.hasError ? 'true' : undefined
+  )
+  let resolvedAriaDescribedby = $derived(
+    fieldCtx?.hasHint ? fieldCtx.hintId : (rest['aria-describedby'] as string | undefined)
+  )
+  let resolvedError = $derived(error || (fieldCtx?.hasError ?? false))
 </script>
 
-<input class="input" class:err={error} {...rest} />
+<input
+  class="input"
+  class:err={resolvedError}
+  id={resolvedId}
+  aria-invalid={resolvedAriaInvalid}
+  aria-describedby={resolvedAriaDescribedby}
+  {...rest}
+/>
 
 <style>
   .input {

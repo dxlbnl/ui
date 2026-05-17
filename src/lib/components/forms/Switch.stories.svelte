@@ -1,0 +1,86 @@
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
+  import { expect, within } from "storybook/test";
+  import { resolveTokenColor } from "$lib/storybook-utils.js";
+  import Switch from "./Switch.svelte";
+
+  const { Story } = defineMeta({
+    title: "Forms/Switch",
+    component: Switch,
+    tags: ["autodocs"],
+  });
+</script>
+
+<!-- AC-44, AC-45, AC-46, AC-47: Off state -->
+<Story name="Off (Default)" args={{ label: "Dark mode", checked: false }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // AC-44: renders a button with role="switch"
+    // AC-46: accessible name provided by aria-label={label}
+    const sw = canvas.getByRole("switch", { name: "Dark mode" });
+    await expect(sw).toBeVisible();
+    // AC-45: aria-checked is "false" when off
+    await expect(sw.getAttribute("aria-checked")).toBe("false");
+    // AC-47: track background matches var(--bg-sunken) when off
+    const bgSunken = resolveTokenColor("--bg-sunken");
+    await expect(getComputedStyle(sw).backgroundColor).toBe(bgSunken);
+  }} />
+
+<!-- AC-45, AC-48: On state -->
+<Story name="On" args={{ label: "Dark mode", checked: true }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const sw = canvas.getByRole("switch", { name: "Dark mode" });
+    // AC-45: aria-checked is "true" when on
+    await expect(sw.getAttribute("aria-checked")).toBe("true");
+    // AC-48: track background matches var(--amber) when on
+    const amberColor = resolveTokenColor("--amber");
+    await expect(getComputedStyle(sw).backgroundColor).toBe(amberColor);
+  }} />
+
+<!-- AC-49: disabled off — toBeDisabled and wrap opacity 0.4 -->
+<Story name="Disabled Off" args={{ label: "Feature flag", disabled: true, checked: false }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const sw = canvas.getByRole("switch", { name: "Feature flag" });
+    await expect(sw).toBeDisabled();
+    // AC-49: wrap opacity is 0.4
+    const wrap = canvasElement.querySelector(".switch-wrap");
+    await expect(getComputedStyle(wrap!).opacity).toBe("0.4");
+  }} />
+
+<!-- AC-49: disabled on — toBeDisabled and aria-checked true -->
+<Story name="Disabled On" args={{ label: "Feature flag", disabled: true, checked: true }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const sw = canvas.getByRole("switch", { name: "Feature flag" });
+    await expect(sw).toBeDisabled();
+    await expect(sw.getAttribute("aria-checked")).toBe("true");
+  }} />
+
+<!-- AC-50: Space key toggles switch from off to on -->
+<Story name="Space to Toggle" args={{ label: "Toggle", checked: false }}
+  play={async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const sw = canvas.getByRole("switch", { name: "Toggle" });
+    await expect(sw.getAttribute("aria-checked")).toBe("false");
+    await userEvent.tab();
+    await expect(sw).toHaveFocus();
+    await userEvent.keyboard(" ");
+    // AC-50: after Space on an off switch, aria-checked becomes "true"
+    await expect(sw.getAttribute("aria-checked")).toBe("true");
+  }} />
+
+<!-- AC-48, AC-52: amber track when on + pill shape dimensions -->
+<Story name="Amber Track When On" args={{ label: "Power", checked: true }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const sw = canvas.getByRole("switch", { name: "Power" });
+    // AC-48: track background matches var(--amber)
+    const amberColor = resolveTokenColor("--amber");
+    await expect(getComputedStyle(sw).backgroundColor).toBe(amberColor);
+    // AC-52: pill shape — borderRadius is 11px, width 40px, height 22px
+    await expect(getComputedStyle(sw).borderRadius).toBe("11px");
+    await expect(getComputedStyle(sw).width).toBe("40px");
+    await expect(getComputedStyle(sw).height).toBe("22px");
+  }} />

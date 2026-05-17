@@ -3,7 +3,7 @@ export { Button, Led, TagPill, Text, Heading } from './components/primitives/ind
 export { Stack, Inline, Spread, Grid, Container, Rule } from './components/layout/index.js'
 export { Card, ProductCard, ProjectCard, NoteCard } from './components/cards/index.js'
 export { Nav } from './components/navigation/index.js'
-export { Input, Textarea, Select, InputWrap, Field } from './components/forms/index.js'
+export { Input, Textarea, Select, InputWrap, Field, Checkbox, Radio, RadioGroup, Switch } from './components/forms/index.js'
 export { Modal } from './components/feedback/index.js'
 export { Alert, CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero } from './components/patterns/index.js'
 export { Accordion, AccordionItem, Tabs, Table } from './components/data/index.js'

@@ -1,7 +1,9 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import { setContext } from 'svelte'
   import Stack from '../layout/Stack.svelte'
+  import { FIELD_CONTEXT_KEY } from './field-context.js'
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
     label: string
@@ -23,7 +25,19 @@
 
   let hintId = $derived(`${inputId}-hint`)
   let hasError = $derived(!!error)
+  let hasHint = $derived(!!(hint || error))
   let hintText = $derived(error ?? hint)
+
+  // Provide context so nested Input/Textarea/Checkbox/Radio/Switch
+  // can auto-wire aria-invalid, aria-describedby, and id.
+  // Use a getter object so children re-read reactive values on each render.
+  const ctx = {
+    get inputId() { return inputId },
+    get hintId() { return hintId },
+    get hasHint() { return hasHint },
+    get hasError() { return hasError },
+  }
+  setContext(FIELD_CONTEXT_KEY, ctx)
 </script>
 
 <Stack gap="xs" style="min-width: 0;" {...rest}>

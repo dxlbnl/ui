@@ -31,11 +31,14 @@ it records the reason here AND states it in chat.
 - reviewer: PASS — all 30 ACs met, 0 pnpm check errors, no scope creep
 - result: done — commit `3396103`
 
+## 2026-05-17 — B16: Form primitives
+- manager: set in-progress; spec at wiki/specs/B16-form-primitives.md; delegating to test-writer
+
 ## 2026-05-16 — B15: Keyboard navigation
 - manager: set in-progress; spec written (wiki/specs/B15-keyboard-navigation.md)
 - implementer: added `highlightedIndex` + ARIA Listbox keyboard handler to Select.svelte; added `handleTabKeydown` + ARIA Tabs keyboard handler to Tabs.svelte; added "Keyboard Navigation" stories for both; fixed 6 parallel-agent regressions (class names dropped in NoteCard, ProjectCard, CtaBlock; broken composition stories in Led, Modal, ActivityRow)
 - reviewer: PASS (second pass) — all 36 ACs met, 180/180 green, 0 pnpm check errors, no scope creep
-- result: done — commit to follow
+- result: done — commit `64bbe74`
 
 ## 2026-05-15 — Bootstrap
 - bootstrap: interviewed user, populated wiki (vision, requirements, architecture, backlog, decisions) → done
