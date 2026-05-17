@@ -208,3 +208,12 @@ it records the reason here AND states it in chat.
 - implementer: added 9+ stories across Spread/Rule/Card/ProjectCard/CtaBlock/Modal/Table; created token docs (Color Palette, Typography Scale, Spacing Scale); removed 4 old token stories → 164/164 green
 - reviewer: FAIL (AC-29: old token stories not removed); manager fixed directly → re-run PASS
 - result: done — commit `8b47cb2`
+
+## 2026-05-17 — B24: Style prop cleanup
+- manager: set in-progress; spec at wiki/specs/B24-style-prop-cleanup.md; implemented directly
+- SectionHead, PageHero, CtaBlock, SectionFoot, NoteCard: eyebrow variant + container scoped CSS
+- ProductCard, ProjectCard: card-body div + eyebrow variant + heading style trim + card-footer-row
+- Modal: Stack→div (.modal-inner), Inline as="header"→header (.modal-header), Spread as="footer"→footer (.modal-footer); removed Stack import
+- Nav: Inline nav-inner→div, Inline as="a" nav-brand→native a, Inline nav-right→div, Inline as="ul" nav-links→native ul, Stack as="ul" nav-drawer-links→native ul; fixed :global(.nav-links)→.nav-links; removed Stack import
+- pnpm check: 0 errors; pnpm test: 232/232 green
+- result: done — commit `eee6862`

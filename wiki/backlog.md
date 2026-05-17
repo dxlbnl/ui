@@ -173,7 +173,7 @@ Each item has a **status** and an optional **`review`** flag:
       exported component props (feeds Storybook autodocs). Version bump from 0.0.1 → 0.1.0
       in `package.json` once B13 is confirmed stable.
 
-- [ ] **B24: Style prop cleanup** — status: `in-progress`
+- [x] **B24: Style prop cleanup** — status: `done` — commit: `eee6862`
       Eliminate excessive inline `style=` props introduced during B13–B14. Two classes of
       fix: (1) use correct Heading `variant` so typography overrides collapse to one prop;
       (2) replace multi-prop `style=` on layout primitives acting as containers with scoped
