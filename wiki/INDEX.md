@@ -64,6 +64,8 @@ Every agent reads this page first, before doing anything else.
 | [specs/B12-story-rewrite.md](specs/B12-story-rewrite.md) | B12 Story rewrite — add `component:` to `defineMeta`, props via `args`, shared `storybook-utils.ts`, remove null-checks and AC comments. |
 | [specs/B13-composition-refactor.md](specs/B13-composition-refactor.md) | B13 Composition refactor — replace raw flex/grid CSS with `Stack`/`Inline`/`Spread`; replace raw `<button>` with `Button`. |
 | [specs/B15-keyboard-navigation.md](specs/B15-keyboard-navigation.md) | B15 Keyboard navigation — ARIA Listbox for `Select`, ARIA Tabs for `Tabs` (ArrowLeft/Right, Home/End). WCAG 2.1 AA SC 2.1.1. |
+| [specs/B24-style-prop-cleanup.md](specs/B24-style-prop-cleanup.md) | B24 Style prop cleanup — use correct Heading variants; replace multi-prop style= on layout primitives with scoped HTML + CSS. No :global() added. |
+| [specs/B22-modal-story-improvements.md](specs/B22-modal-story-improvements.md) | B22 Modal story improvements — replace static `open: true` stories with trigger-based stories that manage `$state` internally; six stories with play functions testing open/close paths. |
 
 ### Specs — Documentation & packaging
 
