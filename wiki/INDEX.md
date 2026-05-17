@@ -39,6 +39,7 @@ Every agent reads this page first, before doing anything else.
 | [specs/B2-design-tokens.md](specs/B2-design-tokens.md) | B2 Design tokens + global CSS (Phosphor/Paper palettes, reset, typography classes). |
 | [specs/B3-layout-components.md](specs/B3-layout-components.md) | B3 Layout components — `Stack`, `Inline`, `Spread`, `Grid`, `Container`, `Rule` as Svelte 5 style-prop components. |
 | [specs/B3-layout-helpers.md](specs/B3-layout-helpers.md) | B3 Layout helpers — superseded CSS-only approach (kept for reference). |
+| [specs/B25-layout-gap-api.md](specs/B25-layout-gap-api.md) | B25 Layout primitive gap API — add `gap` prop to `Spread` (default `none`); fix `md` mapping in Stack & Inline from 16 px to 24 px; migrate `CtaBlock` inline gap. |
 
 ### Specs — Components
 

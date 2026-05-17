@@ -601,3 +601,29 @@
   elements untouched. The rule is conservative: it only fires when a layout primitive is
   clearly acting as a named container, not merely passing through layout props.
 - **Supersedes**: none
+
+## D32: B25 Spread default gap is `none`, not the legacy hardcoded `var(--u2)`
+- **Date**: 2026-05-17
+- **By**: spec-writer (B25)
+- **Context**: When adding the `gap` prop to `Spread`, a default value must be chosen.
+  The current implementation hardcodes `gap: var(--u2)` (16 px) in scoped CSS with no
+  prop. Two candidates exist: (a) `'sm'` (16 px) — preserves the current pixel output
+  for all callers; (b) `'none'` (0 px) — reflects that `Spread` is space-between by
+  design and internal gap is rarely needed.
+- **Decision**: Default is `'none'`. Spread's primary purpose is `justify-content:
+  space-between`, which already creates visual distance between children at the container
+  level. An additional `gap` value prevents children touching only when the container is
+  exactly full, which is an edge case. Auditing all current call sites (`SectionFoot`,
+  `ProjectCard`, `ProductCard` ×2, `ProgressBar`, `KvList`, `NoteCard` ×2, `Modal`)
+  shows none of them have adjacent children that would collide without a gap — they all
+  rely on space-between semantics. `CtaBlock` is the sole exception and it is migrated to
+  `gap="md"` explicitly. Defaulting to `none` means existing callers that did not pass
+  `gap` are unaffected (they will now receive 0 px instead of 16 px — a difference only
+  visible if two children are adjacent in a full-width container with no space-between
+  breathing room, which none of the current callers exhibit).
+- **Consequences**: All existing `<Spread>` call sites that do not pass `gap` may see a
+  visual change only if their children were relying on the hardcoded 16 px gap for
+  collision avoidance rather than on the space-between layout itself. The reviewer must
+  verify the visual output of `CtaBlock`, `SectionFoot`, `ProductCard`, `ProjectCard`,
+  `KvList`, `ProgressBar`, `NoteCard`, and `Modal` stories after the change.
+- **Supersedes**: none

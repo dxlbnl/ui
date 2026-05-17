@@ -173,6 +173,14 @@ Each item has a **status** and an optional **`review`** flag:
       exported component props (feeds Storybook autodocs). Version bump from 0.0.1 → 0.1.0
       in `package.json` once B13 is confirmed stable.
 
+- [ ] **B25: Layout primitive gap API** — status: `todo`
+      Consistent `gap` API across all three layout primitives.
+      (1) Add `gap` prop to `Spread` (currently hardcodes `gap: var(--u2)`); default `none`
+      so existing callers are unaffected. (2) Fix the `md` mapping in `Stack` and `Inline`
+      from `--u2` (16 px, duplicate of `sm`) to `--u3` (24 px), giving a clean scale:
+      none=0 / xs=8 / sm=16 / md=24 / lg=32 / xl=40. (3) Update every caller that uses
+      `style="gap: 24px"` on a layout primitive to `gap="md"` instead.
+
 - [x] **B24: Style prop cleanup** — status: `done` — commit: `eee6862`
       Eliminate excessive inline `style=` props introduced during B13–B14. Two classes of
       fix: (1) use correct Heading `variant` so typography overrides collapse to one prop;
