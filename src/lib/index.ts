@@ -1,6 +1,6 @@
 // Component exports — populated as components are built through the backlog
 export { Button, Led, TagPill, Text, Heading } from './components/primitives/index.js'
-export { Stack, Inline, Spread, Grid, Container, Rule } from './components/layout/index.js'
+export { Stack, Inline, Spread, Grid, Container, Rule, Prose } from './components/layout/index.js'
 export { Card, ProductCard, ProjectCard, NoteCard } from './components/cards/index.js'
 export { Nav, Breadcrumb } from './components/navigation/index.js'
 export { Input, Textarea, Select, InputWrap, Field, Checkbox, Radio, RadioGroup, Switch } from './components/forms/index.js'
