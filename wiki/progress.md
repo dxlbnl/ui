@@ -46,11 +46,18 @@ it records the reason here AND states it in chat.
 - manager: fixed Radio.svelte + added "Auto ARIA Wiring — Radio" story; reviewer pass 2: PASS — 203/203 green, 0 errors
 - result: done — commit `40229b8`
 
+## 2026-05-17 — B22: Modal story improvements
+- manager: set in-progress; wrote spec at wiki/specs/B22-modal-story-improvements.md; implemented directly (story rewrite)
+- manager: replaced all 7 open: true stories with 6 trigger-based stories; $state per story; backdrop close via dialog.click() + waitFor
+- reviewer: FAIL (pass 1) — AC-13 missing from Backdrop Close story; manager fixed → 232/232 green
+- reviewer: PASS (pass 2) — all 18 ACs met, 0 errors, no scope creep
+- result: done — commit `a7f1a03`
+
 ## 2026-05-17 — B21: AI-readable docs
 - manager: set in-progress; spec at wiki/specs/B21-ai-readable-docs.md; skipping test-writer (docs-only item); delegating to implementer
 - implementer: wrote all 10 docs/ files (index, design-tokens, layout, primitives, cards, navigation, forms, feedback, patterns, data) → 233/233 green (no regressions)
 - reviewer: PASS — all 39 ACs met, 233 tests green, no scope creep
-- result: done — commit `pending`
+- result: done — commit `bd97e1e`
 
 ## 2026-05-17 — B20: Prose component
 - manager: set in-progress; spec at wiki/specs/B20-prose-component.md (written by user); delegating to test-writer

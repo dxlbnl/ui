@@ -57,8 +57,8 @@
     transition: border-color var(--transition);
   }
 
-  :global(.note-card:hover) {
-    border-color: var(--amber) !important;
+  :global(.note-card):hover {
+    border-color: var(--amber);
   }
 
   .note-foot {

@@ -132,8 +132,7 @@
     }
 
     .hamburger-wrap {
-      display: flex;
-      align-items: center;
+      display: block;
     }
 
     .nav-drawer {

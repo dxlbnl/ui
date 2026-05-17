@@ -24,7 +24,7 @@
 </script>
 
 <svelte:element this={as} class="cta-block" {...rest}>
-  <Spread style="align-items: center; gap: 24px;">
+  <Spread style="gap: 24px;">
     <Stack gap="xs">
       {#if eyebrow}
         <Text variant="mono" color="faint" class="cta-eyebrow" style="font-size: var(--t-micro); letter-spacing: 0.12em;">{eyebrow}</Text>

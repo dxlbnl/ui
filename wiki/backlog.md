@@ -136,7 +136,7 @@ Each item has a **status** and an optional **`review`** flag:
       `hr` (matches Rule component). Max prose width ~72ch. Gap between block elements
       via adjacent-sibling selectors or `> * + *` spacing.
 
-- [x] **B21: AI-readable docs** — status: `done` — commit: `pending`
+- [x] **B21: AI-readable docs** — status: `done` — commit: `bd97e1e`
       Markdown documentation in `docs/` — machine-parseable by AI assistants and renderable
       by mdsvex on a future documentation site. Storybook covers interactive/visual reference;
       `docs/` covers prop tables, usage examples, and design rationale in plain text.
@@ -147,7 +147,7 @@ Each item has a **status** and an optional **`review`** flag:
       props table (name / type / default / description), minimal usage example, notable
       behaviour. No generated content — hand-written, accurate to the source.
 
-- [ ] **B22: Modal story improvements** — status: `todo`
+- [x] **B22: Modal story improvements** — status: `done` — commit: `a7f1a03`
       The current Modal stories all render with `open: true`, which causes the Storybook
       docs page to open multiple overlapping modals at once. Each story should instead show
       a trigger `<Button>` that opens the modal, so the docs page is clean and the interaction
@@ -156,7 +156,7 @@ Each item has a **status** and an optional **`review`** flag:
       first, verify open state, then test close paths. The `open` prop default should stay
       `false`; the story manages state internally via `$state`.
 
-- [ ] **B23: CSS audit fixes** — status: `todo`
+- [ ] **B23: CSS audit fixes** — status: `in-progress`
       Three issues surfaced by the post-B13 composition review.
       (1) **NoteCard hover** — `:global(.note-card:hover)` must be `:global(.note-card):hover`
       so the pseudo-class is handled by the browser, not escaped into the global scope;
