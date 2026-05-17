@@ -13,6 +13,8 @@ Every agent reads this page first, before doing anything else.
 
 ## Pages
 
+### Project & wiki
+
 | Page | Purpose |
 |------|---------|
 | [vision.md](vision.md) | What the project is and why it exists. |
@@ -21,33 +23,58 @@ Every agent reads this page first, before doing anything else.
 | [backlog.md](backlog.md) | Prioritized work items with status and `review` flags. |
 | [decisions.md](decisions.md) | Append-only decision log (ADR-style). |
 | [progress.md](progress.md) | Append-only run journal — what the agents have done. |
-| [specs/](specs/) | One detailed spec page per feature. See `specs/README.md`. |
-| [specs/B2-design-tokens.md](specs/B2-design-tokens.md) | Spec: B2 Design tokens + global CSS (Phosphor/Paper palettes, reset, typography classes). |
-| [specs/B3-layout-helpers.md](specs/B3-layout-helpers.md) | Spec: B3 Layout helpers — superseded CSS-only approach (kept for reference). |
-| [specs/B3-layout-components.md](specs/B3-layout-components.md) | Spec: B3 Layout components — `Stack`, `Inline`, `Spread`, `Grid`, `Container`, `Rule` as Svelte 5 style-prop components. |
+
+### Reference & guides
+
+| Page | Purpose |
+|------|---------|
 | [stories-guide.md](stories-guide.md) | How to write Svelte CSF stories with play functions for this project. |
-| [specs/B4-primitive-components.md](specs/B4-primitive-components.md) | Spec: B4 Primitive components — Button (5 variants), Led (5 colors + blink), TagPill (3 variants). |
-| [specs/B5-card-components.md](specs/B5-card-components.md) | Spec: B5 Card components — Card (base), ProductCard, ProjectCard, NoteCard. Diagonal hatch placeholder, amber footer/border hover, hex note IDs. |
-| [specs/B6-navigation.md](specs/B6-navigation.md) | Spec: B6 Navigation — Nav component with palette toggle, mobile hamburger, active link state. |
-| [specs/B12-story-rewrite.md](specs/B12-story-rewrite.md) | Spec: B12 Story rewrite — add `component:` to `defineMeta`, props via `args`, shared `storybook-utils.ts`, remove null-checks and AC comments. |
-| [specs/B7-form-components.md](specs/B7-form-components.md) | Spec: B7 Form components — `Input`, `Textarea`, `Select` (custom), `InputWrap` (icon/addon/clear), `Field` (label + a11y wiring). |
-| [specs/B8-modal.md](specs/B8-modal.md) | Spec: B8 Modal — `Modal` dialog: header + body + footer; confirm/destructive variant with danger icon. Backdrop overlay, SSR-safe mount. |
-| [specs/B9-pattern-components.md](specs/B9-pattern-components.md) | Spec: B9 Pattern components — `Alert`, `CtaBlock`, `StatCard`, `KvList`, `ProgressBar`, `ActivityRow`, `SectionHead`, `SectionFoot`, `PageHero`. |
-| [specs/B10-accordion-tabs-table.md](specs/B10-accordion-tabs-table.md) | Spec: B10 Data components — `Accordion` + `AccordionItem` (native `<details>`, SSR-safe), `Tabs` (underline + pill variants, amber active, ARIA tabpanel), `Table` (mono headers, dashed row rules, snippet rows). |
-| [specs/B11-storybook-catalogue.md](specs/B11-storybook-catalogue.md) | Spec: B11 Storybook catalogue — consistency pass on Spread, Rule, Card, ProjectCard, CtaBlock, Modal, Table stories; token documentation stories (Color Palette, Typography Scale, Spacing Scale). |
-| [specs/B13-composition-refactor.md](specs/B13-composition-refactor.md) | Spec: B13 Composition refactor — replace raw flex/grid CSS in all higher-order components with `Stack`, `Inline`, `Spread` layout primitives; replace raw `<button>` elements with `Button`. Exceptions: `AccordionItem`, `Table`, `Card.svelte`. |
-| [composition-limits.md](composition-limits.md) | Reference: Svelte scoping constraints, the three workaround patterns, what remains in higher-order components post-B13, and what B14 Text+Heading will resolve. |
-| [specs/B14-typography-primitives.md](specs/B14-typography-primitives.md) | Spec: B14 Typography primitives — `Text` (body/lede/mono/eyebrow variants, color prop) and `Heading` (level 1–6, display/hero/h1/h2/h3 variants). Zero-CSS wrappers around existing global type classes. |
-| [specs/B15-keyboard-navigation.md](specs/B15-keyboard-navigation.md) | Spec: B15 Keyboard navigation — ARIA Listbox pattern for `Select` (ArrowDown/Up, Home/End, Enter, aria-activedescendant) and ARIA Tabs pattern for `Tabs` (ArrowLeft/Right, Home/End, automatic activation). WCAG 2.1 AA SC 2.1.1 compliance. |
-| [specs/B16-form-primitives.md](specs/B16-form-primitives.md) | Spec: B16 Form primitives — `Checkbox` (checked/indeterminate/disabled, amber accent), `Radio` + `RadioGroup` (exclusive selection, arrow-key nav, roving tabindex), `Switch` (role=switch, amber track when on, SSR-safe). `Field` enhancement: auto-inject `aria-invalid` + `aria-describedby` via Svelte context. |
-| [specs/B17-navigation-enhancements.md](specs/B17-navigation-enhancements.md) | Spec: B17 Navigation enhancements — `Breadcrumb` component (`<nav aria-label="breadcrumb">`, `<ol>`, `aria-current="page"` on last crumb, separators `aria-hidden`); `AnimatedAccordion` CSS-only height transition on `AccordionItem` via `interpolate-size: allow-keywords`, `@starting-style`, and `@supports` guard. |
-| [specs/B18-toast-notifications.md](specs/B18-toast-notifications.md) | Spec: B18 Toast notifications — `Toast` (ok/amber/danger, role=status/alert, close button), `ToastRegion` (fixed viewport portal, SSR-safe via `$effect`, configurable corner + stack limit + auto-dismiss), `toast` store API (`push`, `dismiss`). |
-| [specs/B20-prose-component.md](specs/B20-prose-component.md) | Spec: B20 Prose component — `Prose` wrapper that styles dynamically-inserted markdown HTML via `.prose :global(element)` CSS; polymorphic `as` prop (default `article`), `maxWidth` prop (default `72ch`); all 34 ACs cover h1–h4, p, a, ul/ol/li, code, pre, blockquote, table, img, hr, and palette switching. |
-| [specs/B21-ai-readable-docs.md](specs/B21-ai-readable-docs.md) | Spec: B21 AI-readable docs — ten hand-written Markdown files under `docs/` covering all exported components; props tables, usage examples, design rationale; mdsvex-renderable; accurate to source `.svelte` files; prerequisite: B15–B20 complete. |
-| [specs/B19-package-documentation.md](specs/B19-package-documentation.md) | Spec: B19 Package documentation — `README.md` (install, peer deps, CSS import, palette setup, usage example, Storybook link), `CHANGELOG.md` (Keep a Changelog, v0.1.0, B1–B14), JSDoc `@param`/`@default` on all exported component props, version bump 0.0.1→0.1.0. |
+| [composition-limits.md](composition-limits.md) | Svelte scoping constraints, the three workaround patterns, what remains in higher-order components post-B13. |
+| [specs/](specs/) | One detailed spec page per feature. See `specs/README.md`. |
+
+### Specs — Foundation & layout
+
+| Page | Purpose |
+|------|---------|
+| [specs/B2-design-tokens.md](specs/B2-design-tokens.md) | B2 Design tokens + global CSS (Phosphor/Paper palettes, reset, typography classes). |
+| [specs/B3-layout-components.md](specs/B3-layout-components.md) | B3 Layout components — `Stack`, `Inline`, `Spread`, `Grid`, `Container`, `Rule` as Svelte 5 style-prop components. |
+| [specs/B3-layout-helpers.md](specs/B3-layout-helpers.md) | B3 Layout helpers — superseded CSS-only approach (kept for reference). |
+
+### Specs — Components
+
+| Page | Purpose |
+|------|---------|
+| [specs/B4-primitive-components.md](specs/B4-primitive-components.md) | B4 Primitive components — Button (5 variants), Led (5 colors + blink), TagPill (3 variants). |
+| [specs/B14-typography-primitives.md](specs/B14-typography-primitives.md) | B14 Typography primitives — `Text` (body/lede/mono/eyebrow variants, color prop) and `Heading` (level 1–6, display/hero/h1/h2/h3 variants). |
+| [specs/B5-card-components.md](specs/B5-card-components.md) | B5 Card components — Card (base), ProductCard, ProjectCard, NoteCard. Diagonal hatch placeholder, amber footer/border hover, hex note IDs. |
+| [specs/B6-navigation.md](specs/B6-navigation.md) | B6 Navigation — Nav component with palette toggle, mobile hamburger, active link state. |
+| [specs/B17-navigation-enhancements.md](specs/B17-navigation-enhancements.md) | B17 Navigation enhancements — `Breadcrumb` (`aria-current="page"`), `AnimatedAccordion` CSS-only height transition via `interpolate-size`. |
+| [specs/B7-form-components.md](specs/B7-form-components.md) | B7 Form components — `Input`, `Textarea`, `Select` (custom), `InputWrap` (icon/addon/clear), `Field` (label + a11y wiring). |
+| [specs/B16-form-primitives.md](specs/B16-form-primitives.md) | B16 Form primitives — `Checkbox` (indeterminate/disabled), `Radio` + `RadioGroup` (roving tabindex), `Switch` (role=switch, SSR-safe). |
+| [specs/B8-modal.md](specs/B8-modal.md) | B8 Modal — `Modal` dialog: header + body + footer; confirm/destructive variant with danger icon. Backdrop overlay, SSR-safe mount. |
+| [specs/B9-pattern-components.md](specs/B9-pattern-components.md) | B9 Pattern components — `Alert`, `CtaBlock`, `StatCard`, `KvList`, `ProgressBar`, `ActivityRow`, `SectionHead`, `SectionFoot`, `PageHero`. |
+| [specs/B10-accordion-tabs-table.md](specs/B10-accordion-tabs-table.md) | B10 Data components — `Accordion` + `AccordionItem` (native `<details>`), `Tabs` (underline + pill, ARIA tabpanel), `Table` (mono headers, dashed rules). |
+| [specs/B18-toast-notifications.md](specs/B18-toast-notifications.md) | B18 Toast notifications — `Toast` (ok/amber/danger), `ToastRegion` (fixed portal, SSR-safe), `toast` store API (`push`, `dismiss`). |
+| [specs/B20-prose-component.md](specs/B20-prose-component.md) | B20 Prose component — `Prose` wrapper for dynamically-inserted markdown HTML; polymorphic `as` prop, `maxWidth` prop; palette switching. |
+
+### Specs — Enhancements & refactors
+
+| Page | Purpose |
+|------|---------|
+| [specs/B12-story-rewrite.md](specs/B12-story-rewrite.md) | B12 Story rewrite — add `component:` to `defineMeta`, props via `args`, shared `storybook-utils.ts`, remove null-checks and AC comments. |
+| [specs/B13-composition-refactor.md](specs/B13-composition-refactor.md) | B13 Composition refactor — replace raw flex/grid CSS with `Stack`/`Inline`/`Spread`; replace raw `<button>` with `Button`. |
+| [specs/B15-keyboard-navigation.md](specs/B15-keyboard-navigation.md) | B15 Keyboard navigation — ARIA Listbox for `Select`, ARIA Tabs for `Tabs` (ArrowLeft/Right, Home/End). WCAG 2.1 AA SC 2.1.1. |
+
+### Specs — Documentation & packaging
+
+| Page | Purpose |
+|------|---------|
+| [specs/B11-storybook-catalogue.md](specs/B11-storybook-catalogue.md) | B11 Storybook catalogue — consistency pass on key stories; token documentation stories (Color Palette, Typography Scale, Spacing Scale). |
+| [specs/B19-package-documentation.md](specs/B19-package-documentation.md) | B19 Package documentation — `README.md`, `CHANGELOG.md` (v0.1.0), JSDoc on all exported props, version bump 0.0.1→0.1.0. |
+| [specs/B21-ai-readable-docs.md](specs/B21-ai-readable-docs.md) | B21 AI-readable docs — ten Markdown files under `docs/` covering all exported components; props tables, usage examples, design rationale. |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
-> and restructure pages as the project grows — just link new pages in the table above.
+> and restructure pages as the project grows — just link new pages in the relevant section above.
 
 ## Conventions
 

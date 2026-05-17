@@ -31,8 +31,41 @@ it records the reason here AND states it in chat.
 - reviewer: PASS — all 30 ACs met, 0 pnpm check errors, no scope creep
 - result: done — commit `3396103`
 
+## 2026-05-17 — B17: Navigation enhancements
+- manager: set in-progress; spec at wiki/specs/B17-navigation-enhancements.md; delegating to test-writer
+- test-writer: wrote Breadcrumb.stories.svelte (3 stories) + Accordion "Animated" story → red (Breadcrumb.svelte missing)
+- implementer: Breadcrumb.svelte already pre-populated by parallel agent; added waitFor to Accordion visibility assertions (CSS transition race) → 207/207 green
+- reviewer: PASS — all 42 ACs met, 0 pnpm check errors, no scope creep
+- result: done — commit `180790d`
+
 ## 2026-05-17 — B16: Form primitives
 - manager: set in-progress; spec at wiki/specs/B16-form-primitives.md; delegating to test-writer
+- test-writer: wrote 22 failing stories across 5 files; confirmed red (import failures + runtime failures)
+- implementer: wrote Checkbox, Radio, RadioGroup, Switch, field-context.ts; enhanced Field/Input/Textarea with Svelte context; 202/202 green (11 TS errors in stories fixed by manager)
+- reviewer: FAIL (pass 1) — AC-60: Radio missing resolvedId + resolvedAriaInvalid; no test for Radio-in-Field
+- manager: fixed Radio.svelte + added "Auto ARIA Wiring — Radio" story; reviewer pass 2: PASS — 203/203 green, 0 errors
+- result: done — commit `40229b8`
+
+## 2026-05-17 — B21: AI-readable docs
+- manager: set in-progress; spec at wiki/specs/B21-ai-readable-docs.md; skipping test-writer (docs-only item); delegating to implementer
+- implementer: wrote all 10 docs/ files (index, design-tokens, layout, primitives, cards, navigation, forms, feedback, patterns, data) → 233/233 green (no regressions)
+- reviewer: PASS — all 39 ACs met, 233 tests green, no scope creep
+- result: done — commit `pending`
+
+## 2026-05-17 — B20: Prose component
+- manager: set in-progress; spec at wiki/specs/B20-prose-component.md (written by user); delegating to test-writer
+- test-writer: wrote Prose.stories.svelte (13 stories) → red (Prose.svelte missing)
+- implementer: wrote Prose.svelte + updated layout/index.ts + lib/index.ts; fixed AnchorHover (:hover not readable via getComputedStyle) and Image (height:auto not readable) → 233/233 green
+- reviewer: PASS — all 34 ACs met, 0 errors, no scope creep
+- result: done — commit `fe54444`
+
+## 2026-05-17 — B18: Toast notifications
+- manager: set in-progress; spec already written by user; test-writer wrote 13 failing stories (2 files) → red
+- implementer: wrote toast.ts, Toast.svelte, ToastRegion.svelte; updated feedback/index.ts + lib/index.ts → 220/220 green; fixed 7 TS errors in stories
+- reviewer: FAIL (pass 1) — AC 60 (:global in Toast.svelte), AC 32 (background-color untested), AC 46 (timer cancellation untested), Nav.svelte scope creep
+- manager: fixed all 4 findings; Nav.svelte parallel-agent changes bundled in commit
+- reviewer: PASS (pass 2) — all 75 ACs met, 220/220 green, 0 errors
+- result: done — commit `eefc8b5`
 
 ## 2026-05-16 — B15: Keyboard navigation
 - manager: set in-progress; spec written (wiki/specs/B15-keyboard-navigation.md)

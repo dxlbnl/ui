@@ -105,7 +105,7 @@ Each item has a **status** and an optional **`review`** flag:
       `aria-invalid` and `aria-describedby` from its `error` prop so consumers get correct
       ARIA wiring without manual plumbing.
 
-- [ ] **B17: Navigation enhancements** — status: `todo`
+- [x] **B17: Navigation enhancements** — status: `done` — commit: `180790d`
       Two deferred navigation features. `Breadcrumb`: a `<nav aria-label="breadcrumb">`
       component that renders a list of `{ label, href }` crumbs with `aria-current="page"`
       on the last item; designed for the slot already present in `Nav`. `AnimatedAccordion`:
@@ -113,7 +113,7 @@ Each item has a **status** and an optional **`review`** flag:
       allow-keywords` with a `@starting-style` fallback; gated behind `@supports` so the
       native `<details>` fallback remains instant on unsupported browsers.
 
-- [ ] **B18: Toast notifications** — status: `todo`
+- [x] **B18: Toast notifications** — status: `done` — commit: `eefc8b5`
       A transient notification system: `Toast` component (icon + message, ok/amber/danger
       variants, auto-dismiss after N seconds, manual close button) rendered in a
       `ToastRegion` portal anchored to a corner of the viewport. SSR-safe (region mounts
@@ -121,7 +121,7 @@ Each item has a **status** and an optional **`review`** flag:
       danger. Distinct from `Alert` (which is static and inline). Stack of up to N toasts;
       oldest dismissed first when limit is exceeded.
 
-- [ ] **B20: Prose component** — status: `todo`
+- [x] **B20: Prose component** — status: `done` — commit: `fe54444`
       A `Prose` wrapper component that applies design-system typography to raw HTML
       rendered by mdsvex (or any markdown processor). Targets dynamically inserted child
       elements via `.prose :global(element)` — Svelte's scoped CSS cannot reach markdown
@@ -136,7 +136,7 @@ Each item has a **status** and an optional **`review`** flag:
       `hr` (matches Rule component). Max prose width ~72ch. Gap between block elements
       via adjacent-sibling selectors or `> * + *` spacing.
 
-- [ ] **B21: AI-readable docs** — status: `todo`
+- [x] **B21: AI-readable docs** — status: `done` — commit: `pending`
       Markdown documentation in `docs/` — machine-parseable by AI assistants and renderable
       by mdsvex on a future documentation site. Storybook covers interactive/visual reference;
       `docs/` covers prop tables, usage examples, and design rationale in plain text.
@@ -156,9 +156,26 @@ Each item has a **status** and an optional **`review`** flag:
       first, verify open state, then test close paths. The `open` prop default should stay
       `false`; the story manages state internally via `$state`.
 
+- [ ] **B23: CSS audit fixes** — status: `todo`
+      Three issues surfaced by the post-B13 composition review.
+      (1) **NoteCard hover** — `:global(.note-card:hover)` must be `:global(.note-card):hover`
+      so the pseudo-class is handled by the browser, not escaped into the global scope;
+      remove the `!important` (Card's border specificity doesn't require it with the correct selector).
+      (2) **Nav hamburger-wrap** — `.hamburger-wrap { display: flex; align-items: center }` on mobile
+      can simplify to `display: block`; the parent Inline already handles vertical alignment.
+      (3) **CtaBlock redundant override** — `align-items: center` on the Spread's `style=` prop
+      is redundant (Spread already sets it); remove it.
+
 - [ ] **B19: Package documentation** — status: `todo`
       Minimum viable documentation for the library. `README.md`: installation (`pnpm add
       dxlb-design`), peer deps, global CSS import, usage example, Storybook link. `CHANGELOG.md`:
       starting from v0.1.0, covering B1–B14. JSDoc `@param` / `@default` annotations on
       exported component props (feeds Storybook autodocs). Version bump from 0.0.1 → 0.1.0
       in `package.json` once B13 is confirmed stable.
+
+- [ ] **B24: Style prop cleanup** — status: `todo`
+      Eliminate excessive inline `style=` props introduced during B13–B14. Two classes of
+      fix: (1) use correct Heading `variant` so typography overrides collapse to one prop;
+      (2) replace multi-prop `style=` on layout primitives acting as containers with scoped
+      HTML elements + scoped CSS. No `:global()` to be introduced. Spec writer to detail
+      scope and acceptance criteria.

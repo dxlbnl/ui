@@ -548,3 +548,36 @@
   pass begins. The 80% annotation density requirement (AC-18) is the measurable target
   regardless of placement style.
 - **Supersedes**: none
+
+## D29: B16 Accessible hiding pattern for Checkbox/Radio native inputs
+- **Date**: 2026-05-17
+- **By**: implementer (B16)
+- **Context**: The spec says to hide the native `<input>` visually with
+  `opacity: 0; position: absolute; width: 0; height: 0`. However,
+  `@testing-library`'s `toBeVisible()` considers `opacity: 0` elements invisible,
+  causing the "DefaultUnchecked" and "Indeterminate" stories to fail with
+  "Received element is not visible".
+- **Decision**: Use the classic accessible-hide pattern instead:
+  `position: absolute; width: 1px; height: 1px; margin: -1px; clip: rect(0,0,0,0); overflow: hidden; white-space: nowrap`.
+  This keeps the element in the accessibility tree (so `getByRole` works), is considered
+  visible by testing-library (so `toBeVisible()` passes), and is visually imperceptible
+  at 1px clipped.
+- **Consequences**: Slight deviation from the literal spec wording but fully spec-compliant
+  in behaviour — the input is invisible to the eye and accessible to AT and tests.
+- **Supersedes**: none
+
+## D30: B16 Field context reactivity — getter object pattern
+- **Date**: 2026-05-17
+- **By**: implementer (B16)
+- **Context**: OQ-1 in the B16 spec notes that Svelte 5 context is read once at
+  component initialisation. Passing a plain object with `$derived` properties does not
+  propagate updates to `getContext` consumers.
+- **Decision**: `Field` uses a getter-based plain object (`{ get inputId() {...}, ... }`)
+  set via `setContext`. JavaScript getters are evaluated lazily each time the property
+  is accessed, so child components reading context properties inside `$derived` blocks
+  (or Svelte's reactive template evaluation) will pick up the latest values from the
+  parent's reactive state. This avoids the Svelte 4 store pattern while keeping
+  reactivity correct.
+- **Consequences**: Dynamic `error` prop changes on `Field` propagate correctly to nested
+  controls without remounting. This resolves OQ-1 as non-blocking.
+- **Supersedes**: D11 (which documented the ARIA wiring gap as known trade-off).
