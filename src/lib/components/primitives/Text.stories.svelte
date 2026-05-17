@@ -124,3 +124,129 @@
   }}>
   Default variant text.
 </Story>
+
+<!-- B26 AC-3, AC-17: size="xs" on mono → 12px, data-size="xs" present -->
+<Story name="SizeXs" args={{ variant: "mono", size: "xs" }}
+  play={async ({ canvasElement }) => {
+    const el = canvasElement.firstElementChild!;
+    await expect(el.getAttribute("data-size")).toBe("xs");
+    await expect(getComputedStyle(el).fontSize).toBe("12px");
+  }}>
+  Micro label
+</Story>
+
+<!-- B26 AC-4: size="sm" on mono → 14px -->
+<Story name="SizeSm" args={{ variant: "mono", size: "sm" }}
+  play={async ({ canvasElement }) => {
+    const el = canvasElement.firstElementChild!;
+    await expect(el.getAttribute("data-size")).toBe("sm");
+    await expect(getComputedStyle(el).fontSize).toBe("14px");
+  }}>
+  Small label
+</Story>
+
+<!-- B26 AC-5, AC-41: size="md" on mono → 16px -->
+<Story name="SizeMd" args={{ variant: "mono", size: "md" }}
+  play={async ({ canvasElement }) => {
+    const el = canvasElement.firstElementChild!;
+    await expect(el.getAttribute("data-size")).toBe("md");
+    await expect(getComputedStyle(el).fontSize).toBe("16px");
+  }}>
+  Medium mono text.
+</Story>
+
+<!-- B26 AC-6: size="lg" on lede → 19px -->
+<Story name="SizeLg" args={{ variant: "lede", size: "lg" }}
+  play={async ({ canvasElement }) => {
+    const el = canvasElement.firstElementChild!;
+    await expect(el.getAttribute("data-size")).toBe("lg");
+    await expect(getComputedStyle(el).fontSize).toBe("19px");
+  }}>
+  Large lede text.
+</Story>
+
+<!-- B26 AC-7, AC-41: size="xl" on body → 24px -->
+<Story name="SizeXl" args={{ variant: "body", size: "xl" }}
+  play={async ({ canvasElement }) => {
+    const el = canvasElement.firstElementChild!;
+    await expect(el.getAttribute("data-size")).toBe("xl");
+    await expect(getComputedStyle(el).fontSize).toBe("24px");
+  }}>
+  Extra-large body text.
+</Story>
+
+<!-- B26 AC-8: natural defaults — no size prop → variant's natural font-size -->
+<Story name="NaturalDefaults" args={{ variant: "body" }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const eyebrow = canvas.getByTestId("natural-eyebrow");
+    await expect(getComputedStyle(eyebrow).fontSize).toBe("12px");
+    const mono = canvas.getByTestId("natural-mono");
+    await expect(getComputedStyle(mono).fontSize).toBe("14px");
+    const body = canvas.getByTestId("natural-body");
+    await expect(getComputedStyle(body).fontSize).toBe("16px");
+    const lede = canvas.getByTestId("natural-lede");
+    await expect(getComputedStyle(lede).fontSize).toBe("19px");
+  }}>
+  <Text variant="eyebrow" data-testid="natural-eyebrow">Eyebrow</Text>
+  <Text variant="mono" data-testid="natural-mono">Mono</Text>
+  <Text variant="body" data-testid="natural-body">Body</Text>
+  <Text variant="lede" data-testid="natural-lede">Lede</Text>
+</Story>
+
+<!-- B26 AC-9: size overrides font-size only; other variant properties (letterSpacing, textTransform) preserved -->
+<Story name="SizePreservesVariant" args={{ variant: "eyebrow", size: "lg" }}
+  play={async ({ canvasElement }) => {
+    const el = canvasElement.firstElementChild!;
+    await expect(getComputedStyle(el).fontSize).toBe("19px");
+    await expect(getComputedStyle(el).letterSpacing).toBe("2.28px");
+    await expect(getComputedStyle(el).textTransform).toBe("uppercase");
+  }}>
+  Eyebrow at lede size
+</Story>
+
+<!-- B26 AC-20, AC-42: case="none" suppresses uppercase on mono -->
+<Story name="CaseNone" args={{ variant: "mono", case: "none" }}
+  play={async ({ canvasElement }) => {
+    const el = canvasElement.firstElementChild!;
+    await expect(el.getAttribute("data-case")).toBe("none");
+    await expect(getComputedStyle(el).textTransform).toBe("none");
+  }}>
+  not uppercase
+</Story>
+
+<!-- B26 AC-18, AC-42: case="lower" produces lowercase -->
+<Story name="CaseLower" args={{ variant: "mono", case: "lower" }}
+  play={async ({ canvasElement }) => {
+    const el = canvasElement.firstElementChild!;
+    await expect(el.getAttribute("data-case")).toBe("lower");
+    await expect(getComputedStyle(el).textTransform).toBe("lowercase");
+  }}>
+  lowercase label
+</Story>
+
+<!-- B26 AC-19, AC-42: case="upper" produces uppercase on body variant -->
+<Story name="CaseUpper" args={{ variant: "body", case: "upper" }}
+  play={async ({ canvasElement }) => {
+    const el = canvasElement.firstElementChild!;
+    await expect(el.getAttribute("data-case")).toBe("upper");
+    await expect(getComputedStyle(el).textTransform).toBe("uppercase");
+  }}>
+  Uppercased body text.
+</Story>
+
+<!-- B26 AC-21: mono and eyebrow default to uppercase; body defaults to none (no case prop) -->
+<Story name="DefaultCase" args={{ variant: "body" }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const monoEl = canvas.getByTestId("default-case-mono");
+    await expect(getComputedStyle(monoEl).textTransform).toBe("uppercase");
+    const bodyEl = canvas.getByTestId("default-case-body");
+    await expect(getComputedStyle(bodyEl).textTransform).toBe("none");
+    const eyebrowEl = canvas.getByTestId("default-case-eyebrow");
+    await expect(getComputedStyle(eyebrowEl).textTransform).toBe("uppercase");
+  }}>
+  <Text variant="mono" data-testid="default-case-mono">Mono default</Text>
+  <Text variant="body" data-testid="default-case-body">Body default</Text>
+  <Text variant="eyebrow" data-testid="default-case-eyebrow">Eyebrow</Text>
+</Story>

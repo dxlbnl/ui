@@ -19,6 +19,16 @@ it records the reason here AND states it in chat.
 
 <!-- entries start here -->
 
+## 2026-05-17 — B26: Typography primitive size prop and scoped CSS
+- manager: start, track: feature; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B26-typography-size-prop.md (45 ACs) → user approved at review checkpoint
+- test-writer: added 14 stories to Text.stories.svelte (SizeXs/Sm/Md/Lg/Xl, NaturalDefaults, SizePreservesVariant, CaseNone/Lower/Upper, DefaultCase) + 3 stories to Heading.stories.svelte (SizeXs, SizeLg, SizeXl) → red (components missing props)
+- implementer: Text.svelte + Heading.svelte — added size/case props, data-size/data-case attributes, scoped variant CSS; migrated 15 style= overrides across NoteCard, ProductCard, ProjectCard, StatCard, ProgressBar, Modal → 250/250 green; fixed letterSpacing assertion em→px (Chromium returns resolved px)
+- reviewer: FAIL (pass 1) — AC-32 spec/code mismatch (residual .card-desc rule), AC-21 DefaultCase missing eyebrow assertion, AC-41 SizeMd used variant="body" not "mono"
+- implementer: fixed all 3 findings; updated AC-32 spec text to permit option (b); 250/250 green
+- reviewer: PASS (pass 2) — all 45 ACs met, 250 tests green, 0 pnpm check errors, no scope creep
+- result: done — commit TBD
+
 ## 2026-05-17 14:00 — B25: Layout primitive gap API
 - manager: start, track: feature; spec already written at wiki/specs/B25-layout-gap-api.md; delegating to test-writer
 - test-writer: added gap stories to Spread.stories.svelte (GapNone/Sm/Md/Lg + updated LedStatusBar/WithGap to assert 0px default); updated Stack "As Section" to assert 24px → 6 tests red

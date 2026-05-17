@@ -28,8 +28,8 @@
 <Stack gap="xs" style="width: 100%;" {...rest}>
   {#if label}
     <Spread aria-hidden="true">
-      <Text variant="mono" color="faint" style="font-size: var(--t-micro);">{label}</Text>
-      <Text variant="mono" color={color} style="font-size: var(--t-micro);">{clampedValue}%</Text>
+      <Text variant="mono" color="faint" size="xs">{label}</Text>
+      <Text variant="mono" color={color} size="xs">{clampedValue}%</Text>
     </Spread>
   {/if}
   <div

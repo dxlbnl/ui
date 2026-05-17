@@ -5,6 +5,7 @@ type: bug
 priority: high
 flags: [review]
 created: 2026-05-17
+spec: wiki/specs/B26-typography-size-prop.md
 ---
 
 ## Description

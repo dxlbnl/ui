@@ -627,3 +627,23 @@
   verify the visual output of `CtaBlock`, `SectionFoot`, `ProductCard`, `ProjectCard`,
   `KvList`, `ProgressBar`, `NoteCard`, and `Modal` stories after the change.
 - **Supersedes**: none
+
+## D33: B26 test-writer — NaturalDefaults and DefaultCase use composition-in-slot pattern
+- **Date**: 2026-05-17
+- **By**: test-writer (B26)
+- **Context**: `NaturalDefaults` (AC-8) must assert computed font-size for all four `Text`
+  variants without a `size` prop. `DefaultCase` (AC-21) must assert `textTransform` for
+  `mono` and `body` without a `case` prop. Both require multiple independent `<Text>`
+  instances in a single story. The primary `Text.stories.svelte` has `component: Text` in
+  `defineMeta`, so each story slot is wrapped by one outer `<Text>` instance.
+- **Decision**: Both stories use the same composition-in-slot pattern established by `Colors`
+  (D21): `args` set an innocuous outer variant (`body`) and the slot contains multiple
+  `<Text data-testid="...">` instances as children. Play functions query each by `data-testid`
+  and assert `getComputedStyle`. A separate `.composition.stories.svelte` file is not
+  needed — the inner `<Text>` children are not double-wrapped by the outer component, just
+  nested as slot content.
+- **Consequences**: `NaturalDefaults` and `DefaultCase` pass today (natural defaults are
+  already correct from global classes) and serve as regression guards ensuring implementation
+  does not break the no-prop baseline. `data-testid` queries are justified per the stories
+  guide: there is no accessible role or unique visible text to distinguish the variants.
+- **Supersedes**: none

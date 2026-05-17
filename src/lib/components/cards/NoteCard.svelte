@@ -38,18 +38,18 @@
   <div class="card-body">
     <Stack gap="xs">
       <Spread>
-        <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.1em;">{hexId}</Text>
-        <Text variant="mono" color="cyan" style="font-size: var(--t-micro); letter-spacing: 0.1em;">{kind.toUpperCase()}</Text>
+        <Text variant="mono" color="faint" size="xs">{hexId}</Text>
+        <Text variant="mono" color="cyan" size="xs">{kind.toUpperCase()}</Text>
       </Spread>
-      <Heading level={3} style="font-size: var(--t-lede);">{title}</Heading>
+      <Heading level={3} size="lg">{title}</Heading>
       {#if lede}
         <Text variant="body" color="dim" class="note-lede" style="flex: 1;">{lede}</Text>
       {/if}
       {#if date}
         <div class="note-foot">
           <Spread>
-            <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.08em;">{date}</Text>
-            <Text variant="mono" color="amber" style="font-size: var(--t-micro); letter-spacing: 0.08em;" aria-hidden="true">READ →</Text>
+            <Text variant="mono" color="faint" size="xs">{date}</Text>
+            <Text variant="mono" color="amber" size="xs" aria-hidden="true">READ →</Text>
           </Spread>
         </div>
       {/if}

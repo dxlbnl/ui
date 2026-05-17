@@ -26,6 +26,7 @@ Every agent reads this page first, before doing anything else.
 | [decisions.md](decisions.md)                   | Append-only decision log (ADR-style).                                                       |
 | [progress.md](progress.md)                     | Append-only run journal — what the agents have done.                                        |
 | [specs/](specs/)                               | One detailed spec page per feature/bug. See `specs/README.md`.                              |
+| [specs/B26-typography-size-prop.md](specs/B26-typography-size-prop.md) | Spec: `size` and `case` props on Text/Heading; scoped CSS; 15 caller migrations. |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
 > and restructure pages as the project grows — just link new pages in the table above.

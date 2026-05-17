@@ -28,10 +28,10 @@
 
 <Card class="stat-card" {...rest}>
   <Stack gap="xs" style="padding: 16px 20px;">
-    <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.1em;">{label}</Text>
+    <Text variant="mono" color="faint" size="xs">{label}</Text>
     <span class="stat-value stat-value--{color}">{value}</span>
     {#if sublabel}
-      <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.04em;">{sublabel}</Text>
+      <Text variant="mono" color="faint" size="xs">{sublabel}</Text>
     {/if}
   </Stack>
 </Card>

@@ -81,7 +81,7 @@
         {#if variant === 'destructive' || variant === 'confirm'}
           <span class="modal-icon" aria-hidden="true">!</span>
         {/if}
-        <Text variant="mono" as="h2" id="modal-title" style="font-size: var(--t-lede); letter-spacing: 0.08em; flex: 1;">{title}</Text>
+        <Text variant="mono" as="h2" id="modal-title" size="lg" class="modal-title">{title}</Text>
         <Button variant="ghost" type="button" aria-label="Close dialog" onclick={handleClose}>×</Button>
       </Inline>
     </header>
@@ -177,5 +177,9 @@
     font-size: var(--t-body);
     color: var(--ink-dim);
     line-height: 1.5;
+  }
+
+  :global(.modal-title) {
+    flex: 1;
   }
 </style>

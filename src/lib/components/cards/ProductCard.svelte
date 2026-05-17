@@ -70,19 +70,19 @@
   <div class="card-body">
     <Stack gap="xs">
       <Text variant="eyebrow">{sku}</Text>
-      <Heading level={3} style="font-size: var(--t-lede);">{name}</Heading>
-      <p class="card-desc">{description}</p>
+      <Heading level={3} size="lg">{name}</Heading>
+      <Text variant="mono" case="none" color="dim" class="card-desc">{description}</Text>
       <div class="card-footer-row">
         <Spread>
           {#if price}
             <Inline gap="xs" style="align-items: baseline;">
-              <Text variant="mono" color="amber" style="font-size: var(--t-body);">{price}</Text>
-              <Text variant="mono" color="faint" style="font-size: var(--t-micro); text-transform: lowercase; letter-spacing: 0.06em;">incl. VAT</Text>
+              <Text variant="mono" color="amber" size="md">{price}</Text>
+              <Text variant="mono" color="faint" size="xs" case="lower">incl. VAT</Text>
             </Inline>
           {/if}
           <Inline gap="xs">
             <Led color={ledColor} aria-hidden="true" />
-            <Text variant="mono" style="font-size: var(--t-micro);">{stockLabel}</Text>
+            <Text variant="mono" size="xs">{stockLabel}</Text>
           </Inline>
         </Spread>
       </div>
@@ -133,13 +133,8 @@
     justify-content: center;
   }
 
-  /* mono prose without uppercase — can't use Text variant=mono which forces uppercase */
-  .card-desc {
-    font-family: var(--mono);
-    font-size: var(--t-mono);
-    color: var(--ink-dim);
+  :global(.card-desc) {
     line-height: 1.4;
-    margin: 0;
   }
 
   .card-cta {

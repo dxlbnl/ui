@@ -104,3 +104,34 @@
   }}>
   Section Title
 </Story>
+
+<!-- B26 AC-12, AC-43: size="xs" on h3 → 12px -->
+<Story name="SizeXs" args={{ level: 3, size: "xs" }}
+  play={async ({ canvasElement }) => {
+    const el = canvasElement.firstElementChild!;
+    await expect(el.getAttribute("data-size")).toBe("xs");
+    await expect(getComputedStyle(el).fontSize).toBe("12px");
+  }}>
+  Micro heading
+</Story>
+
+<!-- B26 AC-13, AC-15, AC-43: size="lg" on h3 → 19px, letterSpacing stays at h3 default -0.01em -->
+<Story name="SizeLg" args={{ level: 3, size: "lg" }}
+  play={async ({ canvasElement }) => {
+    const el = canvasElement.firstElementChild!;
+    await expect(el.getAttribute("data-size")).toBe("lg");
+    await expect(getComputedStyle(el).fontSize).toBe("19px");
+    await expect(getComputedStyle(el).letterSpacing).toBe("-0.19px");
+  }}>
+  Lede-size heading
+</Story>
+
+<!-- B26 AC-14: size="xl" on h3 → 24px -->
+<Story name="SizeXl" args={{ level: 3, size: "xl" }}
+  play={async ({ canvasElement }) => {
+    const el = canvasElement.firstElementChild!;
+    await expect(el.getAttribute("data-size")).toBe("xl");
+    await expect(getComputedStyle(el).fontSize).toBe("24px");
+  }}>
+  XL heading
+</Story>

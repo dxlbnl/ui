@@ -49,7 +49,7 @@
           {/each}
         </Inline>
       {/if}
-      <Heading level={3} style="font-size: var(--t-lede);">{title}</Heading>
+      <Heading level={3} size="lg">{title}</Heading>
       <p class="card-desc">{description}</p>
     </Stack>
   </div>
