@@ -104,7 +104,7 @@ Individual toast notification. Internal component — in normal usage, push toas
 |---|---|---|---|
 | `id` | `string` | — | Unique toast identifier. Passed back to `ondismiss`. |
 | `message` | `string` | — | Notification message text. |
-| `variant` | `'ok' \| 'amber' \| 'danger'` | `'ok'` | Determines border colour and icon glyph. |
+| `variant` | `'success' \| 'warning' \| 'error'` | `'success'` | Determines border colour and icon glyph. |
 | `ondismiss` | `(id: string) => void` | — | Callback fired when the close button is clicked. |
 | `...rest` | `HTMLAttributes<HTMLDivElement>` | — | All native HTML div attributes forwarded to the root element. |
 
@@ -116,17 +116,17 @@ Individual toast notification. Internal component — in normal usage, push toas
 </script>
 
 <!-- Preferred: use the store -->
-<button onclick={() => toast.push('Build complete', { variant: 'ok' })}>
+<button onclick={() => toast.push('Build complete', { variant: 'success' })}>
   Notify
 </button>
 ```
 
 ### Notable behaviour
 
-- `danger` variant uses `role="alert"` (assertive live region) so screen readers interrupt immediately.
-- `ok` and `amber` variants use `role="status"` (polite live region).
+- `error` variant uses `role="alert"` (assertive live region) so screen readers interrupt immediately.
+- `success` and `warning` variants use `role="status"` (polite live region).
 - `aria-atomic="true"` is always set.
-- Icon glyphs: `ok` → `ok`; `amber` → `!!`; `danger` → `err`.
+- Icon glyphs: `success` → `ok`; `warning` → `!!`; `error` → `err`.
 - Minimum width 260px, maximum width 400px.
 
 ---
@@ -179,7 +179,7 @@ const id = toast.push('Operation complete')
 
 // Push with options
 const id2 = toast.push('Upload failed', {
-  variant: 'danger',   // 'ok' | 'amber' | 'danger' — default 'ok'
+  variant: 'error',    // 'success' | 'warning' | 'error' — default 'success'
   duration: 8000,      // milliseconds before auto-dismiss — default 5000
 })
 

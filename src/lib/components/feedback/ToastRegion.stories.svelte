@@ -17,7 +17,7 @@
     const canvas = within(canvasElement);
 
     // AC 40: push a toast and it appears
-    const id = toast.push('Hello from ToastRegion.', { variant: 'ok' });
+    const id = toast.push('Hello from ToastRegion.', { variant: 'success' });
 
     // AC 39: ToastRegion renders one Toast per active store item
     await waitFor(() => expect(canvas.getByRole('status')).toBeVisible());
@@ -37,15 +37,15 @@
   <ToastRegion position="bottom-right" />
 </Story>
 
-<!-- AC 39, 41 — three variants: ok + amber = status (×2), danger = alert (×1) -->
+<!-- AC 39, 41 — three variants: success + warning = status (×2), error = alert (×1) -->
 <Story name="Three Variants"
   play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
     // Push three toasts with different variants
-    const id1 = toast.push('Build passed.', { variant: 'ok' });
-    const id2 = toast.push('Memory at 85%.', { variant: 'amber' });
-    const id3 = toast.push('Connection lost.', { variant: 'danger' });
+    const id1 = toast.push('Build passed.', { variant: 'success' });
+    const id2 = toast.push('Memory at 85%.', { variant: 'warning' });
+    const id3 = toast.push('Connection lost.', { variant: 'error' });
 
     // AC 39: all items render
     await waitFor(() => {
@@ -53,7 +53,7 @@
       expect(statuses.length).toBe(2);
     });
 
-    // AC 16+17: ok and amber get role=status
+    // AC 16+17: success and warning get role=status
     const statuses = canvas.getAllByRole('status');
     await expect(statuses.length).toBe(2);
 
@@ -81,11 +81,11 @@
 
     // Push 5 toasts
     const ids = [
-      toast.push('Toast 1', { variant: 'ok' }),
-      toast.push('Toast 2', { variant: 'ok' }),
-      toast.push('Toast 3', { variant: 'ok' }),
-      toast.push('Toast 4', { variant: 'ok' }),
-      toast.push('Toast 5', { variant: 'ok' }),
+      toast.push('Toast 1', { variant: 'success' }),
+      toast.push('Toast 2', { variant: 'success' }),
+      toast.push('Toast 3', { variant: 'success' }),
+      toast.push('Toast 4', { variant: 'success' }),
+      toast.push('Toast 5', { variant: 'success' }),
     ];
 
     // AC 42: only 3 toasts are visible (oldest 2 dismissed by limit enforcement)
@@ -117,7 +117,7 @@
     const canvas = within(canvasElement);
 
     // AC 44: push with short duration
-    const id = toast.push('Short-lived.', { variant: 'ok', duration: 1000 });
+    const id = toast.push('Short-lived.', { variant: 'success', duration: 1000 });
 
     // Immediately visible
     await waitFor(() => expect(canvas.getByText('Short-lived.')).toBeVisible());
@@ -139,7 +139,7 @@
     const canvas = within(canvasElement);
 
     // AC 46: push with a real timer so we can verify cancellation
-    const id = toast.push('Manual dismiss only.', { variant: 'amber', duration: 800 });
+    const id = toast.push('Manual dismiss only.', { variant: 'warning', duration: 800 });
 
     await waitFor(() => expect(canvas.getByText('Manual dismiss only.')).toBeVisible());
 
@@ -166,7 +166,7 @@
   play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const id = toast.push('Top-left toast.', { variant: 'ok' });
+    const id = toast.push('Top-left toast.', { variant: 'success' });
 
     await waitFor(() => expect(canvas.getByText('Top-left toast.')).toBeVisible());
 

@@ -11,7 +11,7 @@
   });
 </script>
 
-<!-- AC 16, 23, 26, 27, 29 — ok variant: role=status, icon "ok", border-color=--ok -->
+<!-- AC 16, 23, 26, 27, 29 — success variant: role=status, icon "ok", border-color=--ok -->
 <Story
   name="Success"
   args={{
@@ -55,9 +55,9 @@
   }}
 />
 
-<!-- AC 17, 24, 30 — amber variant: role=status, icon "!!", border-color=--amber -->
+<!-- AC 17, 24, 30 — warning variant: role=status, icon "!!", border-color=--amber -->
 <Story
-  name="Amber"
+  name="Warning"
   args={{
     id: "toast-2",
     message: "+12V rail at 88% capacity.",
@@ -85,9 +85,9 @@
   }}
 />
 
-<!-- AC 18, 20, 25, 31 — danger variant: role=alert, aria-live=assertive, icon "err", border-color=--danger -->
+<!-- AC 18, 20, 25, 31 — error variant: role=alert, aria-live=assertive, icon "err", border-color=--danger -->
 <Story
-  name="Danger"
+  name="Error"
   args={{
     id: "toast-3",
     message: "Thermal protection triggered.",
@@ -161,7 +161,7 @@
   play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // AC 17: still role=status for amber
+    // AC 17: still role=status for warning
     const toast = canvas.getByRole("status");
     await expect(toast).toBeVisible();
 
@@ -177,7 +177,7 @@
   }}
 />
 
-<!-- AC 19, 21, 22 — ARIA attributes on ok variant -->
+<!-- AC 19, 21, 22 — ARIA attributes on success variant -->
 <Story
   name="Aria Attributes"
   args={{

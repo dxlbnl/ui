@@ -8,7 +8,7 @@
     id: string;
     /** Text content of the notification. */
     message: string;
-    /** Colour variant — also sets the ARIA live region type. @default 'ok' */
+    /** Colour variant — also sets the ARIA live region type. @default 'success' */
     variant?: ToastVariant;
     /** Called with the toast `id` when the dismiss button is clicked. */
     ondismiss: (id: string) => void;
@@ -87,13 +87,13 @@
     flex-shrink: 0;
   }
 
-  .toast--ok .toast-icon {
+  .toast--success .toast-icon {
     color: var(--ok);
   }
-  .toast--amber .toast-icon {
+  .toast--warning .toast-icon {
     color: var(--amber);
   }
-  .toast--danger .toast-icon {
+  .toast--error .toast-icon {
     color: var(--danger);
   }
 

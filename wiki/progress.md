@@ -19,13 +19,19 @@ it records the reason here AND states it in chat.
 
 <!-- entries start here -->
 
+## 2026-05-17 — B37: Rename ToastVariant to success/warning/error
+- manager: start, track: chore; delegating directly to implementer
+- implementer: renamed ToastVariant ok/amber/danger → success/warning/error across toast.ts, Toast.svelte, Toast.stories.svelte, ToastRegion.stories.svelte; updated docs/feedback.md → 263/263 green
+- reviewer: PASS — rename complete and consistent, 0 pnpm check errors, no scope creep
+- result: done — commit TBD
+
 ## 2026-05-17 — B27: Layout style prop cleanup — Inline align prop + scoped CSS pass
 - manager: start, track: bug; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B27-layout-style-prop-cleanup.md (25 ACs) → no blocking questions
 - test-writer: added 13 stories to Inline.stories.svelte (AlignBaseline/Start/Default/DataAttr + scoped CSS outcome assertions) → 13 red
 - implementer: Inline align prop + data-align CSS; SectionHead/PageHero/Modal/StatCard/ProgressBar/Nav/Accordion/NoteCard scoped CSS fixes; Accordion refactored to native div (no Stack) → 263/263 green; reviewer FAIL (bare :global in Accordion); Accordion rewritten to native div with scoped .accordion rule → 263/263 green
 - reviewer: PASS — all 25 ACs met, 263 tests green, 0 pnpm check errors, no scope creep
-- result: done — commit TBD
+- result: done — commit `798e95c`
 
 ## 2026-05-17 — B26: Typography primitive size prop and scoped CSS
 - manager: start, track: feature; delegating to spec-writer
