@@ -6,8 +6,11 @@
   type TextColor = 'ink' | 'dim' | 'faint' | 'amber' | 'cyan' | 'ok' | 'danger'
 
   interface Props {
+    /** Typography style to apply. @default 'body' */
     variant?: TextVariant
+    /** Text colour mapped to a design token. */
     color?: TextColor
+    /** HTML element to render as — overrides the variant default. */
     as?: string
     children?: Snippet
     class?: ClassValue | null

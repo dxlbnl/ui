@@ -1,69 +1,94 @@
-# Vibin
+# dxlb-design
 
-A **seed repo** for spinning up random projects with a **wiki-driven, spec-driven,
-test-first** multi-agent workflow. Clone it, run `/bootstrap`, and a team of agents
-builds your project from the wiki.
+Design system for [dexterlabs.nl](https://dexterlabs.nl). SvelteKit component library with Phosphor (dark) and Paper (light) palettes, built with Svelte 5 and documented in Storybook.
 
-## How it works
+## Install
 
-The `wiki/` directory is the **single source of truth** — the wiki *is* the spec. The
-top-level session runs a `manager` skill that reads the wiki, decides what to build, and
-orchestrates a pipeline of specialized subagents. Tests are written before
-implementation, always.
-
-```
-/bootstrap  →  wiki/ populated  →  manager  →  per backlog item:
-                                                spec-writer  (writes wiki/specs/<feature>.md)
-                                                test-writer  (writes FAILING tests)
-                                                implementer  (makes tests pass)
-                                                reviewer     (verifies vs the wiki)
-                                                → commit, mark done, loop
+```bash
+pnpm add dxlb-design
 ```
 
-## Getting started
+## Peer dependencies
 
-1. Clone this repo for your new project.
-2. Run `/bootstrap` — it interviews you about the project, stack, constraints, and
-   initial backlog, then writes the `wiki/` starter pages and scaffolds the stack.
-3. Review/refine the `wiki/` pages (it's open-ended — add whatever pages you want).
-4. The `manager` presents an ordered work plan for your approval, then builds the
-   backlog autonomously.
+```json
+{
+  "svelte": "^5.0.0",
+  "@sveltejs/kit": "^2.0.0"
+}
+```
 
-## Staying in (or out of) the loop
+## Setup
 
-By default the manager runs **until blocked**. You're pulled in for:
-- the **initial work plan**, always; and
-- any backlog item flagged `review` in `wiki/backlog.md` (you flag it, or the manager
-  auto-flags risky/ambiguous items) — it pauses after the spec is written, before
-  implementation.
+Import the design token CSS in your global stylesheet or root layout:
 
-Everything else runs hands-off.
+```js
+// src/app.css  or  src/routes/+layout.svelte
+import 'dxlb-design/tokens/tokens.css';
+import 'dxlb-design/tokens/typography.css';
+```
 
-## The manager and the agents
+`tokens.css` defines all CSS custom properties (colours, spacing, typography scale, transitions).
+`typography.css` adds base element resets and global typography classes.
 
-The **`manager`** is a *skill* the top-level session runs — not a subagent. It orders
-the work, orchestrates the pipeline, commits, and never writes product code itself.
-Orchestration has to live at the top level because only the top-level session can spawn
-subagents. The manager delegates to four pipeline **subagents**:
+## Palette
 
-| Agent | Role |
-|-------|------|
-| `spec-writer` | Turns a backlog item into a testable spec page in `wiki/specs/`. |
-| `test-writer` | Writes failing tests from the spec (tests first). |
-| `implementer` | Writes the minimum code to make tests pass. |
-| `reviewer` | Verifies the implementation against the wiki and the full test suite. |
+Set `data-palette` on the `<html>` element to activate a palette:
 
-The manager can also bring in **project-specific specialists** (researcher,
-frontend-dev, security-auditor, designer, …) as a project needs them.
+```html
+<!-- Phosphor — dark, terminal-green accent, amber highlights -->
+<html data-palette="phosphor">
 
-## Enforcement
+<!-- Paper — light, warm off-white background, same amber highlights -->
+<html data-palette="paper">
+```
 
-A `PreToolUse` hook (`.claude/hooks/wiki-gate.py`) **blocks** any agent from writing
-files, running Bash, or spawning agents until it has read the current `wiki/INDEX.md`.
-A `SessionStart` hook injects the wiki index into every session. A `PostToolUse` hook
-nudges to keep the wiki in sync when product code changes.
+Both palettes use the same CSS custom property names (`--ink`, `--bg`, `--amber`, etc.) so components switch automatically.
 
-## Rolling back
+## Usage
 
-Each completed backlog item is exactly one commit. To undo an item, `git revert` its
-commit.
+```svelte
+<script>
+  import { Button, Stack, Heading } from 'dxlb-design';
+</script>
+
+<Stack gap="md">
+  <Heading level={2}>Deploy module</Heading>
+  <Button variant="primary">Confirm</Button>
+  <Button variant="ghost">Cancel</Button>
+</Stack>
+```
+
+### Components
+
+| Category | Components |
+|----------|-----------|
+| Primitives | `Button`, `Led`, `TagPill`, `Text`, `Heading` |
+| Layout | `Stack`, `Inline`, `Spread`, `Grid`, `Container`, `Rule`, `Prose` |
+| Cards | `Card`, `ProductCard`, `ProjectCard`, `NoteCard` |
+| Navigation | `Nav`, `Breadcrumb` |
+| Forms | `Input`, `Textarea`, `Select`, `InputWrap`, `Field`, `Checkbox`, `Radio`, `RadioGroup`, `Switch` |
+| Feedback | `Modal`, `Alert`, `Toast`, `ToastRegion` |
+| Patterns | `CtaBlock`, `StatCard`, `KvList`, `ProgressBar`, `ActivityRow`, `SectionHead`, `SectionFoot`, `PageHero` |
+| Data | `Accordion`, `AccordionItem`, `Tabs`, `Table` |
+
+### Toast store
+
+```svelte
+<script>
+  import { toast, ToastRegion } from 'dxlb-design';
+</script>
+
+<!-- Mount once in your root layout -->
+<ToastRegion />
+
+<!-- Push a notification from anywhere -->
+<button onclick={() => toast.push('Saved', { variant: 'ok' })}>Save</button>
+```
+
+## Storybook
+
+Interactive component explorer with play-function tests:
+
+```bash
+pnpm storybook   # starts at http://localhost:6006
+```

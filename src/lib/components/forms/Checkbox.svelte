@@ -5,7 +5,9 @@
   import { FIELD_CONTEXT_KEY } from './field-context.js'
 
   interface Props extends HTMLInputAttributes {
+    /** Visible label text rendered next to the checkbox. */
     label: string
+    /** Show the indeterminate (−) state. @default false */
     indeterminate?: boolean
     [key: string]: unknown
   }

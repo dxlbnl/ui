@@ -4,6 +4,7 @@
   type TagPillVariant = 'default' | 'amber' | 'cyan'
 
   interface Props extends HTMLAttributes<HTMLSpanElement> {
+    /** Colour variant of the pill. @default 'default' */
     variant?: TagPillVariant
   }
 

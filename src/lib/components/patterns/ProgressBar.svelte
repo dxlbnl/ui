@@ -6,8 +6,11 @@
   type ProgressColor = 'ok' | 'amber' | 'danger'
 
   interface Props {
+    /** Progress percentage (0–100). Clamped automatically. */
     value: number
+    /** Optional label shown above the bar alongside the percentage. */
     label?: string
+    /** Bar colour variant. @default 'ok' */
     color?: ProgressColor
     [key: string]: unknown
   }

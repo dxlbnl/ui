@@ -9,11 +9,17 @@
   }
 
   interface Props extends Omit<HTMLAttributes<HTMLFieldSetElement>, 'onchange'> {
+    /** `<legend>` text for the fieldset. */
     legend: string
+    /** `name` attribute shared by all radio inputs in the group. */
     name: string
+    /** Array of `{ value, label, disabled? }` options. */
     options: RadioOption[]
+    /** Currently selected value. */
     value?: string
+    /** Disable all radios in the group. @default false */
     disabled?: boolean
+    /** Called with the newly selected value string. */
     onchange?: (value: string) => void
     [key: string]: unknown
   }

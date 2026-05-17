@@ -6,8 +6,11 @@
   import Heading from '../primitives/Heading.svelte'
 
   interface Props {
+    /** Small mono label shown above the heading. */
     eyebrow?: string
+    /** Primary section heading. */
     heading: string
+    /** Secondary label shown inline after the heading. */
     sublabel?: string
     children?: Snippet
     [key: string]: unknown

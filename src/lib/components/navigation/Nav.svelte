@@ -11,7 +11,9 @@
   }
 
   interface Props {
+    /** Navigation links to render in the top bar. @default [] */
     links?: NavLink[]
+    /** Brand name shown next to the status LED. @default 'DEXTERLABS' */
     siteName?: string
     [key: string]: unknown
   }

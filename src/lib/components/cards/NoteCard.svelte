@@ -6,11 +6,17 @@
   import Heading from '../primitives/Heading.svelte'
 
   interface Props {
+    /** HTML element to render as. @default 'a' */
     as?: string
+    /** Numeric index — rendered as a hex ID (e.g. `0x0A`). */
     idx: number
+    /** Tag shown in the top-right corner. @default 'LOG' */
     kind?: string
+    /** Note title. */
     title: string
+    /** Optional lede / excerpt text. */
     lede?: string
+    /** Optional date string shown in the footer. */
     date?: string
     [key: string]: unknown
   }

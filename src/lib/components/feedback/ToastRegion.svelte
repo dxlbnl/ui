@@ -3,7 +3,9 @@
   import Toast from './Toast.svelte'
 
   interface Props {
+    /** Viewport corner where the toast stack is anchored. @default 'bottom-right' */
     position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
+    /** Maximum toasts visible at once — oldest are dismissed when exceeded. @default 5 */
     limit?: number
   }
 

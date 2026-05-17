@@ -3,6 +3,7 @@
   import type { ClassValue } from 'svelte/elements'
 
   interface Props {
+    /** HTML element to render as. @default 'div' */
     as?: string
     children?: Snippet
     class?: ClassValue | null

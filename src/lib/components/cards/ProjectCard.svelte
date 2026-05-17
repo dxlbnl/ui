@@ -9,11 +9,17 @@
   import Heading from '../primitives/Heading.svelte'
 
   interface Props {
+    /** HTML element to render as. @default 'a' */
     as?: string
+    /** Project slug, shown in the card header. */
     slug: string
+    /** Project display title. */
     title: string
+    /** Short project description. */
     description: string
+    /** Tag labels rendered as TagPills. @default [] */
     tags?: string[]
+    /** CTA label in the card footer. @default 'VIEW PROJECT' */
     ctaLabel?: string
     children?: Snippet
     [key: string]: unknown

@@ -11,12 +11,19 @@
   type StockStatus = 'in-stock' | 'coming-soon' | 'low-stock' | 'out-of-stock'
 
   interface Props extends HTMLAnchorAttributes {
+    /** HTML element to render as. @default 'a' */
     as?: string
+    /** Product SKU code, shown in the card header. */
     sku: string
+    /** Product display name. */
     name: string
+    /** Short product description. */
     description: string
+    /** Formatted price string (e.g. `'€200'`). */
     price?: string
+    /** Inventory status — drives the LED colour and CTA label. @default 'out-of-stock' */
     status?: StockStatus
+    /** Override the generated CTA label. */
     ctaLabel?: string
     [key: string]: unknown
   }

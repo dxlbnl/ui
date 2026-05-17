@@ -5,9 +5,13 @@
   import Text from '../primitives/Text.svelte'
 
   interface Props {
+    /** HTML element to render as. @default 'div' */
     as?: string
+    /** Small mono label shown above the heading. */
     eyebrow?: string
+    /** Primary heading text. */
     heading: string
+    /** Secondary descriptive text below the heading. */
     subtext?: string
     children?: Snippet
     [key: string]: unknown

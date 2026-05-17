@@ -5,6 +5,7 @@
   import { FIELD_CONTEXT_KEY } from './field-context.js'
 
   interface Props extends HTMLInputAttributes {
+    /** Show the error (danger-border) state. Auto-set when inside a Field with an error prop. @default false */
     error?: boolean
     [key: string]: unknown
   }

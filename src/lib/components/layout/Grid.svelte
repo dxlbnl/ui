@@ -6,9 +6,13 @@
   type GridCols = 1 | 2 | 3 | 4 | 'auto'
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
+    /** HTML element to render as. @default 'div' */
     as?: string
+    /** Number of equal columns, or `'auto'` for responsive auto-fill. @default 3 */
     cols?: GridCols
+    /** Space between grid cells. @default 'sm' */
     gap?: GapSize
+    /** Minimum column width used when `cols` is `'auto'`. @default '240px' */
     minColWidth?: string
     children?: Snippet
     [key: string]: unknown

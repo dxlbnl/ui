@@ -3,9 +3,12 @@
   import type { Snippet } from 'svelte'
 
   interface TableProps extends HTMLTableAttributes {
+    /** Column header labels. */
     headers: string[]
+    /** Data rows — each inner array must match the length of `headers`. */
     rows?: string[][]
     children?: Snippet
+    /** Optional `<caption>` text for the table. */
     caption?: string
   }
 

@@ -5,7 +5,9 @@
   type ContainerSize = 'lg' | 'md' | 'sm'
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
+    /** HTML element to render as. @default 'div' */
     as?: string
+    /** Max-width preset: lg = 1440px, md = 960px, sm = 640px. @default 'lg' */
     size?: ContainerSize
     children?: Snippet
     [key: string]: unknown

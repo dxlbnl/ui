@@ -6,9 +6,13 @@
   type LedStatus = 'ok' | 'amber' | 'danger' | 'off'
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
+    /** Timestamp string displayed on the left. */
     timestamp: string
+    /** Optional actor name shown before the description. */
     actor?: string
+    /** Event description text. */
     description: string
+    /** LED status colour. @default 'off' */
     status?: LedStatus
     [key: string]: unknown
   }

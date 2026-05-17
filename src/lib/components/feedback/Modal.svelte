@@ -10,9 +10,13 @@
   type ModalVariant = 'default' | 'confirm' | 'destructive'
 
   interface Props extends HTMLDialogAttributes {
+    /** Whether the dialog is currently open. @default false */
     open?: boolean
+    /** Heading text shown in the modal header. */
     title: string
+    /** Visual variant — adds a coloured icon to the header. @default 'default' */
     variant?: ModalVariant
+    /** Called when the modal requests to close (close button, backdrop, or Escape). */
     onclose?: () => void
     children?: Snippet
     footer?: Snippet

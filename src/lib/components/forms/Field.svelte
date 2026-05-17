@@ -6,9 +6,13 @@
   import { FIELD_CONTEXT_KEY } from './field-context.js'
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
+    /** Visible label text rendered above the input. */
     label: string
+    /** `id` of the associated input — wires the `<label for>` and context. */
     inputId: string
+    /** Helper text shown below the input. */
     hint?: string
+    /** Error message — overrides hint and sets error state on nested inputs. */
     error?: string
     children: Snippet
     [key: string]: unknown

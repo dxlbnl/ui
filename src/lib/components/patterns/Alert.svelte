@@ -6,8 +6,11 @@
   type AlertVariant = 'ok' | 'amber' | 'danger' | 'info'
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
+    /** Colour variant — drives the tag glyph and border accent. @default 'info' */
     variant?: AlertVariant
+    /** Bold title text shown in the alert header. */
     title: string
+    /** Body message text. */
     message?: string
     children?: Snippet
     [key: string]: unknown

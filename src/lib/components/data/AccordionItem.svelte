@@ -2,7 +2,9 @@
   import type { Snippet } from 'svelte'
 
   interface AccordionItemProps {
+    /** Summary / trigger text for the accordion row. */
     label: string
+    /** Whether the item starts expanded. @default false */
     open?: boolean
     children: Snippet
   }

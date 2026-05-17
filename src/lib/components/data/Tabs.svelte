@@ -13,8 +13,11 @@
   }
 
   interface TabsProps extends HTMLAttributes<HTMLDivElement> {
+    /** Array of `{ id, label, panel }` tab descriptors. */
     tabs: TabItem[]
+    /** `id` of the initially active tab — defaults to the first tab. */
     active?: string
+    /** Tab indicator style. @default 'underline' */
     variant?: TabsVariant
   }
 

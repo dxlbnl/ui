@@ -3,7 +3,9 @@
   import type { Snippet } from 'svelte'
 
   interface ProseProps extends HTMLAttributes<HTMLElement> {
+    /** HTML element to render as. @default 'article' */
     as?: string
+    /** Max-width constraint applied to the prose container. @default '72ch' */
     maxWidth?: string
     children?: Snippet
   }

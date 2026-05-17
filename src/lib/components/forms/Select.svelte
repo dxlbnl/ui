@@ -8,11 +8,17 @@
   }
 
   interface Props extends Omit<HTMLAttributes<HTMLDivElement>, "onchange"> {
+    /** Array of `{ value, label }` option objects. */
     options: SelectOption[];
+    /** Currently selected value. */
     value?: string;
+    /** Label shown when no value is selected. @default 'SELECT…' */
     placeholder?: string;
+    /** Show the error (danger-border) state. @default false */
     error?: boolean;
+    /** Disable the select — prevents opening the dropdown. @default false */
     disabled?: boolean;
+    /** Called with the new value string when the user selects an option. */
     onchange?: (value: string) => void;
     [key: string]: unknown;
   }

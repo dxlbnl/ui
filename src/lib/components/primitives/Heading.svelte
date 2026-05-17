@@ -7,8 +7,11 @@
   type TextColor = 'ink' | 'dim' | 'faint' | 'amber' | 'cyan' | 'ok' | 'danger'
 
   interface Props {
+    /** HTML heading level (h1–h6). @default 2 */
     level?: HeadingLevel
+    /** Typography class to apply — defaults to the level's matching variant. */
     variant?: HeadingVariant
+    /** Text colour mapped to a design token. */
     color?: TextColor
     children?: Snippet
     class?: ClassValue | null

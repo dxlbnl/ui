@@ -6,9 +6,13 @@
   type StatColor = 'default' | 'ok' | 'amber' | 'danger'
 
   interface Props {
+    /** Metric label shown above the value. */
     label: string
+    /** Primary value string displayed large. */
     value: string
+    /** Secondary label shown below the value. */
     sublabel?: string
+    /** Colour accent applied to the value. @default 'default' */
     color?: StatColor
     [key: string]: unknown
   }

@@ -4,11 +4,17 @@
   import Button from '../primitives/Button.svelte'
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
+    /** Snippet rendered as an icon before the input (aria-hidden). */
     iconPre?: Snippet
+    /** Text prefix rendered before the input in a pill. */
     addonPre?: string
+    /** Text suffix rendered after the input in a pill. */
     addonSuf?: string
+    /** Show a clear (×) button when the input has a value. @default false */
     clearable?: boolean
+    /** Current input value — used to show/hide the clear button. @default '' */
     value?: string
+    /** Called when the clear button is clicked. */
     onclear?: () => void
     children: Snippet
     [key: string]: unknown

@@ -5,9 +5,12 @@
   type ButtonVariant = 'primary' | 'cta' | 'ghost' | 'back' | 'del'
 
   interface Props extends HTMLButtonAttributes {
+    /** HTML element or component to render as. @default 'button' */
     as?: string
+    /** Visual style variant. @default 'primary' */
     variant?: ButtonVariant
     children?: Snippet
+    /** URL — pass to render as an `<a>` (set `as="a"` too). */
     href?: string
     [key: string]: unknown
   }

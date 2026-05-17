@@ -5,8 +5,11 @@
   import Heading from '../primitives/Heading.svelte'
 
   interface Props {
+    /** Small mono label shown above the heading. */
     eyebrow?: string
+    /** Hero heading text. */
     heading: string
+    /** Subtitle / lede text shown below the heading. */
     lede?: string
     children?: Snippet
     [key: string]: unknown

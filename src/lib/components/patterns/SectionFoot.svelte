@@ -3,9 +3,13 @@
   import Spread from '../layout/Spread.svelte'
 
   interface Props extends HTMLAttributes<HTMLElement> {
+    /** Link URL for the "view all" anchor. */
     href: string
+    /** Link label text. */
     label: string
+    /** Optional item count shown on the right. */
     count?: number
+    /** Optional meta string shown alongside the count. */
     meta?: string
     [key: string]: unknown
   }

@@ -5,7 +5,9 @@
   import { FIELD_CONTEXT_KEY } from './field-context.js'
 
   interface Props extends HTMLButtonAttributes {
+    /** Accessible label rendered next to the toggle track. */
     label: string
+    /** Whether the switch is on. Bindable. @default false */
     checked?: boolean
     [key: string]: unknown
   }

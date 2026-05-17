@@ -5,6 +5,7 @@
   }
 
   interface BreadcrumbProps {
+    /** Array of `{ label, href }` crumbs — last item gets `aria-current="page"`. */
     crumbs: Crumb[]
   }
 

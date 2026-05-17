@@ -12,6 +12,7 @@
   }
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
+    /** Array of `{ key, value, color? }` rows to render. */
     items: KvItem[]
     [key: string]: unknown
   }

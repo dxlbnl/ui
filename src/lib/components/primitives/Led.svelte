@@ -4,7 +4,9 @@
   type LedColor = 'ok' | 'amber' | 'cyan' | 'danger' | 'off'
 
   interface Props extends HTMLAttributes<HTMLSpanElement> {
+    /** Colour of the LED indicator. @default 'ok' */
     color?: LedColor
+    /** Whether the LED pulses with a blink animation. @default false */
     blink?: boolean
   }
 

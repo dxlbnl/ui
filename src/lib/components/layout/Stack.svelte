@@ -5,7 +5,9 @@
   type GapSize = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
   interface Props {
+    /** HTML element to render as. @default 'div' */
     as?: string
+    /** Space between children. @default 'sm' */
     gap?: GapSize
     children?: Snippet
     class?: ClassValue | null

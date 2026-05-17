@@ -4,9 +4,13 @@
   import Button from '$lib/components/primitives/Button.svelte'
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
+    /** Unique toast ID (used by the dismiss callback). */
     id: string
+    /** Text content of the notification. */
     message: string
+    /** Colour variant — also sets the ARIA live region type. @default 'ok' */
     variant?: ToastVariant
+    /** Called with the toast `id` when the dismiss button is clicked. */
     ondismiss: (id: string) => void
   }
 
