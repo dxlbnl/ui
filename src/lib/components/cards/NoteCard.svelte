@@ -35,27 +35,36 @@
 </script>
 
 <Card as={as} class="note-card" {...rest}>
-  <Stack gap="xs" style="padding: 20px; flex: 1;">
-    <Spread>
-      <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.1em;">{hexId}</Text>
-      <Text variant="mono" color="cyan" style="font-size: var(--t-micro); letter-spacing: 0.1em;">{kind.toUpperCase()}</Text>
-    </Spread>
-    <Heading level={3} style="font-size: var(--t-lede); letter-spacing: -0.01em; margin: 0;">{title}</Heading>
-    {#if lede}
-      <Text variant="body" color="dim" class="note-lede" style="flex: 1;">{lede}</Text>
-    {/if}
-    {#if date}
-      <div class="note-foot">
-        <Spread>
-          <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.08em;">{date}</Text>
-          <Text variant="mono" color="amber" style="font-size: var(--t-micro); letter-spacing: 0.08em;" aria-hidden="true">READ →</Text>
-        </Spread>
-      </div>
-    {/if}
-  </Stack>
+  <div class="card-body">
+    <Stack gap="xs">
+      <Spread>
+        <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.1em;">{hexId}</Text>
+        <Text variant="mono" color="cyan" style="font-size: var(--t-micro); letter-spacing: 0.1em;">{kind.toUpperCase()}</Text>
+      </Spread>
+      <Heading level={3} style="font-size: var(--t-lede);">{title}</Heading>
+      {#if lede}
+        <Text variant="body" color="dim" class="note-lede" style="flex: 1;">{lede}</Text>
+      {/if}
+      {#if date}
+        <div class="note-foot">
+          <Spread>
+            <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.08em;">{date}</Text>
+            <Text variant="mono" color="amber" style="font-size: var(--t-micro); letter-spacing: 0.08em;" aria-hidden="true">READ →</Text>
+          </Spread>
+        </div>
+      {/if}
+    </Stack>
+  </div>
 </Card>
 
 <style>
+  .card-body {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
   :global(.note-card) {
     text-decoration: none;
     color: inherit;

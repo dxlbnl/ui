@@ -67,23 +67,27 @@
   <div class="card-img">
     <Text variant="mono" color="faint">{sku} · PRODUCT</Text>
   </div>
-  <Stack gap="xs" style="padding: 12px 14px 10px; flex: 1;">
-    <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.12em;">{sku}</Text>
-    <Heading level={3} style="font-size: var(--t-lede); letter-spacing: -0.01em; line-height: 1.2;">{name}</Heading>
-    <p class="card-desc">{description}</p>
-    <Spread style="align-items: baseline; margin-top: auto; padding-top: 8px;">
-      {#if price}
-        <Inline gap="xs" style="align-items: baseline;">
-          <Text variant="mono" color="amber" style="font-size: var(--t-body);">{price}</Text>
-          <Text variant="mono" color="faint" style="font-size: var(--t-micro); text-transform: lowercase; letter-spacing: 0.06em;">incl. VAT</Text>
-        </Inline>
-      {/if}
-      <Inline gap="xs">
-        <Led color={ledColor} aria-hidden="true" />
-        <Text variant="mono" style="font-size: var(--t-micro);">{stockLabel}</Text>
-      </Inline>
-    </Spread>
-  </Stack>
+  <div class="card-body">
+    <Stack gap="xs">
+      <Text variant="eyebrow">{sku}</Text>
+      <Heading level={3} style="font-size: var(--t-lede);">{name}</Heading>
+      <p class="card-desc">{description}</p>
+      <div class="card-footer-row">
+        <Spread>
+          {#if price}
+            <Inline gap="xs" style="align-items: baseline;">
+              <Text variant="mono" color="amber" style="font-size: var(--t-body);">{price}</Text>
+              <Text variant="mono" color="faint" style="font-size: var(--t-micro); text-transform: lowercase; letter-spacing: 0.06em;">incl. VAT</Text>
+            </Inline>
+          {/if}
+          <Inline gap="xs">
+            <Led color={ledColor} aria-hidden="true" />
+            <Text variant="mono" style="font-size: var(--t-micro);">{stockLabel}</Text>
+          </Inline>
+        </Spread>
+      </div>
+    </Stack>
+  </div>
   <div class="card-cta">
     <Spread>
       <Text variant="mono">{resolvedCtaLabel}</Text>
@@ -93,6 +97,22 @@
 </Card>
 
 <style>
+  .card-body {
+    padding: 12px 14px 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-footer-row {
+    align-items: baseline;
+    margin-top: auto;
+    padding-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--u2);
+  }
+
   /* :global needed — .product-card is on Card's root, invisible to Svelte's scoped CSS analysis */
   :global(.product-card) {
     text-decoration: none;

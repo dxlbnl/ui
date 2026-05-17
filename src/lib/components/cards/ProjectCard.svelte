@@ -38,19 +38,21 @@
 
 <Card as={as} class="project-card" {...rest}>
   <div class="card-img">
-    <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.12em;">{slug.toUpperCase()} · PROJECT</Text>
+    <Text variant="eyebrow">{slug.toUpperCase()} · PROJECT</Text>
   </div>
-  <Stack gap="xs" style="padding: 12px 14px 10px; flex: 1;">
-    {#if tags.length > 0}
-      <Inline gap="xs" class="card-tags">
-        {#each tags as tag}
-          <TagPill>{tag}</TagPill>
-        {/each}
-      </Inline>
-    {/if}
-    <Heading level={3} style="font-size: var(--t-lede); letter-spacing: -0.01em; line-height: 1.2;">{title}</Heading>
-    <p class="card-desc">{description}</p>
-  </Stack>
+  <div class="card-body">
+    <Stack gap="xs">
+      {#if tags.length > 0}
+        <Inline gap="xs" class="card-tags">
+          {#each tags as tag}
+            <TagPill>{tag}</TagPill>
+          {/each}
+        </Inline>
+      {/if}
+      <Heading level={3} style="font-size: var(--t-lede);">{title}</Heading>
+      <p class="card-desc">{description}</p>
+    </Stack>
+  </div>
   <div class="card-cta">
     <Spread>
       <Text variant="mono">{ctaLabel}</Text>
@@ -60,6 +62,13 @@
 </Card>
 
 <style>
+  .card-body {
+    padding: 12px 14px 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
   :global(.project-card) {
     text-decoration: none;
     color: inherit;

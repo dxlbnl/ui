@@ -25,17 +25,26 @@
   }: Props = $props()
 </script>
 
-<Stack as="section" style="gap: 6px; padding: 40px 0 12px; border-bottom: 1px solid var(--rule);" {...rest}>
-  {#if eyebrow}
-    <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.12em;">{eyebrow}</Text>
-  {/if}
-  <Inline style="align-items: baseline; gap: 16px;">
-    <Heading level={2} style="font-weight: 500; font-size: var(--t-h3); letter-spacing: -0.01em; margin: 0;">{heading}</Heading>
-    {#if sublabel}
-      <Text variant="mono" style="margin-left: auto;">{sublabel}</Text>
+<section class="section-head" {...rest}>
+  <Stack style="gap: 6px;">
+    {#if eyebrow}
+      <Text variant="eyebrow">{eyebrow}</Text>
     {/if}
-  </Inline>
-  {#if children}
-    {@render children()}
-  {/if}
-</Stack>
+    <Inline gap="sm" style="align-items: baseline;">
+      <Heading level={2} variant="h3">{heading}</Heading>
+      {#if sublabel}
+        <Text variant="mono" style="margin-left: auto;">{sublabel}</Text>
+      {/if}
+    </Inline>
+    {#if children}
+      {@render children()}
+    {/if}
+  </Stack>
+</section>
+
+<style>
+  .section-head {
+    padding: 40px 0 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+</style>

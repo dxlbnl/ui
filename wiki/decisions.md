@@ -581,3 +581,23 @@
 - **Consequences**: Dynamic `error` prop changes on `Field` propagate correctly to nested
   controls without remounting. This resolves OQ-1 as non-blocking.
 - **Supersedes**: D11 (which documented the ARIA wiring gap as known trade-off).
+
+## D31: B24 style cleanup — two-prop threshold for layout primitive container replacement
+- **Date**: 2026-05-17
+- **By**: spec-writer (B24)
+- **Context**: B24 needs a clear rule for when a `style=` prop on a layout primitive
+  warrants replacement with a scoped element. Single-property overrides (e.g.
+  `style="width: 100%;"`) are sanctioned by pattern 1 in `composition-limits.md` and
+  are common across the codebase. Multi-property overrides on structural regions are the
+  problem pattern.
+- **Decision**: Two or more CSS declarations on a layout primitive that also functions as
+  a named structural region (has a `class=` prop or is the outermost element of a
+  component) triggers replacement with a native scoped element + scoped CSS. Single-prop
+  overrides are acceptable regardless of position. Reactive style values (e.g.
+  `style="width: {value}%"`) are never moved to scoped CSS regardless of property count.
+- **Consequences**: This threshold produces 12 container replacements across 6 files in
+  B24 (SectionHead, SectionFoot, PageHero, Modal, ProductCard/ProjectCard/NoteCard cards,
+  Nav). It leaves single-prop overrides in Accordion, ProgressBar, and several Text
+  elements untouched. The rule is conservative: it only fires when a layout primitive is
+  clearly acting as a named container, not merely passing through layout props.
+- **Supersedes**: none

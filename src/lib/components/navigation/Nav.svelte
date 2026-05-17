@@ -2,7 +2,6 @@
   import Led from '../primitives/Led.svelte'
   import Button from '../primitives/Button.svelte'
   import Inline from '../layout/Inline.svelte'
-  import Stack from '../layout/Stack.svelte'
 
   interface NavLink {
     href: string
@@ -44,16 +43,16 @@
 </script>
 
 <nav class="nav" {...rest}>
-  <Inline class="nav-inner" gap="none" style="padding: 0 24px; height: 48px; max-width: 1200px; margin: 0 auto;">
-    <Inline as="a" href="/" class="nav-brand" gap="xs" style="flex-shrink: 0; color: var(--ink); text-decoration: none; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">
       <Led color="ok" aria-hidden="true" />
       <span class="nav-wordmark">{siteName}</span>
-    </Inline>
+    </a>
 
     <!-- Right-side group always carries margin-left:auto so it stays right-aligned
          even when nav-links is hidden on mobile -->
-    <Inline class="nav-right" gap="sm" style="margin-left: auto; flex-shrink: 0;">
-      <Inline as="ul" class="nav-links" gap="md" style="padding: 0; margin: 0; flex-shrink: 0; text-transform: uppercase; font-size: 12px; list-style: none;">
+    <div class="nav-right">
+      <ul class="nav-links">
         {#each links as link}
           <li>
             <a href={link.href} class="nav-link" class:active={link.active}
@@ -62,7 +61,7 @@
             </a>
           </li>
         {/each}
-      </Inline>
+      </ul>
       <Inline class="nav-actions" gap="xs" style="flex-shrink: 0;">
         <Button variant="ghost" aria-label="Toggle colour palette" onclick={handlePaletteToggle}>
           {palette === 'paper' ? '◑' : '◐'}
@@ -74,12 +73,12 @@
           </Button>
         </div>
       </Inline>
-    </Inline>
-  </Inline>
+    </div>
+  </div>
 
   <div id="nav-drawer" class="nav-drawer" aria-hidden={menuOpen ? undefined : 'true'}>
     {#if menuOpen}
-      <Stack as="ul" class="nav-drawer-links" gap="sm" style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 12px; letter-spacing: 0.08em;">
+      <ul class="nav-drawer-links">
         {#each links as link}
           <li>
             <a href={link.href} class="nav-drawer-link" class:active={link.active}
@@ -88,7 +87,7 @@
             </a>
           </li>
         {/each}
-      </Stack>
+      </ul>
     {/if}
   </div>
 </nav>
@@ -104,6 +103,61 @@
     border-bottom: 1px solid var(--rule);
     font-family: var(--mono);
     font-size: var(--t-mono);
+    letter-spacing: 0.08em;
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 0 24px;
+    height: 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--u);
+    flex-shrink: 0;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: var(--u2);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--u2);
+    padding: 0;
+    margin: 0;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    font-size: 12px;
+    list-style: none;
+  }
+
+  .nav-drawer-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--u2);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-transform: uppercase;
+    font-size: 12px;
     letter-spacing: 0.08em;
   }
 
@@ -129,7 +183,7 @@
   }
 
   @media (max-width: 767px) {
-    :global(.nav-links) {
+    .nav-links {
       display: none !important;
     }
 

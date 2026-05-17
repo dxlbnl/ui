@@ -46,6 +46,21 @@ it records the reason here AND states it in chat.
 - manager: fixed Radio.svelte + added "Auto ARIA Wiring — Radio" story; reviewer pass 2: PASS — 203/203 green, 0 errors
 - result: done — commit `40229b8`
 
+## 2026-05-17 — B19: Package documentation
+- manager: set in-progress; implemented directly
+- README.md: overwrote Vibin seed readme with consumer-facing dxlb-design docs
+- CHANGELOG.md: created with 14+ entries under v0.1.0 in Keep a Changelog format
+- package.json: version 0.0.1→0.1.0, added @sveltejs/kit peer dep, CSS exports for tokens
+- JSDoc: annotated 41/43 exported components (95% coverage); 2 skipped (Rule, Accordion — no custom props)
+- result: done — commit `9f82900`
+
+## 2026-05-17 — B23: CSS audit fixes
+- manager: set in-progress; implemented three fixes directly
+- NoteCard: `:global(.note-card:hover)` → `:global(.note-card):hover`, removed `!important`
+- Nav: `.hamburger-wrap { display: flex; align-items: center }` → `display: block` on mobile
+- CtaBlock: removed redundant `align-items: center` from Spread style prop
+- result: done — commit `6391d17`
+
 ## 2026-05-17 — B22: Modal story improvements
 - manager: set in-progress; wrote spec at wiki/specs/B22-modal-story-improvements.md; implemented directly (story rewrite)
 - manager: replaced all 7 open: true stories with 6 trigger-based stories; $state per story; backdrop close via dialog.click() + waitFor

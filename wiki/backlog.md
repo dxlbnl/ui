@@ -156,7 +156,7 @@ Each item has a **status** and an optional **`review`** flag:
       first, verify open state, then test close paths. The `open` prop default should stay
       `false`; the story manages state internally via `$state`.
 
-- [ ] **B23: CSS audit fixes** — status: `in-progress`
+- [x] **B23: CSS audit fixes** — status: `done` — commit: `6391d17`
       Three issues surfaced by the post-B13 composition review.
       (1) **NoteCard hover** — `:global(.note-card:hover)` must be `:global(.note-card):hover`
       so the pseudo-class is handled by the browser, not escaped into the global scope;
@@ -166,14 +166,14 @@ Each item has a **status** and an optional **`review`** flag:
       (3) **CtaBlock redundant override** — `align-items: center` on the Spread's `style=` prop
       is redundant (Spread already sets it); remove it.
 
-- [ ] **B19: Package documentation** — status: `todo`
+- [x] **B19: Package documentation** — status: `done` — commit: `9f82900`
       Minimum viable documentation for the library. `README.md`: installation (`pnpm add
       dxlb-design`), peer deps, global CSS import, usage example, Storybook link. `CHANGELOG.md`:
       starting from v0.1.0, covering B1–B14. JSDoc `@param` / `@default` annotations on
       exported component props (feeds Storybook autodocs). Version bump from 0.0.1 → 0.1.0
       in `package.json` once B13 is confirmed stable.
 
-- [ ] **B24: Style prop cleanup** — status: `todo`
+- [ ] **B24: Style prop cleanup** — status: `in-progress`
       Eliminate excessive inline `style=` props introduced during B13–B14. Two classes of
       fix: (1) use correct Heading `variant` so typography overrides collapse to one prop;
       (2) replace multi-prop `style=` on layout primitives acting as containers with scoped

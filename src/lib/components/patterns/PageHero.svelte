@@ -26,11 +26,11 @@
 
 <header class="page-hero" {...rest}>
   {#if eyebrow}
-    <Text variant="mono" color="faint" style="font-size: var(--t-micro); letter-spacing: 0.12em; margin-bottom: 12px;">{eyebrow}</Text>
+    <Text variant="eyebrow" style="margin-bottom: 12px;">{eyebrow}</Text>
   {/if}
-  <Heading level={1} style="font-weight: 500; font-size: var(--t-hero); line-height: 1; letter-spacing: -0.03em; margin: 0;">{heading}</Heading>
+  <Heading level={1} variant="hero">{heading}</Heading>
   {#if lede}
-    <Text color="dim" style="font-size: var(--t-lede); margin-top: 20px; line-height: 1.55; max-width: 62ch;">{lede}</Text>
+    <Text variant="lede" style="margin-top: 20px; max-width: 62ch;">{lede}</Text>
   {/if}
   {#if children}
     <Inline gap="sm" style="margin-top: 24px;">

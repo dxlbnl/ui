@@ -23,22 +23,33 @@
   }: Props = $props()
 </script>
 
-<Spread as="footer" style="border-top: 1px solid var(--rule); padding: 12px 0; font-family: var(--mono); font-size: var(--t-mono); letter-spacing: 0.06em; margin-top: 20px;" {...rest}>
-  <a class="section-foot-link" {href}>{label}</a>
-  {#if count !== undefined || meta}
-    <span class="section-foot-meta">
-      {#if count !== undefined && meta}
-        {count} · {meta}
-      {:else if count !== undefined}
-        {count}
-      {:else}
-        {meta}
-      {/if}
-    </span>
-  {/if}
-</Spread>
+<footer class="section-foot" {...rest}>
+  <Spread>
+    <a class="section-foot-link" {href}>{label}</a>
+    {#if count !== undefined || meta}
+      <span class="section-foot-meta">
+        {#if count !== undefined && meta}
+          {count} · {meta}
+        {:else if count !== undefined}
+          {count}
+        {:else}
+          {meta}
+        {/if}
+      </span>
+    {/if}
+  </Spread>
+</footer>
 
 <style>
+  .section-foot {
+    border-top: 1px solid var(--rule);
+    padding: 12px 0;
+    font-family: var(--mono);
+    font-size: var(--t-mono);
+    letter-spacing: 0.06em;
+    margin-top: 20px;
+  }
+
   .section-foot-link {
     color: var(--amber);
     text-transform: uppercase;
