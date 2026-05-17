@@ -82,4 +82,29 @@
     border-top: 1px solid var(--rule);
     background: var(--bg-sunken, var(--bg));
   }
+
+  @supports (interpolate-size: allow-keywords) {
+    details.acc-item {
+      interpolate-size: allow-keywords;
+    }
+
+    .acc-body {
+      overflow: hidden;
+      height: 0;
+      transition: height var(--transition), opacity var(--transition);
+      opacity: 0;
+    }
+
+    details[open] .acc-body {
+      height: auto;
+      opacity: 1;
+    }
+
+    @starting-style {
+      details[open] .acc-body {
+        height: 0;
+        opacity: 0;
+      }
+    }
+  }
 </style>

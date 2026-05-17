@@ -53,10 +53,10 @@
     // AC-6: body content is in .acc-body sibling of summary
     const firstBody = allDetails[0].querySelector(".acc-body");
     await expect(firstBody).not.toBeNull();
-    await expect(firstBody).toBeVisible();
+    await waitFor(() => expect(firstBody).toBeVisible());
 
     // AC-10: body content of open item is visible
-    await expect(canvas.getByText(/Start by reading the quick-start guide/)).toBeVisible();
+    await waitFor(() => expect(canvas.getByText(/Start by reading the quick-start guide/)).toBeVisible());
 
     // AC-17: summary has list-style: none (no browser disclosure triangle)
     const firstSummary = allDetails[0].querySelector("summary") as HTMLElement;
@@ -119,7 +119,7 @@
 
     // AC-10: body content is visible after opening
     const bodyText = within(canvasElement).getByText(/Interact with this item/);
-    await expect(bodyText).toBeVisible();
+    await waitFor(() => expect(bodyText).toBeVisible());
 
     // AC-11: icon has transform applied when open
     await expect(getComputedStyle(icon).transform).not.toBe("none");
@@ -150,10 +150,10 @@
     // AC-6: body content rendered inside .acc-body
     const body = canvasElement.querySelector(".acc-body");
     await expect(body).not.toBeNull();
-    await expect(body).toBeVisible();
+    await waitFor(() => expect(body).toBeVisible());
 
     // Body content is accessible
-    await expect(within(canvasElement).getByText("VDD")).toBeVisible();
+    await waitFor(() => expect(within(canvasElement).getByText("VDD")).toBeVisible());
     await expect(within(canvasElement).getByText("+3.3V")).toBeVisible();
     await expect(within(canvasElement).getByText("VCC")).toBeVisible();
     await expect(within(canvasElement).getByText("+5V")).toBeVisible();
@@ -212,6 +212,36 @@
     </AccordionItem>
     <AccordionItem label="Last">
       <p>Last item — no bottom border.</p>
+    </AccordionItem>
+  </Accordion>
+</Story>
+
+<!-- AC 41 / AC 42: "Animated" story — verifies DOM toggle behaviour of CSS animation -->
+<Story name="Animated"
+  play={async ({ canvasElement, userEvent }) => {
+    // AC 35: <details> starts without the open attribute (closed)
+    const details = canvasElement.querySelector("details.acc-item") as HTMLElement;
+    await expect(details.hasAttribute("open")).toBe(false);
+
+    // AC 35: .acc-body is present in the DOM regardless of open state
+    const accBody = details.querySelector(".acc-body") as HTMLElement;
+    await expect(accBody).not.toBeNull();
+
+    // AC 36: click summary → <details> gains open attribute
+    const summary = details.querySelector("summary.acc-trigger") as HTMLElement;
+    await userEvent.click(summary);
+    await expect(details.hasAttribute("open")).toBe(true);
+
+    // AC 36: after opening, .acc-body is visible
+    await waitFor(() => expect(accBody).toBeVisible());
+
+    // AC 37: click summary again → <details> loses open attribute
+    await userEvent.click(summary);
+    await expect(details.hasAttribute("open")).toBe(false);
+  }}>
+  <Accordion>
+    <AccordionItem label="CSS Height Animation">
+      <p>This item uses a CSS-only height transition via interpolate-size and @starting-style.</p>
     </AccordionItem>
   </Accordion>
 </Story>
