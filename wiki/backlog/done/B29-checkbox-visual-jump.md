@@ -5,6 +5,7 @@ type: bug
 priority: low
 flags: [review]
 created: 2026-05-17
+spec: wiki/specs/B29-checkbox-visual-jump.md
 ---
 
 ## Description

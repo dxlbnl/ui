@@ -67,13 +67,37 @@
     await expect(input).toBeChecked();
   }} />
 
-<!-- AC-18: Space key toggles checked state -->
+<!-- AC-18: Space key toggles checked state; AC-1/AC-2/AC-4/AC-8 regression guards -->
 <Story name="Space to Toggle" args={{ label: "Toggle me", checked: false }}
   play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole("checkbox");
+    const indicator = canvasElement.querySelector(".checkbox-indicator");
+    const wrap = canvasElement.querySelector(".checkbox-wrap");
+
+    // AC-1: indicator is exactly 16×16 before toggle
+    const indicatorRectBefore = indicator!.getBoundingClientRect();
+    await expect(indicatorRectBefore.width).toBe(16);
+    await expect(indicatorRectBefore.height).toBe(16);
+
+    // Capture wrap row height before toggle
+    const wrapHeightBefore = wrap!.getBoundingClientRect().height;
+
     await expect(input).not.toBeChecked();
     await input.focus();
     await userEvent.keyboard(" ");
     await expect(input).toBeChecked();
+
+    // AC-2 / AC-4: indicator dimensions must not change after toggle
+    const indicatorRectAfter = indicator!.getBoundingClientRect();
+    await expect(indicatorRectAfter.width).toBe(16);
+    await expect(indicatorRectAfter.height).toBe(16);
+
+    // AC-4: wrap row height must not change (the layout shift symptom)
+    const wrapHeightAfter = wrap!.getBoundingClientRect().height;
+    await expect(wrapHeightAfter).toBe(wrapHeightBefore);
+
+    // AC-8: ::after must be position:absolute so it is out of flow
+    const afterPosition = getComputedStyle(indicator!, "::after").position;
+    await expect(afterPosition).toBe("absolute");
   }} />

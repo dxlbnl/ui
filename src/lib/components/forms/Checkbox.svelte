@@ -1,15 +1,15 @@
 <script lang="ts">
-  import type { HTMLInputAttributes } from 'svelte/elements'
-  import { getContext } from 'svelte'
-  import type { FieldContext } from './field-context.js'
-  import { FIELD_CONTEXT_KEY } from './field-context.js'
+  import type { HTMLInputAttributes } from "svelte/elements";
+  import { getContext } from "svelte";
+  import type { FieldContext } from "./field-context.js";
+  import { FIELD_CONTEXT_KEY } from "./field-context.js";
 
   interface Props extends HTMLInputAttributes {
     /** Visible label text rendered next to the checkbox. */
-    label: string
+    label: string;
     /** Show the indeterminate (−) state. @default false */
-    indeterminate?: boolean
-    [key: string]: unknown
+    indeterminate?: boolean;
+    [key: string]: unknown;
   }
 
   let {
@@ -18,24 +18,33 @@
     checked = $bindable(false),
     disabled,
     ...rest
-  }: Props = $props()
+  }: Props = $props();
 
-  let inputEl: HTMLInputElement | undefined = $state()
+  let inputEl: HTMLInputElement | undefined = $state();
 
-  const fieldCtx = getContext<FieldContext | undefined>(FIELD_CONTEXT_KEY)
+  const fieldCtx = getContext<FieldContext | undefined>(FIELD_CONTEXT_KEY);
 
-  let resolvedId = $derived(fieldCtx ? fieldCtx.inputId : (rest.id as string | undefined))
-  let resolvedAriaInvalid: boolean | 'true' | 'false' | 'grammar' | 'spelling' | null | undefined = $derived(
-    fieldCtx?.hasError ? 'true' : undefined
-  )
-  let resolvedAriaDescribedby = $derived(fieldCtx?.hasHint ? fieldCtx.hintId : undefined)
+  let resolvedId = $derived(
+    fieldCtx ? fieldCtx.inputId : (rest.id as string | undefined),
+  );
+  let resolvedAriaInvalid:
+    | boolean
+    | "true"
+    | "false"
+    | "grammar"
+    | "spelling"
+    | null
+    | undefined = $derived(fieldCtx?.hasError ? "true" : undefined);
+  let resolvedAriaDescribedby = $derived(
+    fieldCtx?.hasHint ? fieldCtx.hintId : undefined,
+  );
 
   $effect(() => {
-    if (inputEl) inputEl.indeterminate = indeterminate
-  })
+    if (inputEl) inputEl.indeterminate = indeterminate;
+  });
 </script>
 
-<label class="checkbox-wrap" class:disabled={disabled}>
+<label class="checkbox-wrap" class:disabled>
   <input
     type="checkbox"
     class="checkbox-input"
@@ -62,11 +71,11 @@
     font-size: 13px;
     color: var(--ink);
     position: relative;
-  }
 
-  .checkbox-wrap.disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+    &.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
   }
 
   .checkbox-input {
@@ -79,6 +88,44 @@
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
+
+    &:checked + .checkbox-indicator {
+      background: var(--amber);
+      border-color: var(--amber);
+
+      &::after {
+        content: "✔";
+        color: var(--bg);
+        font-size: 20px;
+        line-height: 1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    &:indeterminate + .checkbox-indicator {
+      background: var(--amber);
+      border-color: var(--amber);
+      opacity: 0.6;
+
+      &::after {
+        content: "–";
+        color: var(--bg);
+        font-size: 20px;
+        line-height: 1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    &:focus-visible + .checkbox-indicator {
+      outline: 2px solid var(--amber);
+      outline-offset: 2px;
+    }
   }
 
   .checkbox-indicator {
@@ -91,41 +138,10 @@
     border: 1px solid var(--rule-strong);
     background: transparent;
     border-radius: 0;
-    transition: background var(--transition), border-color var(--transition);
+    transition:
+      background var(--transition),
+      border-color var(--transition);
     position: relative;
-  }
-
-  /* Checked state */
-  .checkbox-input:checked + .checkbox-indicator {
-    background: var(--amber);
-    border-color: var(--amber);
-  }
-
-  .checkbox-input:checked + .checkbox-indicator::after {
-    content: '✓';
-    color: var(--bg);
-    font-size: 11px;
-    line-height: 1;
-  }
-
-  /* Indeterminate state */
-  .checkbox-input:indeterminate + .checkbox-indicator {
-    background: var(--amber);
-    border-color: var(--amber);
-    opacity: 0.6;
-  }
-
-  .checkbox-input:indeterminate + .checkbox-indicator::after {
-    content: '–';
-    color: var(--bg);
-    font-size: 11px;
-    line-height: 1;
-  }
-
-  /* Focus-visible delegated to indicator */
-  .checkbox-input:focus-visible + .checkbox-indicator {
-    outline: 2px solid var(--amber);
-    outline-offset: 2px;
   }
 
   .checkbox-label {

@@ -261,6 +261,14 @@ it records the reason here AND states it in chat.
 - reviewer: FAIL — 6 groups of missing story assertions (ACs 11, 25, 27–30, 36–37, 39–43, 45–48); implementation correct
 - implementer: added all missing assertions → 265/265 green
 - reviewer: PASS
+- result: done — commit `b2b739e`
+
+## 2026-05-18 — B29: Checkbox shifts down on toggle
+- manager: start, track: bug
+- spec-writer: wrote wiki/specs/B29-checkbox-visual-jump.md → done
+- test-writer: added "No Layout Shift" regression story → fails (::after position: static)
+- implementer: position:absolute + centred ::after, ✔ at 20px, CSS nesting pass → 265/265 green
+- manager: visual review approved; folded regression into Space to Toggle, removed dedicated story; 0 check errors
 - result: done — commit pending
 
 ## 2026-05-17 — B24: Style prop cleanup
