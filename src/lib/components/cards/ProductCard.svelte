@@ -70,7 +70,7 @@
   <div class="card-body">
     <Stack gap="xs">
       <Text variant="eyebrow">{sku}</Text>
-      <Heading level={3} size="lg">{name}</Heading>
+      <Heading level={3}>{name}</Heading>
       <Text variant="mono" case="none" color="dim" class="card-desc">{description}</Text>
       <div class="card-footer-row">
         <Spread>

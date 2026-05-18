@@ -52,6 +52,8 @@ by the agent and skill definitions in `.claude/agents/` and `.claude/skills/`.
   rejection escalates.
 - **Commits** — one commit per completed item, message references the backlog item.
   Never push unless the user asks.
+- **Git commands** — never use `git -C <path>`; run git commands from the working
+  directory without that flag.
 - **Resumability** — the manager's durable state is `wiki/backlog.md` +
   `wiki/progress.md`. A fresh `/manager` invocation reads those and continues.
 - **Decision ownership** — any agent making a notable design/tech choice appends it to

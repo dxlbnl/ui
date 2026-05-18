@@ -20,7 +20,7 @@
   let openNoFooter    = $state(false);
 </script>
 
-<!-- AC-5, AC-6, AC-7, AC-13, AC-14 -->
+<!-- AC-1 through AC-7, AC-13, AC-14 -->
 <Story name="Default"
   play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
@@ -34,6 +34,17 @@
     await expect(dialog.getAttribute("aria-labelledby")).toBe("modal-title");
     const heading = canvas.getByRole("heading", { level: 2, name: /CONFIRM ACTION/i });
     await expect(heading).toBeVisible();
+    // AC-1: title element is an h2 with id="modal-title"
+    const titleEl = canvasElement.querySelector("h2#modal-title")!;
+    await expect(titleEl).not.toBeNull();
+    // AC-2: font-size resolves to 24px (--t-h3)
+    await expect(getComputedStyle(titleEl).fontSize).toBe("24px");
+    // AC-3: font-family is sans — must NOT contain JetBrains Mono
+    await expect(getComputedStyle(titleEl).fontFamily).not.toContain("JetBrains Mono");
+    // AC-4: font-weight is 500
+    await expect(getComputedStyle(titleEl).fontWeight).toBe("500");
+    // AC-5: text-transform is none (not uppercase)
+    await expect(getComputedStyle(titleEl).textTransform).toBe("none");
     const closeBtn = canvas.getByRole("button", { name: /Close dialog/i });
     await expect(closeBtn).toBeVisible();
     await expect(closeBtn).toBeEnabled();
@@ -81,7 +92,7 @@
   </Modal>
 </Story>
 
-<!-- AC-5, AC-6, AC-9, AC-13, AC-14 -->
+<!-- AC-5, AC-6, AC-7, AC-9, AC-13, AC-14 -->
 <Story name="Destructive Variant"
   play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
@@ -95,6 +106,13 @@
     await expect(icon.textContent?.trim()).toBe("!");
     const dangerColor = resolveTokenColor("--danger");
     await expect(getComputedStyle(icon).backgroundColor).toBe(dangerColor);
+    // AC-7: heading assertions for destructive variant (variant-agnostic check)
+    const titleEl = canvasElement.querySelector("h2#modal-title")!;
+    await expect(titleEl).not.toBeNull();
+    await expect(getComputedStyle(titleEl).fontSize).toBe("24px");
+    await expect(getComputedStyle(titleEl).fontFamily).not.toContain("JetBrains Mono");
+    await expect(getComputedStyle(titleEl).fontWeight).toBe("500");
+    await expect(getComputedStyle(titleEl).textTransform).toBe("none");
     const closeBtn = canvas.getByRole("button", { name: /Close dialog/i });
     await expect(closeBtn.getAttribute("type")).toBe("button");
     await userEvent.click(closeBtn);

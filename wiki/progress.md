@@ -271,6 +271,12 @@ it records the reason here AND states it in chat.
 - manager: visual review approved; folded regression into Space to Toggle, removed dedicated story; 0 check errors
 - result: done — commit pending
 
+## 2026-05-18 — B33: Typography realignment with OG design system
+- manager: start, track: bug; spawning researcher to diff tokens.css vs colors_and_type.css
+- researcher: token layer clean; root cause = Modal size="lg" on Text mono (19px→24px); Heading.svelte data-size overrides unsafe
+- spec-writer: wrote wiki/specs/B33-font-realignment.md (14 ACs, 2 changes + caller audit) → user approved
+- test-writer: extended Modal Default + Destructive play fns (AC-1–5, AC-7); extended Heading Levels play fn (AC-10–12); 2 red (Modal 19px≠24px), Heading assertions green as regression guards
+
 ## 2026-05-17 — B24: Style prop cleanup
 - manager: set in-progress; spec at wiki/specs/B24-style-prop-cleanup.md; implemented directly
 - SectionHead, PageHero, CtaBlock, SectionFoot, NoteCard: eyebrow variant + container scoped CSS

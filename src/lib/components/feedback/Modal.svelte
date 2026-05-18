@@ -3,7 +3,7 @@
   import type { Snippet } from 'svelte'
   import Inline from '../layout/Inline.svelte'
   import Spread from '../layout/Spread.svelte'
-  import Text from '../primitives/Text.svelte'
+  import Heading from '../primitives/Heading.svelte'
   import Button from '../primitives/Button.svelte'
 
   type ModalVariant = 'default' | 'confirm' | 'destructive'
@@ -81,7 +81,7 @@
         {#if variant === 'destructive' || variant === 'confirm'}
           <span class="modal-icon" aria-hidden="true">!</span>
         {/if}
-        <Text variant="mono" as="h2" id="modal-title" size="lg" class="modal-title">{title}</Text>
+        <Heading level={2} variant="h3" id="modal-title" class="modal-title">{title}</Heading>
         <Button variant="ghost" type="button" aria-label="Close dialog" onclick={handleClose}>×</Button>
       </Inline>
     </header>

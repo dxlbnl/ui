@@ -31,7 +31,9 @@ Every agent reads this page first, before doing anything else.
 | [specs/B28-nav-overhaul.md](specs/B28-nav-overhaul.md) | Spec: Nav overhaul — `<Breadcrumb>` in brand area, new `Button variant="nav"`, `<details>` mobile menu, ink-faint toggle, 720px breakpoint, absolute dropdown. |
 | [specs/B29-checkbox-visual-jump.md](specs/B29-checkbox-visual-jump.md) | Spec: Fix layout shift on toggle (fixed-size indicator) + illegible checkmark; regression story AC-4. |
 | [specs/B31-select-design.md](specs/B31-select-design.md) | Spec: Fix amber panel border + audit trigger token rules; 2 new token-assertion stories. |
+| [specs/B33-font-realignment.md](specs/B33-font-realignment.md) | Spec: Modal title → Heading h3 style (24 px, sans); remove size prop from Heading.svelte; caller audit. |
 | [design-system-audit.md](design-system-audit.md) | Audit: OG flat-CSS vs Svelte implementation — token alignment, component drifts, missing pieces. |
+| [research/B33-token-diff.md](research/B33-token-diff.md) | Research: B33 — token diff (colors_and_type.css vs tokens.css) + Modal/Text/Heading size-prop audit. |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
 > and restructure pages as the project grows — just link new pages in the table above.

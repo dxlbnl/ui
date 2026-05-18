@@ -5,8 +5,6 @@
   type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6
   type HeadingVariant = 'display' | 'hero' | 'h1' | 'h2' | 'h3'
   type TextColor = 'ink' | 'dim' | 'faint' | 'amber' | 'cyan' | 'ok' | 'danger'
-  type SizeVariant = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-
   interface Props {
     /** HTML heading level (h1–h6). @default 2 */
     level?: HeadingLevel
@@ -14,8 +12,6 @@
     variant?: HeadingVariant
     /** Text colour mapped to a design token. */
     color?: TextColor
-    /** Font size override mapped to a type-scale token. */
-    size?: SizeVariant
     children?: Snippet
     class?: ClassValue | null
     style?: string | null
@@ -46,7 +42,7 @@
     danger: 'danger',
   }
 
-  let { level = 2, variant, color, size, children, class: klass = '', style, ...rest }: Props = $props()
+  let { level = 2, variant, color, children, class: klass = '', style, ...rest }: Props = $props()
 
   const resolvedVariant = $derived(variant ?? DEFAULT_VARIANT[level])
   const variantClass = $derived(resolvedVariant ? VARIANT_CLASS[resolvedVariant] : undefined)
@@ -54,7 +50,7 @@
   const mergedStyle = $derived([colorStyle, style].filter(Boolean).join(' ') || undefined)
 </script>
 
-<svelte:element this={"h" + level} class={[variantClass, klass]} style={mergedStyle} data-size={size || undefined} {...rest}>
+<svelte:element this={"h" + level} class={[variantClass, klass]} style={mergedStyle} {...rest}>
   {@render children?.()}
 </svelte:element>
 
@@ -99,9 +95,4 @@
     line-height: 0.9;
   }
 
-  [data-size="xs"] { font-size: var(--t-micro) }
-  [data-size="sm"] { font-size: var(--t-mono) }
-  [data-size="md"] { font-size: var(--t-body) }
-  [data-size="lg"] { font-size: var(--t-lede) }
-  [data-size="xl"] { font-size: var(--t-h3) }
 </style>

@@ -41,7 +41,7 @@
         <Text variant="mono" color="faint" size="xs">{hexId}</Text>
         <Text variant="mono" color="cyan" size="xs">{kind.toUpperCase()}</Text>
       </Spread>
-      <Heading level={3} size="lg">{title}</Heading>
+      <Heading level={3}>{title}</Heading>
       {#if lede}
         <Text variant="body" class="note-lede">{lede}</Text>
       {/if}

@@ -12,6 +12,9 @@
 
 <!-- AC-17, AC-18, AC-19, AC-21, AC-22, AC-23: levels 1/2/3 render h1/h2/h3 with default variant classes -->
 <!-- AC-20: default level is 2 -->
+<!-- AC-12: H1 font-size === 72px (var(--t-h1)) -->
+<!-- AC-10: H2 font-size === 36px (var(--t-h2)) -->
+<!-- AC-11: H3 font-size === 24px (var(--t-h3)) -->
 <Story name="Levels"
   play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -19,14 +22,17 @@
     const h1 = canvas.getByTestId("level-1");
     await expect(h1.tagName).toBe("H1");
     await expect(h1.classList.contains("h1")).toBe(true);
+    await expect(getComputedStyle(h1).fontSize).toBe("72px");
 
     const h2 = canvas.getByTestId("level-2");
     await expect(h2.tagName).toBe("H2");
     await expect(h2.classList.contains("h2")).toBe(true);
+    await expect(getComputedStyle(h2).fontSize).toBe("36px");
 
     const h3 = canvas.getByTestId("level-3");
     await expect(h3.tagName).toBe("H3");
     await expect(h3.classList.contains("h3")).toBe(true);
+    await expect(getComputedStyle(h3).fontSize).toBe("24px");
 
     const defaultLevel = canvas.getByTestId("level-default");
     await expect(defaultLevel.tagName).toBe("H2");
@@ -105,33 +111,3 @@
   Section Title
 </Story>
 
-<!-- B26 AC-12, AC-43: size="xs" on h3 → 12px -->
-<Story name="SizeXs" args={{ level: 3, size: "xs" }}
-  play={async ({ canvasElement }) => {
-    const el = canvasElement.firstElementChild!;
-    await expect(el.getAttribute("data-size")).toBe("xs");
-    await expect(getComputedStyle(el).fontSize).toBe("12px");
-  }}>
-  Micro heading
-</Story>
-
-<!-- B26 AC-13, AC-15, AC-43: size="lg" on h3 → 19px, letterSpacing stays at h3 default -0.01em -->
-<Story name="SizeLg" args={{ level: 3, size: "lg" }}
-  play={async ({ canvasElement }) => {
-    const el = canvasElement.firstElementChild!;
-    await expect(el.getAttribute("data-size")).toBe("lg");
-    await expect(getComputedStyle(el).fontSize).toBe("19px");
-    await expect(getComputedStyle(el).letterSpacing).toBe("-0.19px");
-  }}>
-  Lede-size heading
-</Story>
-
-<!-- B26 AC-14: size="xl" on h3 → 24px -->
-<Story name="SizeXl" args={{ level: 3, size: "xl" }}
-  play={async ({ canvasElement }) => {
-    const el = canvasElement.firstElementChild!;
-    await expect(el.getAttribute("data-size")).toBe("xl");
-    await expect(getComputedStyle(el).fontSize).toBe("24px");
-  }}>
-  XL heading
-</Story>
