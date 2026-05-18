@@ -269,7 +269,6 @@
   }
 
   .select-label {
-    flex: 1;
     min-width: 0;
   }
 
@@ -278,6 +277,6 @@
     font-size: 11px;
     color: var(--amber);
     flex-shrink: 0;
-    margin-left: 8px;
+    margin-left: auto;
   }
 </style>
