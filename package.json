@@ -1,6 +1,6 @@
 {
   "name": "dxlb-design",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "svelte": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,8 +12,14 @@
     "./tokens/tokens.css": "./dist/tokens/tokens.css",
     "./tokens/typography.css": "./dist/tokens/typography.css"
   },
-  "files": ["dist", "!dist/**/*.test.*", "!dist/**/*.spec.*"],
-  "sideEffects": ["**/*.css"],
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "!dist/**/*.spec.*"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "peerDependencies": {
     "svelte": "^5.0.0",
     "@sveltejs/kit": "^2.0.0"
@@ -40,7 +46,7 @@
     "@sveltejs/kit": "2.60.1",
     "@sveltejs/package": "2.5.7",
     "@sveltejs/vite-plugin-svelte": "7.1.2",
-    "@types/node": "25.8.0",  
+    "@types/node": "25.8.0",
     "@vitest/browser-playwright": "4.1.6",
     "publint": "0.3.18",
     "storybook": "10.4.0",
@@ -56,6 +62,8 @@
     "@fontsource/jetbrains-mono": "5.2.8"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }
