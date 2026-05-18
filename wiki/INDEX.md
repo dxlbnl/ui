@@ -28,6 +28,7 @@ Every agent reads this page first, before doing anything else.
 | [specs/](specs/)                               | One detailed spec page per feature/bug. See `specs/README.md`.                              |
 | [specs/B26-typography-size-prop.md](specs/B26-typography-size-prop.md) | Spec: `size` and `case` props on Text/Heading; scoped CSS; 15 caller migrations. |
 | [specs/B27-layout-style-prop-cleanup.md](specs/B27-layout-style-prop-cleanup.md) | Spec: `align` prop on Inline + scoped CSS pass across 9 components; eliminates all remaining layout `style=` overrides. |
+| [specs/B31-select-design.md](specs/B31-select-design.md) | Spec: Fix amber panel border + audit trigger token rules; 2 new token-assertion stories. |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,
 > and restructure pages as the project grows — just link new pages in the table above.

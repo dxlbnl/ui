@@ -5,6 +5,7 @@ type: bug
 priority: high
 flags: []
 created: 2026-05-17
+spec: wiki/specs/B31-select-design.md
 ---
 
 ## Description

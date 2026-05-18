@@ -150,10 +150,7 @@
           aria-selected={option.value === internalValue}
           onclick={() => handleSelect(option.value)}
         >
-          {option.label}
-          {#if option.value === internalValue}
-            <span class="select-check" aria-hidden="true">✓</span>
-          {/if}
+          <span class="select-label">{option.label}</span>
         </li>
       {/each}
     </ul>
@@ -209,6 +206,8 @@
     font-size: 14px;
     color: var(--amber);
     transition: transform var(--transition);
+    line-height: 1;
+    flex-shrink: 0;
   }
 
   :global(.select .btn.open) .select-chevron {
@@ -230,6 +229,9 @@
   }
 
   .select-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-family: var(--mono);
     font-size: 12px;
     letter-spacing: 0.04em;
@@ -238,6 +240,7 @@
     cursor: pointer;
     color: var(--ink-dim);
     border-bottom: 1px solid var(--rule);
+    transition: background 0.1s, color 0.1s;
   }
 
   .select-option:last-child {
@@ -260,8 +263,16 @@
     outline-offset: -2px;
   }
 
-  .select-check {
+  .select-label {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .select-option.selected::after {
+    content: '✓';
     font-size: 11px;
     color: var(--amber);
+    flex-shrink: 0;
+    margin-left: 8px;
   }
 </style>

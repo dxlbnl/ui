@@ -19,6 +19,12 @@ it records the reason here AND states it in chat.
 
 <!-- entries start here -->
 
+## 2026-05-18 — B31: Select design overhaul — remove amber option boxes
+- manager: start, track: bug; delegating to spec-writer
+- manager: user review — spec corrected: amber panel border is intentional per design reference; primary remaining issue is checkmark not right-aligned (must use ::after pseudo-element); dispatching implementer to fix
+- implementer: replaced {#if}+span checkmark with ::after pseudo-element; wrapped label in select-label span; 263/263 green, 0 pnpm check errors
+- result: done
+
 ## 2026-05-17 — B37: Rename ToastVariant to success/warning/error
 - manager: start, track: chore; delegating directly to implementer
 - implementer: renamed ToastVariant ok/amber/danger → success/warning/error across toast.ts, Toast.svelte, Toast.stories.svelte, ToastRegion.stories.svelte; updated docs/feedback.md → 263/263 green
