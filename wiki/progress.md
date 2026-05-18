@@ -19,6 +19,12 @@ it records the reason here AND states it in chat.
 
 <!-- entries start here -->
 
+## 2026-05-18 — B28: Nav overhaul — match website design
+- manager: start, track: feature; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B28-nav-overhaul.md (58 ACs, 8 Nav stories + 1 Button story); revised per user: Breadcrumb root → div, Button nav variant, D38 recorded → user approved
+- manager: delegating to test-writer
+- test-writer: 6 new failing stories (Nav ×5, Button Nav Variant ×1); 259 existing pass → delegating to implementer
+
 ## 2026-05-18 — B31: Select design overhaul — remove amber option boxes
 - manager: start, track: bug; delegating to spec-writer
 - manager: user review — spec corrected: amber panel border is intentional per design reference; primary remaining issue is checkmark not right-aligned (must use ::after pseudo-element); dispatching implementer to fix
@@ -245,6 +251,17 @@ it records the reason here AND states it in chat.
 - implementer: added 9+ stories across Spread/Rule/Card/ProjectCard/CtaBlock/Modal/Table; created token docs (Color Palette, Typography Scale, Spacing Scale); removed 4 old token stories → 164/164 green
 - reviewer: FAIL (AC-29: old token stories not removed); manager fixed directly → re-run PASS
 - result: done — commit `8b47cb2`
+
+## 2026-05-18 — B28: Nav overhaul — match website design
+- manager: start, track: feature
+- spec-writer: wrote wiki/specs/B28-nav-overhaul.md → done (first draft rejected for D38 violation; rewritten with Button nav variant + Breadcrumb primitives)
+- test-writer: wrote Nav.stories.svelte (8 stories) + Button.stories.svelte Nav Variant story → 5 failing as expected
+- implementer: Button nav variant, Breadcrumb as prop, Nav full overhaul → 265/265 green
+- manager: visual review (user approved with breadcrumb color + spacing fixes applied to Breadcrumb.svelte + Nav.svelte)
+- reviewer: FAIL — 6 groups of missing story assertions (ACs 11, 25, 27–30, 36–37, 39–43, 45–48); implementation correct
+- implementer: added all missing assertions → 265/265 green
+- reviewer: PASS
+- result: done — commit pending
 
 ## 2026-05-17 — B24: Style prop cleanup
 - manager: set in-progress; spec at wiki/specs/B24-style-prop-cleanup.md; implemented directly

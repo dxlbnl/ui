@@ -719,3 +719,22 @@
 - **Consequences**: `resolveTokenFgColor` is now imported alongside `resolveTokenColor`
   in `Select.stories.svelte`. Future stories should apply the same split.
 - **Supersedes**: none
+
+## D38: Primitives first — always use design system primitives in higher-order components
+- **Date**: 2026-05-18
+- **By**: user
+- **Context**: The B28 spec-writer draft replaced `<Button>` and `<Inline>` with raw
+  `<button>` and plain div elements, citing amber ghost-fill regressions. The user
+  rejected this approach as inconsistent with a unified design system.
+- **Decision**: Higher-order components (Nav, Modal, PageHero, cards, etc.) must always
+  use design system primitives (`Button`, `Inline`, `Stack`, `Breadcrumb`, `Led`, etc.)
+  rather than raw HTML elements. If a primitive cannot satisfy the visual requirement,
+  that is a signal to fix or extend the primitive — not to bypass it. The only acceptable
+  exceptions are structural elements with no primitive equivalent (e.g. `<nav>`, `<header>`,
+  `<ul>`, `<details>`). Additionally: minimise `style=` prop usage; prefer scoped CSS
+  class rules. Minimise custom CSS; prefer primitive props.
+- **Consequences**: All agents must audit higher-order component implementations against
+  this rule. Specs must name which primitive handles each interactive or layout element.
+  If a primitive's default styling conflicts with a higher-order context, the fix is a
+  new variant or prop on the primitive, not a raw element substitution.
+- **Supersedes**: none

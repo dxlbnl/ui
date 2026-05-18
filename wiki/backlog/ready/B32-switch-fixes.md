@@ -3,7 +3,7 @@ id: B32
 title: Switch — dark mode invisible when off + label click doesn't toggle
 type: bug
 priority: medium
-flags: []
+flags: [review]
 created: 2026-05-17
 ---
 

@@ -2,7 +2,7 @@
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
 
-  type ButtonVariant = 'primary' | 'cta' | 'ghost' | 'back' | 'del'
+  type ButtonVariant = 'primary' | 'cta' | 'ghost' | 'back' | 'del' | 'nav'
 
   interface Props extends HTMLButtonAttributes {
     /** HTML element or component to render as. @default 'button' */
@@ -121,5 +121,22 @@
   .btn-del:hover {
     color: var(--danger);
     border-color: var(--danger);
+  }
+
+  /* nav */
+  .btn-nav {
+    color: var(--ink-faint);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    font-size: var(--t-body);
+    line-height: 1;
+    padding: 0 0 2px 0;
+    letter-spacing: 0;
+  }
+
+  .btn-nav:hover {
+    color: var(--ink);
+    border-bottom-color: var(--amber);
   }
 </style>

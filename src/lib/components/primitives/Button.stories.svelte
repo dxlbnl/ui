@@ -2,7 +2,7 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, within } from "storybook/test";
   import Button from "./Button.svelte";
-  import { resolveTokenColor } from "$lib/storybook-utils.js";
+  import { resolveTokenColor, resolveTokenFgColor } from "$lib/storybook-utils.js";
 
   const { Story } = defineMeta({
     title: "Primitives/Button",
@@ -109,4 +109,24 @@
     await expect(link.tagName).toBe("A");
   }}>
   View Demo →
+</Story>
+
+<!-- AC-B28-1 (2,3,4) -->
+<Story name="Nav Variant" args={{ variant: "nav" }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const btn = canvas.getByRole("button");
+    await expect(btn).toBeVisible();
+
+    // AC-2: element has class btn-nav
+    await expect(btn.classList.contains("btn-nav")).toBe(true);
+
+    // AC-3: computed color matches --ink-faint
+    const inkFaintColor = resolveTokenFgColor("--ink-faint");
+    await expect(getComputedStyle(btn).color).toBe(inkFaintColor);
+
+    // AC-4: background-color is transparent
+    await expect(getComputedStyle(btn).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+  }}>
+  ◐
 </Story>

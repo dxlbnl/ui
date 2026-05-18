@@ -3,7 +3,7 @@ id: B29
 title: Checkbox shifts down on toggle
 type: bug
 priority: low
-flags: []
+flags: [review]
 created: 2026-05-17
 ---
 

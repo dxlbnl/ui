@@ -3,7 +3,7 @@ id: B34
 title: Modal close button not in top-right corner
 type: bug
 priority: medium
-flags: []
+flags: [review]
 created: 2026-05-17
 ---
 

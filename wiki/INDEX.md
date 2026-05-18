@@ -28,6 +28,7 @@ Every agent reads this page first, before doing anything else.
 | [specs/](specs/)                               | One detailed spec page per feature/bug. See `specs/README.md`.                              |
 | [specs/B26-typography-size-prop.md](specs/B26-typography-size-prop.md) | Spec: `size` and `case` props on Text/Heading; scoped CSS; 15 caller migrations. |
 | [specs/B27-layout-style-prop-cleanup.md](specs/B27-layout-style-prop-cleanup.md) | Spec: `align` prop on Inline + scoped CSS pass across 9 components; eliminates all remaining layout `style=` overrides. |
+| [specs/B28-nav-overhaul.md](specs/B28-nav-overhaul.md) | Spec: Nav overhaul — `<Breadcrumb>` in brand area, new `Button variant="nav"`, `<details>` mobile menu, ink-faint toggle, 720px breakpoint, absolute dropdown. |
 | [specs/B31-select-design.md](specs/B31-select-design.md) | Spec: Fix amber panel border + audit trigger token rules; 2 new token-assertion stories. |
 | [design-system-audit.md](design-system-audit.md) | Audit: OG flat-CSS vs Svelte implementation — token alignment, component drifts, missing pieces. |
 

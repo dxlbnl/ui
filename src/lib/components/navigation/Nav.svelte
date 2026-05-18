@@ -1,7 +1,12 @@
 <script lang="ts">
   import Led from '../primitives/Led.svelte'
   import Button from '../primitives/Button.svelte'
-  import Inline from '../layout/Inline.svelte'
+  import Breadcrumb from './Breadcrumb.svelte'
+
+  interface BreadcrumbItem {
+    label: string
+    href: string
+  }
 
   interface NavLink {
     href: string
@@ -14,14 +19,15 @@
     links?: NavLink[]
     /** Brand name shown next to the status LED. @default 'DEXTERLABS' */
     siteName?: string
+    /** Optional breadcrumb trail. @default [] */
+    breadcrumbs?: BreadcrumbItem[]
     [key: string]: unknown
   }
 
-  let { links = [], siteName = 'DEXTERLABS', ...rest }: Props = $props()
+  let { links = [], siteName = 'DEXTERLABS', breadcrumbs = [], ...rest }: Props = $props()
 
   type Palette = 'phosphor' | 'paper'
   let palette = $state<Palette>('phosphor')
-  let menuOpen = $state(false)
 
   const PALETTE_KEY = 'dxlb-palette'
 
@@ -36,10 +42,6 @@
     document.documentElement.setAttribute('data-palette', palette)
     localStorage.setItem(PALETTE_KEY, palette)
   }
-
-  function handleMenuToggle() {
-    menuOpen = !menuOpen
-  }
 </script>
 
 <nav class="nav" {...rest}>
@@ -49,46 +51,46 @@
       <span class="nav-wordmark">{siteName}</span>
     </a>
 
-    <!-- Right-side group always carries margin-left:auto so it stays right-aligned
-         even when nav-links is hidden on mobile -->
-    <div class="nav-right">
-      <ul class="nav-links">
-        {#each links as link}
-          <li>
-            <a href={link.href} class="nav-link" class:active={link.active}
-               aria-current={link.active ? 'page' : undefined}>
-              {link.label}
-            </a>
-          </li>
-        {/each}
-      </ul>
-      <Inline class="nav-actions" gap="xs">
-        <Button variant="ghost" aria-label="Toggle colour palette" onclick={handlePaletteToggle}>
-          {palette === 'paper' ? '◑' : '◐'}
-        </Button>
-        <!-- Scoped wrapper avoids specificity battle with Button's .btn rule -->
-        <div class="hamburger-wrap">
-          <Button variant="ghost" class="nav-hamburger" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="nav-drawer" onclick={handleMenuToggle}>
-            {menuOpen ? '×' : '≡'}
-          </Button>
-        </div>
-      </Inline>
-    </div>
-  </div>
-
-  <div id="nav-drawer" class="nav-drawer" aria-hidden={menuOpen ? undefined : 'true'}>
-    {#if menuOpen}
-      <ul class="nav-drawer-links">
-        {#each links as link}
-          <li>
-            <a href={link.href} class="nav-drawer-link" class:active={link.active}
-               aria-current={link.active ? 'page' : undefined}>
-              {link.label}
-            </a>
-          </li>
-        {/each}
-      </ul>
+    {#if breadcrumbs?.length}
+      <div class="nav-path">
+        <span class="nav-sep">//</span>
+        <Breadcrumb crumbs={breadcrumbs} as="div" />
+      </div>
     {/if}
+
+    <div class="nav-right">
+      {#if links?.length}
+        <ul class="nav-links">
+          {#each links as link}
+            <li>
+              <a href={link.href} class="nav-link" class:active={link.active}
+                 aria-current={link.active ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+
+      <Button variant="nav" aria-label="Toggle colour palette" onclick={handlePaletteToggle}>
+        {palette === 'paper' ? '◑' : '◐'}
+      </Button>
+
+      {#if links?.length}
+        <details class="nav-menu">
+          <summary class="nav-summary">
+            <span class="nav-icon-open">≡</span>
+            <span class="nav-icon-close">×</span>
+          </summary>
+          <div class="nav-dropdown">
+            {#each links as link}
+              <a href={link.href} class="nav-dropdown-link" class:active={link.active}
+                 aria-current={link.active ? 'page' : undefined}>{link.label}</a>
+            {/each}
+          </div>
+        </details>
+      {/if}
+    </div>
   </div>
 </nav>
 
@@ -128,6 +130,20 @@
     text-transform: uppercase;
   }
 
+  .nav-path {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    min-width: 0;
+    margin-left: 8px;
+  }
+
+  .nav-sep {
+    color: var(--ink-faint);
+    flex-shrink: 0;
+  }
+
   .nav-right {
     display: flex;
     align-items: center;
@@ -149,18 +165,6 @@
     list-style: none;
   }
 
-  .nav-drawer-links {
-    display: flex;
-    flex-direction: column;
-    gap: var(--u2);
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-  }
-
   .nav-link {
     color: var(--ink-dim);
     text-decoration: none;
@@ -169,53 +173,85 @@
     transition: color var(--transition), border-color var(--transition);
   }
 
+  .nav-link:hover {
+    color: var(--ink);
+    border-bottom-color: var(--amber);
+  }
+
   .nav-link.active {
     color: var(--ink);
     border-bottom-color: var(--amber);
   }
 
-  .nav-right :global(.nav-actions) {
-    flex-shrink: 0;
-  }
-
-  .hamburger-wrap {
+  .nav-menu {
     display: none;
   }
 
-  .nav-drawer {
+  .nav-icon-close {
     display: none;
   }
 
-  @media (max-width: 767px) {
+  details[open] .nav-icon-open {
+    display: none;
+  }
+
+  details[open] .nav-icon-close {
+    display: inline;
+  }
+
+  .nav-summary {
+    list-style: none;
+    cursor: pointer;
+    color: var(--ink-dim);
+    user-select: none;
+  }
+
+  .nav-summary:hover {
+    color: var(--ink);
+  }
+
+  .nav-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    padding: 4px 16px 8px;
+    text-transform: uppercase;
+  }
+
+  .nav-dropdown-link {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-dim);
+    text-decoration: none;
+  }
+
+  .nav-dropdown-link.active {
+    color: var(--amber);
+  }
+
+  .nav-dropdown > :last-child {
+    border-bottom: none;
+  }
+
+  @media (max-width: 720px) {
     .nav-links {
-      display: none !important;
-    }
-
-    .hamburger-wrap {
-      display: block;
-    }
-
-    .nav-drawer {
-      display: block;
-      background: var(--bg);
-      border-bottom: 1px solid var(--rule);
-      padding: 12px 24px 16px;
-    }
-
-    .nav-drawer[aria-hidden='true'] {
       display: none;
     }
 
-    .nav-drawer-link {
-      color: var(--ink-dim);
-      text-decoration: none;
-      padding-bottom: 2px;
-      border-bottom: 1px solid transparent;
-    }
-
-    .nav-drawer-link.active {
-      color: var(--ink);
-      border-bottom-color: var(--amber);
+    .nav-menu {
+      display: block;
+      margin-left: auto;
+      flex-shrink: 0;
     }
   }
 </style>

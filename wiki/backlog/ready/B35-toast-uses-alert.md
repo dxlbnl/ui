@@ -3,7 +3,7 @@ id: B35
 title: Toast should render an Alert internally
 type: feature
 priority: medium
-flags: []
+flags: [review]
 created: 2026-05-17
 ---
 

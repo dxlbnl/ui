@@ -3,7 +3,7 @@ id: B30
 title: Input chrome fixes — number arrows, clearable color, icon color
 type: bug
 priority: medium
-flags: []
+flags: [review]
 created: 2026-05-17
 ---
 
