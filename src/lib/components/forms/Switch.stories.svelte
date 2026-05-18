@@ -13,7 +13,7 @@
 
 <!-- AC-44, AC-45, AC-46, AC-47: Off state -->
 <Story name="Off (Default)" args={{ label: "Dark mode", checked: false }}
-  play={async ({ canvasElement }) => {
+  play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     // AC-44: renders a button with role="switch"
     // AC-46: accessible name provided by aria-label={label}
@@ -24,11 +24,23 @@
     // AC-47: track background matches var(--bg-sunken) when off
     const bgSunken = resolveTokenColor("--bg-sunken");
     await expect(getComputedStyle(sw).backgroundColor).toBe(bgSunken);
+    // AC-1: off-state border resolves to --rule
+    const ruleColor = resolveTokenColor("--rule");
+    await expect(getComputedStyle(sw).borderColor).toBe(ruleColor);
+    // AC-2: border is NOT invisible (not the same as --bg)
+    const bgColor = resolveTokenColor("--bg");
+    await expect(getComputedStyle(sw).borderColor).not.toBe(bgColor);
+    // AC-5: clicking the label text toggles the switch on
+    await userEvent.click(canvas.getByText("Dark mode"));
+    await expect(sw.getAttribute("aria-checked")).toBe("true");
+    // AC-8: clicking the button itself flips it back to off
+    await userEvent.click(sw);
+    await expect(sw.getAttribute("aria-checked")).toBe("false");
   }} />
 
 <!-- AC-45, AC-48: On state -->
 <Story name="On" args={{ label: "Dark mode", checked: true }}
-  play={async ({ canvasElement }) => {
+  play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole("switch", { name: "Dark mode" });
     // AC-45: aria-checked is "true" when on
@@ -36,17 +48,28 @@
     // AC-48: track background matches var(--amber) when on
     const amberColor = resolveTokenColor("--amber");
     await expect(getComputedStyle(sw).backgroundColor).toBe(amberColor);
+    // AC-3: on-state border resolves to --amber
+    await expect(getComputedStyle(sw).borderColor).toBe(amberColor);
+    // AC-6: clicking the label text toggles the switch off
+    await userEvent.click(canvas.getByText("Dark mode"));
+    await expect(sw.getAttribute("aria-checked")).toBe("false");
   }} />
 
 <!-- AC-49: disabled off — toBeDisabled and wrap opacity 0.4 -->
 <Story name="Disabled Off" args={{ label: "Feature flag", disabled: true, checked: false }}
-  play={async ({ canvasElement }) => {
+  play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole("switch", { name: "Feature flag" });
     await expect(sw).toBeDisabled();
     // AC-49: wrap opacity is 0.4
     const wrap = canvasElement.querySelector(".switch-wrap");
     await expect(getComputedStyle(wrap!).opacity).toBe("0.4");
+    // AC-4: disabled off-state border still resolves to --rule
+    const ruleColor = resolveTokenColor("--rule");
+    await expect(getComputedStyle(sw).borderColor).toBe(ruleColor);
+    // AC-7: clicking the label on a disabled switch must NOT toggle it
+    await userEvent.click(canvas.getByText("Feature flag"));
+    await expect(sw.getAttribute("aria-checked")).toBe("false");
   }} />
 
 <!-- AC-49: disabled on — toBeDisabled and aria-checked true -->

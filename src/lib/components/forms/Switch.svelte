@@ -46,7 +46,7 @@
   >
     <span class="switch-knob" aria-hidden="true"></span>
   </button>
-  <span class="switch-label">{label}</span>
+  <span class="switch-label" onclick={() => { if (!disabled) checked = !checked }}>{label}</span>
 </span>
 
 <style>
@@ -70,7 +70,7 @@
     width: 40px;
     height: 22px;
     border-radius: 11px;
-    border: 1px solid var(--rail);
+    border: 1px solid var(--rule);
     background: var(--bg-sunken);
     cursor: pointer;
     padding: 0;

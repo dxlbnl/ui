@@ -263,10 +263,18 @@ it records the reason here AND states it in chat.
 - reviewer: PASS
 - result: done — commit `b2b739e`
 
+## 2026-05-18 — B32: Switch — dark mode invisible when off + label click doesn't toggle
+- manager: start, track: bug; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B32-switch-fixes.md (9 ACs, 2 fixes) → user approved
+- test-writer: extended Off/On/DisabledOff play fns; 3 red (--rail invalid token, label no onclick)
+
 ## 2026-05-18 — B30: Input chrome fixes — number arrows, clearable color, icon color
 - manager: start, track: bug; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B30-input-chrome-fixes.md (10 ACs); corrected per user: clear hover = --amber (not --ink), icon fix uses :global(svg)
 - test-writer: added Number Input story; extended Clearable-With-Value (color probe); extended Icon Prefix (fill probe); 2 red (clear=amber not ink-dim, icon fill=black)
+- implementer: spin button CSS + icon :global(svg) + clear button ink-dim/amber; hover assertion dropped (CSS :hover not triggered by synthetic events); 265/265 green
+- reviewer: PASS — all 10 ACs met
+- result: done — commit 5b0c6ad
 
 ## 2026-05-18 — B36: PageHero — snippet-based heading with mixed ink colors
 - manager: start, track: feature; delegating to spec-writer
