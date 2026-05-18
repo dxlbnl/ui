@@ -702,3 +702,20 @@
   `'error'`) must update. Only `Toast.stories.svelte` was an internal caller — updated
   in this item.
 - **Supersedes**: none
+
+## D37: B31 test-writer — `resolveTokenFgColor` for text/border assertions vs `resolveTokenColor` for background assertions
+- **Date**: 2026-05-18
+- **By**: test-writer (B31)
+- **Context**: `storybook-utils.ts` exports two token resolvers: `resolveTokenColor`
+  (probes via `background-color`) and `resolveTokenFgColor` (probes via `color`).
+  The existing Error State story used `resolveTokenColor("--danger")` for a
+  `borderColor` assertion. For B31, `--ink` is a foreground ink token; asserting it
+  via `backgroundColor` would resolve incorrectly against the token's RGB.
+- **Decision**: Use `resolveTokenFgColor` for `color` and `outlineColor` assertions
+  (e.g. `--ink`, `--amber` as text/outline accent). Use `resolveTokenColor` for
+  `backgroundColor` and `borderTopColor` assertions (e.g. `--bg-sunken`, `--rule`,
+  `--rule-strong`, `--amber` as border token). This matches how the browser computes
+  each channel.
+- **Consequences**: `resolveTokenFgColor` is now imported alongside `resolveTokenColor`
+  in `Select.stories.svelte`. Future stories should apply the same split.
+- **Supersedes**: none

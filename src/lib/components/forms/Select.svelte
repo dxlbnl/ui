@@ -150,7 +150,10 @@
           aria-selected={option.value === internalValue}
           onclick={() => handleSelect(option.value)}
         >
-          <span class="select-label">{option.label}</span>
+          {option.label}
+          {#if option.value === internalValue}
+            <span class="select-check" aria-hidden="true">✓</span>
+          {/if}
         </li>
       {/each}
     </ul>
@@ -162,43 +165,42 @@
     position: relative;
     width: 100%;
     user-select: none;
-  }
 
-  :global(.select .btn) {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-family: var(--mono);
-    font-size: 13px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    background: var(--bg-sunken);
-    color: var(--ink);
-    border: 1px solid var(--rule-strong);
-    padding: 7px 10px;
-    width: 100%;
-    cursor: pointer;
-    transition: border-color var(--transition);
-    border-radius: 0;
-  }
+    :global(.btn) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: var(--bg-sunken);
+      color: var(--ink);
+      border: 1px solid var(--rule-strong);
+      padding: 7px 10px;
+      width: 100%;
+      cursor: pointer;
+      transition: border-color var(--transition);
+      border-radius: 0;
 
-  :global(.select .btn:hover) {
-    border-color: var(--amber);
-  }
+      &.open {
+        border-left: 3px solid var(--amber);
+        padding-left: 8px;
 
-  :global(.select .btn.open) {
-    border-color: var(--amber);
-    border-left-width: 3px;
-    padding-left: 8px;
-  }
+        .select-chevron {
+          transform: rotate(90deg);
+        }
+      }
 
-  :global(.select .btn.err) {
-    border-color: var(--danger);
-  }
+      &.err {
+        border-color: var(--danger);
+      }
 
-  :global(.select .btn:disabled) {
-    opacity: 0.4;
-    cursor: not-allowed;
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
   }
 
   .select-chevron {
@@ -206,12 +208,6 @@
     font-size: 14px;
     color: var(--amber);
     transition: transform var(--transition);
-    line-height: 1;
-    flex-shrink: 0;
-  }
-
-  :global(.select .btn.open) .select-chevron {
-    transform: rotate(90deg);
   }
 
   .select-panel {
@@ -221,7 +217,6 @@
     right: 0;
     z-index: 50;
     background: var(--bg-elev);
-    border: 1px solid var(--amber);
     border-top: none;
     list-style: none;
     margin: 0;
@@ -240,43 +235,28 @@
     cursor: pointer;
     color: var(--ink-dim);
     border-bottom: 1px solid var(--rule);
-    transition: background 0.1s, color 0.1s;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: var(--bg-rail);
+      color: var(--ink);
+    }
+
+    &.selected {
+      color: var(--amber);
+    }
+
+    &.highlighted {
+      background: var(--bg-rail);
+      color: var(--amber);
+    }
   }
 
-  .select-option:last-child {
-    border-bottom: none;
-  }
-
-  .select-option:hover {
-    background: var(--bg-rail);
-    color: var(--ink);
-  }
-
-  .select-option.selected {
-    color: var(--amber);
-  }
-
-  .select-option.highlighted {
-    background: var(--bg-rail);
-    color: var(--ink);
-    outline: 2px solid var(--amber);
-    outline-offset: -2px;
-  }
-
-  .select-option.selected.highlighted {
-    color: var(--amber);
-    outline: none;
-  }
-
-  .select-label {
-    min-width: 0;
-  }
-
-  .select-option.selected::after {
-    content: '✓';
+  .select-check {
     font-size: 11px;
     color: var(--amber);
-    flex-shrink: 0;
-    margin-left: auto;
   }
 </style>
