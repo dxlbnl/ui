@@ -8,9 +8,13 @@
     /** Small mono label shown above the heading. */
     eyebrow?: string
     /** Hero heading text. */
-    heading: string
+    heading?: string
+    /** Snippet-based hero heading — takes precedence over `heading` string when provided. */
+    headingContent?: Snippet
     /** Subtitle / lede text shown below the heading. */
     lede?: string
+    /** Show bottom border rule. @default true */
+    border?: boolean
     children?: Snippet
     [key: string]: unknown
   }
@@ -18,17 +22,19 @@
   let {
     eyebrow,
     heading,
+    headingContent,
     lede,
+    border = true,
     children,
     ...rest
   }: Props = $props()
 </script>
 
-<header class="page-hero" {...rest}>
+<header class="page-hero" class:page-hero--bordered={border} {...rest}>
   {#if eyebrow}
     <div class="page-hero-eyebrow"><Text variant="eyebrow">{eyebrow}</Text></div>
   {/if}
-  <Heading level={1} variant="hero">{heading}</Heading>
+  <Heading level={1} variant="hero">{#if headingContent}{@render headingContent()}{:else}{heading}{/if}</Heading>
   {#if lede}
     <div class="page-hero-lede"><Text variant="lede">{lede}</Text></div>
   {/if}
@@ -44,6 +50,9 @@
 <style>
   .page-hero {
     padding: 48px 0 40px;
+  }
+
+  .page-hero--bordered {
     border-bottom: 1px solid var(--rule);
   }
 
@@ -58,5 +67,10 @@
 
   .page-hero-actions {
     margin-top: 24px;
+  }
+
+  .page-hero :global(.hero-heading em) {
+    font-style: normal;
+    color: var(--ink-faint);
   }
 </style>

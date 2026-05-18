@@ -32,6 +32,7 @@ Every agent reads this page first, before doing anything else.
 | [specs/B29-checkbox-visual-jump.md](specs/B29-checkbox-visual-jump.md) | Spec: Fix layout shift on toggle (fixed-size indicator) + illegible checkmark; regression story AC-4. |
 | [specs/B31-select-design.md](specs/B31-select-design.md) | Spec: Fix amber panel border + audit trigger token rules; 2 new token-assertion stories. |
 | [specs/B33-font-realignment.md](specs/B33-font-realignment.md) | Spec: Modal title → Heading h3 style (24 px, sans); remove size prop from Heading.svelte; caller audit. |
+| [specs/B36-pagehero-snippet-heading.md](specs/B36-pagehero-snippet-heading.md) | Spec: PageHero — `headingContent` snippet prop, `:global(.hero-heading em)` ink-faint rule, `border` prop; 9 ACs. |
 | [design-system-audit.md](design-system-audit.md) | Audit: OG flat-CSS vs Svelte implementation — token alignment, component drifts, missing pieces. |
 | [research/B33-token-diff.md](research/B33-token-diff.md) | Research: B33 — token diff (colors_and_type.css vs tokens.css) + Modal/Text/Heading size-prop audit. |
 

@@ -5,6 +5,7 @@ type: feature
 priority: high
 flags: [review]
 created: 2026-05-17
+spec: wiki/specs/B36-pagehero-snippet-heading.md
 ---
 
 ## Description

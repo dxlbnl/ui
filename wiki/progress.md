@@ -263,6 +263,11 @@ it records the reason here AND states it in chat.
 - reviewer: PASS
 - result: done — commit `b2b739e`
 
+## 2026-05-18 — B36: PageHero — snippet-based heading with mixed ink colors
+- manager: start, track: feature; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B36-pagehero-snippet-heading.md (9 ACs) → user approved
+- test-writer: added SnippetHeading + NoBorder stories; 2 red (headingContent prop missing, border prop missing); 262 passing
+
 ## 2026-05-18 — B29: Checkbox shifts down on toggle
 - manager: start, track: bug
 - spec-writer: wrote wiki/specs/B29-checkbox-visual-jump.md → done
@@ -276,6 +281,9 @@ it records the reason here AND states it in chat.
 - researcher: token layer clean; root cause = Modal size="lg" on Text mono (19px→24px); Heading.svelte data-size overrides unsafe
 - spec-writer: wrote wiki/specs/B33-font-realignment.md (14 ACs, 2 changes + caller audit) → user approved
 - test-writer: extended Modal Default + Destructive play fns (AC-1–5, AC-7); extended Heading Levels play fn (AC-10–12); 2 red (Modal 19px≠24px), Heading assertions green as regression guards
+- implementer: Modal → Heading h3; Heading size prop removed; 3 card callers cleaned; 262/262 green
+- reviewer: PASS (AC-10–12 story-name finding resolved by spec update; assertions present and passing)
+- result: done — commit 503d8d5
 
 ## 2026-05-17 — B24: Style prop cleanup
 - manager: set in-progress; spec at wiki/specs/B24-style-prop-cleanup.md; implemented directly

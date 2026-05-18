@@ -60,3 +60,42 @@
   <Button variant="primary">View Catalogue</Button>
   <Button variant="ghost">View Projects →</Button>
 </Story>
+
+<!-- B36 AC-1, AC-2 branch B, AC-3, AC-4, AC-8: snippet-based heading with mixed ink colors -->
+<Story name="SnippetHeading"
+  play={async ({ canvasElement }) => {
+    // AC-3a: h1 is present and visible
+    const h1 = canvasElement.querySelector("h1");
+    await expect(h1).not.toBeNull();
+    await expect(h1).toBeVisible();
+
+    // AC-3b: h1 contains an <em> child
+    const em = h1!.querySelector("em");
+    await expect(em).not.toBeNull();
+
+    // AC-3d: computed fontStyle of <em> is "normal" (proves :global rule fired)
+    await expect(getComputedStyle(em!).fontStyle).toBe("normal");
+  }}>
+  {#snippet template(args)}
+    {#snippet headingContent()}
+      Dexter.<br /><em>Things built</em><br />in the lab.
+    {/snippet}
+    <PageHero eyebrow="// DEXTERLABS" headingContent={headingContent} />
+  {/snippet}
+</Story>
+
+<!-- B36 AC-5, AC-6: border prop — suppresses bottom rule -->
+<Story name="NoBorder" args={{ eyebrow: "// DEXTERLABS", heading: "Homepage", border: false }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // AC-6a: heading is visible
+    await expect(canvas.getByRole("heading", { level: 1, name: "Homepage" })).toBeVisible();
+
+    // AC-6b: <header> element is present
+    const header = canvasElement.querySelector("header");
+    await expect(header).not.toBeNull();
+
+    // AC-6c: border-bottom is suppressed
+    await expect(getComputedStyle(header!).borderBottomStyle).toBe("none");
+  }} />
