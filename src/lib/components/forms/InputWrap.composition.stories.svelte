@@ -3,6 +3,7 @@
   import { expect, within } from "storybook/test";
   import InputWrap from "./InputWrap.svelte";
   import Input from "./Input.svelte";
+  import { resolveTokenColor } from "$lib/storybook-utils.js";
 
   const { Story } = defineMeta({
     title: "Forms/InputWrap/Composition",
@@ -25,6 +26,16 @@
     const iconPre = canvasElement.querySelector(".icon-pre");
     await expect(iconPre).not.toBeNull();
     await expect(iconPre!.getAttribute("aria-hidden")).toBe("true");
+
+    // AC-7: SVG fill must resolve to --ink-faint (via fill: currentColor inheriting from .icon-pre)
+    const svgEl = canvasElement.querySelector(".icon-pre svg");
+    await expect(svgEl).not.toBeNull();
+    const probe = document.createElement("div");
+    probe.style.cssText = "color:var(--ink-faint);position:absolute;opacity:0";
+    document.body.appendChild(probe);
+    const inkFaintColor = getComputedStyle(probe).color;
+    document.body.removeChild(probe);
+    await expect(getComputedStyle(svgEl!).fill).toBe(inkFaintColor);
   }}>
   <InputWrap iconPre={mailIcon}>
     <Input type="email" placeholder="you@domain.com" />

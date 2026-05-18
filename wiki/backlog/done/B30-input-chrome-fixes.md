@@ -5,6 +5,7 @@ type: bug
 priority: medium
 flags: [review]
 created: 2026-05-17
+spec: wiki/specs/B30-input-chrome-fixes.md
 ---
 
 ## Description

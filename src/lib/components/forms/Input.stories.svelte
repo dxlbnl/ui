@@ -56,3 +56,18 @@
     const input = canvas.getByRole("textbox");
     await expect(input.getAttribute("type")).toBe("email");
   }} />
+
+<Story name="Number Input" args={{ type: "number", value: 42 }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // AC-3: number input baseline — input is visible and enabled
+    const input = canvas.getByRole("spinbutton");
+    await expect(input).toBeVisible();
+    await expect(input).toBeEnabled();
+    // AC-1/AC-2: type is number (spin buttons suppressed via CSS — code-level reviewer check)
+    await expect(input.getAttribute("type")).toBe("number");
+    // Baseline token checks inherited from Default story
+    const bgSunken = resolveTokenColor("--bg-sunken");
+    await expect(getComputedStyle(input).backgroundColor).toBe(bgSunken);
+    await expect(getComputedStyle(input).fontFamily).toContain("JetBrains Mono");
+  }} />

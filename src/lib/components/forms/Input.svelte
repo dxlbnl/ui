@@ -61,4 +61,15 @@
     opacity: 0.4;
     cursor: not-allowed;
   }
+
+  /* Hide WebKit/Blink spin buttons */
+  .input::-webkit-inner-spin-button,
+  .input::-webkit-outer-spin-button {
+    display: none;
+  }
+
+  /* Hide Firefox spin buttons */
+  .input[type='number'] {
+    -moz-appearance: textfield;
+  }
 </style>
