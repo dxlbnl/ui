@@ -48,6 +48,7 @@
 
 <style>
   .cta-block {
+    display: block;
     border: 1px solid var(--amber);
     padding: 24px 32px;
     color: inherit;
