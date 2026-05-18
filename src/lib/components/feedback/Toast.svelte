@@ -1,13 +1,15 @@
 <script lang="ts">
   import type { HTMLAttributes } from "svelte/elements";
   import type { ToastVariant } from "$lib/stores/toast.js";
-  import Button from "$lib/components/primitives/Button.svelte";
+  import Alert from "./Alert.svelte";
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
     /** Unique toast ID (used by the dismiss callback). */
     id: string;
     /** Text content of the notification. */
     message: string;
+    /** Optional title text shown above the message. */
+    title?: string;
     /** Colour variant — also sets the ARIA live region type. @default 'success' */
     variant?: ToastVariant;
     /** Called with the toast `id` when the dismiss button is clicked. */
@@ -17,22 +19,16 @@
   let {
     id,
     message,
+    title = '',
     variant = "success",
     ondismiss,
     ...rest
   }: Props = $props();
 
-  const ICONS: Record<ToastVariant, string> = {
-    success: "ok",
-    warning: "!!",
-    error: "err",
-  };
-
   let role = $derived(variant === "error" ? "alert" : "status");
   let ariaLive: "assertive" | "polite" = $derived(
     variant === "error" ? "assertive" : "polite",
   );
-  let icon = $derived(ICONS[variant]);
 </script>
 
 <div
@@ -42,68 +38,13 @@
   aria-atomic="true"
   {...rest}
 >
-  <span class="toast-icon" aria-hidden="true">{icon}</span>
-  <span class="toast-message">{message}</span>
-  <div class="toast-close-wrap">
-    <Button
-      variant="ghost"
-      type="button"
-      aria-label="Dismiss notification"
-      onclick={() => ondismiss(id)}>×</Button
-    >
-  </div>
+  <Alert variant={variant} {title} {message} ondismiss={() => ondismiss(id)} />
 </div>
 
 <style>
   .toast {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 14px;
     min-width: 260px;
     max-width: 400px;
-    border: 1px solid;
-    background: var(--bg-elev);
-    font-size: var(--t-body);
-    line-height: 1.4;
     pointer-events: all;
-  }
-
-  .toast--success {
-    border-color: var(--ok);
-  }
-  .toast--warning {
-    border-color: var(--amber);
-  }
-  .toast--error {
-    border-color: var(--danger);
-  }
-
-  .toast-icon {
-    font-family: var(--mono);
-    font-size: var(--t-micro);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    flex-shrink: 0;
-  }
-
-  .toast--success .toast-icon {
-    color: var(--ok);
-  }
-  .toast--warning .toast-icon {
-    color: var(--amber);
-  }
-  .toast--error .toast-icon {
-    color: var(--danger);
-  }
-
-  .toast-message {
-    flex: 1;
-    color: var(--ink-dim);
-  }
-
-  .toast-close-wrap {
-    flex-shrink: 0;
-    margin-left: auto;
   }
 </style>

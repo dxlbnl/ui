@@ -55,6 +55,7 @@
       <Toast
         id={item.id}
         message={item.message}
+        title={item.title}
         variant={item.variant}
         ondismiss={handleDismiss}
       />

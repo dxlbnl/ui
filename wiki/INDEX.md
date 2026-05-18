@@ -36,6 +36,7 @@ Every agent reads this page first, before doing anything else.
 | [specs/B36-pagehero-snippet-heading.md](specs/B36-pagehero-snippet-heading.md) | Spec: PageHero — `headingContent` snippet prop, `:global(.hero-heading em)` ink-faint rule, `border` prop; 9 ACs. |
 | [specs/B32-switch-fixes.md](specs/B32-switch-fixes.md) | Spec: Switch — off-state border `--rule` fix (dark mode visibility) + label-click toggle; 9 ACs, extends existing stories only. |
 | [specs/B34-modal-close-button.md](specs/B34-modal-close-button.md) | Spec: Modal header flex fix — close button flush right; `justify-content: space-between` on `.modal-header`; 7 ACs, no new stories. |
+| [specs/B35-toast-uses-alert.md](specs/B35-toast-uses-alert.md) | Spec: New `Alert.svelte` (tone prop, icon, tokens); `Toast.svelte` delegates visual chrome to Alert; 26 ACs across Alert, Toast refactor, ToastRegion regression, and exports. |
 | [design-system-audit.md](design-system-audit.md) | Audit: OG flat-CSS vs Svelte implementation — token alignment, component drifts, missing pieces. |
 | [research/B33-token-diff.md](research/B33-token-diff.md) | Research: B33 — token diff (colors_and_type.css vs tokens.css) + Modal/Text/Heading size-prop audit. |
 

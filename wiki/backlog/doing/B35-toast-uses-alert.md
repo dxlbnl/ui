@@ -5,6 +5,7 @@ type: feature
 priority: medium
 flags: [review]
 created: 2026-05-17
+spec: wiki/specs/B35-toast-uses-alert.md
 ---
 
 ## Description

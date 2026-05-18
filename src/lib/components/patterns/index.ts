@@ -1,4 +1,3 @@
-export { default as Alert } from './Alert.svelte'
 export { default as CtaBlock } from './CtaBlock.svelte'
 export { default as StatCard } from './StatCard.svelte'
 export { default as KvList } from './KvList.svelte'

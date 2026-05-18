@@ -2,6 +2,7 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, within, waitFor } from "storybook/test";
   import ToastRegion from "./ToastRegion.svelte";
+  import Button from "../primitives/Button.svelte";
   import { toast } from "$lib/stores/toast.js";
 
   // AC 69: no component: in defineMeta — ToastRegion is a singleton portal (composition-only)
@@ -10,6 +11,16 @@
     tags: ["autodocs"],
   });
 </script>
+
+<!-- Interactive demo — trigger buttons with duration:0 so toasts persist -->
+<Story name="Interactive">
+  <div style="display: flex; gap: 8px; padding: 1rem;">
+    <Button onclick={() => toast.push('Build complete.', { title: 'Success', variant: 'success', duration: 0 })}>Success</Button>
+    <Button onclick={() => toast.push('+12V rail at 88%.', { title: 'Warning', variant: 'warning', duration: 0 })}>Warning</Button>
+    <Button onclick={() => toast.push('Thermal fault detected.', { title: 'Error', variant: 'error', duration: 0 })}>Error</Button>
+  </div>
+  <ToastRegion position="bottom-right" />
+</Story>
 
 <!-- AC 39, 40, 66 — push one toast and verify it renders in the region -->
 <Story name="Single Toast"

@@ -5,6 +5,7 @@ export type ToastVariant = "success" | "warning" | "error";
 export interface ToastItem {
   id: string;
   message: string;
+  title: string;
   variant: ToastVariant;
   duration: number;
 }
@@ -12,6 +13,7 @@ export interface ToastItem {
 export interface ToastOptions {
   variant?: ToastVariant;
   duration?: number;
+  title?: string;
 }
 
 const _store = writable<ToastItem[]>([]);
@@ -23,6 +25,7 @@ function push(message: string, options?: ToastOptions): string {
   const item: ToastItem = {
     id,
     message,
+    title: options?.title ?? '',
     variant: options?.variant ?? "success",
     duration: options?.duration ?? 5000,
   };
