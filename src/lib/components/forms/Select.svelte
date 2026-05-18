@@ -263,6 +263,11 @@
     outline-offset: -2px;
   }
 
+  .select-option.selected.highlighted {
+    color: var(--amber);
+    outline: none;
+  }
+
   .select-label {
     flex: 1;
     min-width: 0;
