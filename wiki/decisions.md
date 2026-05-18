@@ -738,3 +738,27 @@
   If a primitive's default styling conflicts with a higher-order context, the fix is a
   new variant or prop on the primitive, not a raw element substitution.
 - **Supersedes**: none
+
+## D39: B34 — Modal visual redesign: 12px mono title, variant icons in body, ink-faint close
+- **Date**: 2026-05-18
+- **By**: user
+- **Context**: After B33 changed the Modal title to `<Heading h3>` (24px sans), the user reviewed the rendered result and preferred a compact mono label matching the existing Dexterlabs UI language. The variant icons (confirm/destructive) were also moved from the header to the body, and the close button was made ink-faint.
+- **Decision**: Modal title is `<Text variant="mono" size="xs" as="h2">` (12px mono uppercase). Variant icons (40px circle outline, amber/red) live in the modal body in a flex hstack with the content — not in the header. Close button is a plain `<button>` (not `<Button variant="ghost">`) styled ink-faint 18px. Modal inner background is `--overlay` (`rgba(7,9,8,0.85)`). Footer is `justify-content: flex-end`.
+- **Consequences**: B33 spec updated with a note that subsequent redesign superseded the h3-heading AC. Stories consolidated 6→3 (Default, Confirm, Destructive).
+- **Supersedes**: none (B33 spec note documents the deviation)
+
+## D40: B35 — Alert moved to feedback; AlertVariant aligned with ToastVariant
+- **Date**: 2026-05-18
+- **By**: user
+- **Context**: Alert existed in `patterns/` but belongs semantically with Modal, Toast, and ToastRegion. Separately, D36 had renamed ToastVariant to `ok/amber/danger` for consistency with Alert — but the user prefers the more descriptive `success/warning/error/info` naming.
+- **Decision**: Alert moves to `src/lib/components/feedback/`. AlertVariant is `'success' | 'warning' | 'error' | 'info'`. ToastVariant stays `'success' | 'warning' | 'error'`. The two sets now align on shared values. CSS token references (`--ok`, `--amber`, `--danger`, `--cyan`) are unchanged.
+- **Consequences**: `patterns/index.ts` no longer exports Alert; `feedback/index.ts` does. Alert stories move to `Feedback/Alert` in Storybook. D36 is superseded.
+- **Supersedes**: D36
+
+## D41: B35 — Dismiss button belongs inside Alert via ondismiss prop
+- **Date**: 2026-05-18
+- **By**: user
+- **Context**: Initial B35 implementation placed the dismiss button as a sibling of `<Alert>` inside Toast's outer wrapper div, causing it to render outside the Alert's bordered container. The user pointed this out and asked why Toast isn't just an Alert.
+- **Decision**: Alert accepts an optional `ondismiss?: () => void` prop. When provided, Alert renders a plain `<button>` (ink-faint, 18px, `margin-left: auto`) inside its own flex row — inside the bordered container. Toast passes `ondismiss={() => ondismiss(id)}` to Alert and has no separate dismiss button element. The `role`/`aria-live`/`aria-atomic` attributes remain on Toast's outer wrapper.
+- **Consequences**: Alert is now optionally dismissible. The dismiss button is always visually inside the bordered Alert box. Future persistent Alert usage that needs a dismiss action can use the same prop.
+- **Supersedes**: none

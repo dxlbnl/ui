@@ -54,7 +54,7 @@ src/
       cards/                # Card, ProductCard, ProjectCard, NoteCard
       navigation/           # Nav
       forms/                # Field, Input, InputWrap, Textarea, Select
-      feedback/             # Alert, Modal
+      feedback/             # Alert, Modal, Toast, ToastRegion
       patterns/             # StatCard, KvList, CtaBlock, ProgressBar,
                             #   ActivityRow, SectionHead, SectionFoot, PageHero
       data/                 # Accordion, Tabs, Table

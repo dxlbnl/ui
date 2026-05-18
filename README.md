@@ -82,7 +82,7 @@ Both palettes use the same CSS custom property names (`--ink`, `--bg`, `--amber`
 <ToastRegion />
 
 <!-- Push a notification from anywhere -->
-<button onclick={() => toast.push('Saved', { variant: 'ok' })}>Save</button>
+<button onclick={() => toast.push('Saved', { title: 'Done', variant: 'success' })}>Save</button>
 ```
 
 ## Storybook

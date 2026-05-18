@@ -318,3 +318,22 @@ it records the reason here AND states it in chat.
 - Nav: Inline nav-inner→div, Inline as="a" nav-brand→native a, Inline nav-right→div, Inline as="ul" nav-links→native ul, Stack as="ul" nav-drawer-links→native ul; fixed :global(.nav-links)→.nav-links; removed Stack import
 - pnpm check: 0 errors; pnpm test: 232/232 green
 - result: done — commit `eee6862`
+
+## 2026-05-18 — B34: Modal close button / Modal visual redesign
+- manager: spec written (7 ACs) → user approved; test-writer added flex/position assertions to Default story → 1 red
+- implementer: header flex fix + Inline/Spread wrappers removed → green
+- user review: Modal title too large; icons in wrong place; background wrong; buttons misaligned; stories excessive
+- manager + implementer (iterative): title→12px mono, icons→body hstack (amber/red outline circles), close→ink-faint 18px plain button, background→--overlay, footer→flex-end, stories 6→3
+- reviewer: PASS (all ACs met, 259/259 green)
+- result: done — commit `3a04219`
+
+## 2026-05-18 — B35: Alert → feedback, aligned variants, Toast uses Alert with title+message
+- manager: spec written (review-flagged) → user corrected: Alert already exists in patterns, should move to feedback; variants align to success/warning/error/info; Toast gains title/message like Alert
+- spec-writer: revised spec (move + rename + ondismiss + title prop); user approved
+- test-writer: wrote feedback/Alert.stories.svelte + updated Toast.stories.svelte; 5 red
+- implementer: Alert moved + renamed, role removed, Toast uses Alert, store gains title, ToastRegion passes title → 259/259 green
+- user review: close button amber + outside Alert container
+- manager: added ondismiss prop to Alert (dismiss button inside bordered box, ink-faint); removed Button ghost from Toast → 260/260 green
+- reviewer: PASS (AC-16 spec text reconciled with implementation)
+- Interactive ToastRegion story added (trigger buttons, duration:0)
+- result: done — commit `e54617b`

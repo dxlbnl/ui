@@ -35,8 +35,8 @@ Every agent reads this page first, before doing anything else.
 | [specs/B30-input-chrome-fixes.md](specs/B30-input-chrome-fixes.md) | Spec: Hide number spin buttons; clear-button color → ink-dim; icon SVG fill → currentColor; 10 ACs. |
 | [specs/B36-pagehero-snippet-heading.md](specs/B36-pagehero-snippet-heading.md) | Spec: PageHero — `headingContent` snippet prop, `:global(.hero-heading em)` ink-faint rule, `border` prop; 9 ACs. |
 | [specs/B32-switch-fixes.md](specs/B32-switch-fixes.md) | Spec: Switch — off-state border `--rule` fix (dark mode visibility) + label-click toggle; 9 ACs, extends existing stories only. |
-| [specs/B34-modal-close-button.md](specs/B34-modal-close-button.md) | Spec: Modal header flex fix — close button flush right; `justify-content: space-between` on `.modal-header`; 7 ACs, no new stories. |
-| [specs/B35-toast-uses-alert.md](specs/B35-toast-uses-alert.md) | Spec: New `Alert.svelte` (tone prop, icon, tokens); `Toast.svelte` delegates visual chrome to Alert; 26 ACs across Alert, Toast refactor, ToastRegion regression, and exports. |
+| [specs/B34-modal-close-button.md](specs/B34-modal-close-button.md) | Spec: Modal visual redesign — 12px mono title, variant icons in body hstack, ink-faint close button, `--overlay` background, footer right-aligned; stories 6→3. |
+| [specs/B35-toast-uses-alert.md](specs/B35-toast-uses-alert.md) | Spec: Alert moved patterns→feedback; variants `ok/amber/danger→success/warning/error`; Alert gains `ondismiss` prop; Toast uses Alert with `title`+`message`; 24 ACs. |
 | [design-system-audit.md](design-system-audit.md) | Audit: OG flat-CSS vs Svelte implementation — token alignment, component drifts, missing pieces. |
 | [research/B33-token-diff.md](research/B33-token-diff.md) | Research: B33 — token diff (colors_and_type.css vs tokens.css) + Modal/Text/Heading size-prop audit. |
 
