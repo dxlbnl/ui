@@ -98,12 +98,13 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: var(--bg);
+    background: var(--ink-faint);
     transform: translateX(2px);
     transition: transform var(--transition);
   }
 
   .switch.on .switch-knob {
+    background: var(--bg);
     transform: translateX(20px);
   }
 
