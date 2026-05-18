@@ -12,6 +12,7 @@
   --bg-rail:    #0f1211;   /* cards, nav, sidebars */
   --bg-elev:    #141817;   /* elevated surfaces, inline-code bg */
   --bg-sunken:  #070908;   /* code blocks, status bar, sunken wells */
+  --overlay: rgba(7, 9, 8, 0.85);
 
   /* Ink */
   --ink:        #d6e2dc;   /* primary text */
@@ -93,4 +94,5 @@
   --ok:          #356b31;
   --shiki-token-string:            #2d7a50;
   --shiki-token-string-expression: #2d7a50;
+  --overlay: rgba(7, 9, 8, 0.85);
 }

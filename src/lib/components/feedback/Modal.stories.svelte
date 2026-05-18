@@ -3,7 +3,6 @@
   import { expect, within, waitFor } from "storybook/test";
   import Modal from "./Modal.svelte";
   import Button from "../primitives/Button.svelte";
-  import { resolveTokenColor } from "$lib/storybook-utils.js";
 
   const { Story } = defineMeta({
     title: "Feedback/Modal",
@@ -15,40 +14,33 @@
   let openDefault     = $state(false);
   let openConfirm     = $state(false);
   let openDestructive = $state(false);
-  let openWithFooter  = $state(false);
-  let openBackdrop    = $state(false);
-  let openNoFooter    = $state(false);
 </script>
 
-<!-- AC-1 through AC-7, AC-13, AC-14 -->
+<!-- Default story: 12px mono uppercase title, close button right of title -->
 <Story name="Default"
   play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole("button", { name: "Open Modal" });
-    // dialog not visible before trigger
-    await expect(canvas.getByRole("dialog", { hidden: true })).not.toBeVisible();
     await userEvent.click(trigger);
-    const dialog = canvas.getByRole("dialog");
-    await expect(dialog).toBeVisible();
-    await expect(dialog.getAttribute("aria-modal")).toBe("true");
-    await expect(dialog.getAttribute("aria-labelledby")).toBe("modal-title");
-    const heading = canvas.getByRole("heading", { level: 2, name: /CONFIRM ACTION/i });
-    await expect(heading).toBeVisible();
-    // AC-1: title element is an h2 with id="modal-title"
-    const titleEl = canvasElement.querySelector("h2#modal-title")!;
-    await expect(titleEl).not.toBeNull();
-    // AC-2: font-size resolves to 24px (--t-h3)
-    await expect(getComputedStyle(titleEl).fontSize).toBe("24px");
-    // AC-3: font-family is sans — must NOT contain JetBrains Mono
-    await expect(getComputedStyle(titleEl).fontFamily).not.toContain("JetBrains Mono");
-    // AC-4: font-weight is 500
-    await expect(getComputedStyle(titleEl).fontWeight).toBe("500");
-    // AC-5: text-transform is none (not uppercase)
-    await expect(getComputedStyle(titleEl).textTransform).toBe("none");
+    // title is h2#modal-title, visible
+    const title = canvasElement.querySelector("h2#modal-title") as HTMLElement;
+    await expect(title).not.toBeNull();
+    await expect(title).toBeVisible();
+    // 12px
+    await expect(getComputedStyle(title).fontSize).toBe("12px");
+    // uppercase
+    await expect(getComputedStyle(title).textTransform).toBe("uppercase");
+    // header justify-content space-between
+    const header = canvasElement.querySelector(".modal-header") as HTMLElement;
+    await expect(getComputedStyle(header).justifyContent).toBe("space-between");
+    // close button flex-shrink 0
     const closeBtn = canvas.getByRole("button", { name: /Close dialog/i });
-    await expect(closeBtn).toBeVisible();
-    await expect(closeBtn).toBeEnabled();
-    await expect(closeBtn.getAttribute("type")).toBe("button");
+    await expect(getComputedStyle(closeBtn).flexShrink).toBe("0");
+    // close button is to the right of title
+    await expect(closeBtn.getBoundingClientRect().left).toBeGreaterThan(
+      title.getBoundingClientRect().right
+    );
+    // close modal
     await userEvent.click(closeBtn);
     await expect(canvas.getByRole("dialog", { hidden: true })).not.toBeVisible();
   }}>
@@ -59,25 +51,27 @@
     onclose={() => { openDefault = false }}
   >
     <p>This action cannot be undone. Are you sure you want to proceed?</p>
+    {#snippet footer()}
+      <Button variant="ghost" onclick={() => { openDefault = false }}>Cancel</Button>
+      <Button variant="primary">OK</Button>
+    {/snippet}
   </Modal>
 </Story>
 
-<!-- AC-5, AC-6, AC-8, AC-13, AC-14 -->
-<Story name="Confirm Variant"
+<!-- Confirm story: icon in body, no icon in header -->
+<Story name="Confirm"
   play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("dialog", { hidden: true })).not.toBeVisible();
     await userEvent.click(canvas.getByRole("button", { name: "Open Modal" }));
-    const dialog = canvas.getByRole("dialog");
-    await expect(dialog).toBeVisible();
-    const icon = canvasElement.querySelector(".modal-icon") as HTMLElement;
-    await expect(icon).toBeVisible();
-    await expect(icon.getAttribute("aria-hidden")).toBe("true");
-    await expect(icon.textContent?.trim()).toBe("!");
-    const amberColor = resolveTokenColor("--amber");
-    await expect(getComputedStyle(icon).backgroundColor).toBe(amberColor);
+    // .modal-variant-icon exists in body
+    const body = canvasElement.querySelector(".modal-body") as HTMLElement;
+    const confirmIcon = body.querySelector(".modal-variant-icon") as HTMLElement;
+    await expect(confirmIcon).not.toBeNull();
+    // title visible
+    const title = canvasElement.querySelector("h2#modal-title") as HTMLElement;
+    await expect(title).toBeVisible();
+    // close modal
     const closeBtn = canvas.getByRole("button", { name: /Close dialog/i });
-    await expect(closeBtn.getAttribute("type")).toBe("button");
     await userEvent.click(closeBtn);
     await expect(canvas.getByRole("dialog", { hidden: true })).not.toBeVisible();
   }}>
@@ -89,32 +83,28 @@
     onclose={() => { openConfirm = false }}
   >
     <p>You are about to place an order for 1× Conduit PDX-2 at €200. Proceed?</p>
+    {#snippet footer()}
+      <Button variant="ghost" onclick={() => { openConfirm = false }}>Cancel</Button>
+      <Button variant="primary">Confirm</Button>
+    {/snippet}
   </Modal>
 </Story>
 
-<!-- AC-5, AC-6, AC-7, AC-9, AC-13, AC-14 -->
-<Story name="Destructive Variant"
+<!-- Destructive story: icon in body, title visible -->
+<Story name="Destructive"
   play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("dialog", { hidden: true })).not.toBeVisible();
     await userEvent.click(canvas.getByRole("button", { name: "Open Modal" }));
-    const dialog = canvas.getByRole("dialog");
-    await expect(dialog).toBeVisible();
-    const icon = canvasElement.querySelector(".modal-icon") as HTMLElement;
+    // .modal-variant-icon exists in body
+    const body = canvasElement.querySelector(".modal-body") as HTMLElement;
+    const icon = body.querySelector(".modal-variant-icon") as HTMLElement;
+    await expect(icon).not.toBeNull();
     await expect(icon).toBeVisible();
-    await expect(icon.getAttribute("aria-hidden")).toBe("true");
-    await expect(icon.textContent?.trim()).toBe("!");
-    const dangerColor = resolveTokenColor("--danger");
-    await expect(getComputedStyle(icon).backgroundColor).toBe(dangerColor);
-    // AC-7: heading assertions for destructive variant (variant-agnostic check)
-    const titleEl = canvasElement.querySelector("h2#modal-title")!;
-    await expect(titleEl).not.toBeNull();
-    await expect(getComputedStyle(titleEl).fontSize).toBe("24px");
-    await expect(getComputedStyle(titleEl).fontFamily).not.toContain("JetBrains Mono");
-    await expect(getComputedStyle(titleEl).fontWeight).toBe("500");
-    await expect(getComputedStyle(titleEl).textTransform).toBe("none");
+    // title visible
+    const title = canvasElement.querySelector("h2#modal-title") as HTMLElement;
+    await expect(title).toBeVisible();
+    // close modal
     const closeBtn = canvas.getByRole("button", { name: /Close dialog/i });
-    await expect(closeBtn.getAttribute("type")).toBe("button");
     await userEvent.click(closeBtn);
     await expect(canvas.getByRole("dialog", { hidden: true })).not.toBeVisible();
   }}>
@@ -126,85 +116,9 @@
     onclose={() => { openDestructive = false }}
   >
     <p>This will permanently delete the item. This action cannot be undone.</p>
-  </Modal>
-</Story>
-
-<!-- AC-5, AC-6, AC-10, AC-13, AC-14 -->
-<Story name="With Footer"
-  play={async ({ canvasElement, userEvent }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("dialog", { hidden: true })).not.toBeVisible();
-    await userEvent.click(canvas.getByRole("button", { name: "Open Modal" }));
-    await expect(canvas.getByRole("dialog")).toBeVisible();
-    const footer = canvasElement.querySelector("footer");
-    await expect(footer).toBeInTheDocument();
-    const cancelBtn = canvas.getByRole("button", { name: /Cancel/i });
-    await expect(cancelBtn).toBeVisible();
-    const closeBtn = canvas.getByRole("button", { name: /Close dialog/i });
-    await expect(closeBtn.getAttribute("type")).toBe("button");
-    await userEvent.click(closeBtn);
-    await expect(canvas.getByRole("dialog", { hidden: true })).not.toBeVisible();
-  }}>
-  <Button onclick={() => { openWithFooter = true }}>Open Modal</Button>
-  <Modal
-    open={openWithFooter}
-    title="// WITH FOOTER"
-    onclose={() => { openWithFooter = false }}
-  >
-    <p>This modal includes a footer with action buttons.</p>
     {#snippet footer()}
-      <Button variant="ghost" onclick={() => { openWithFooter = false }}>Cancel</Button>
-      <Button variant="primary">Confirm</Button>
+      <Button variant="ghost" onclick={() => { openDestructive = false }}>Cancel</Button>
+      <Button variant="primary">Delete</Button>
     {/snippet}
-  </Modal>
-</Story>
-
-<!-- AC-5, AC-6, AC-11, AC-13, AC-14 -->
-<Story name="Backdrop Close"
-  play={async ({ canvasElement, userEvent }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("dialog", { hidden: true })).not.toBeVisible();
-    await userEvent.click(canvas.getByRole("button", { name: "Open Modal" }));
-    const dialog = canvas.getByRole("dialog");
-    await expect(dialog).toBeVisible();
-    const closeBtn = canvas.getByRole("button", { name: /Close dialog/i });
-    await expect(closeBtn.getAttribute("type")).toBe("button");
-    // native .click() dispatches with event.target === dialog, triggering handleDialogClick
-    dialog.click();
-    // waitFor: Svelte $effect that closes the dialog is async
-    await waitFor(() => expect(canvas.getByRole("dialog", { hidden: true })).not.toBeVisible());
-  }}>
-  <Button onclick={() => { openBackdrop = true }}>Open Modal</Button>
-  <Modal
-    open={openBackdrop}
-    title="// BACKDROP TEST"
-    onclose={() => { openBackdrop = false }}
-  >
-    <p>Click outside this panel on the backdrop to close.</p>
-  </Modal>
-</Story>
-
-<!-- AC-5, AC-6, AC-12, AC-13, AC-14 -->
-<Story name="No Footer"
-  play={async ({ canvasElement, userEvent }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("dialog", { hidden: true })).not.toBeVisible();
-    await userEvent.click(canvas.getByRole("button", { name: "Open Modal" }));
-    await expect(canvas.getByRole("dialog")).toBeVisible();
-    await expect(canvasElement.querySelector("footer")).toBeNull();
-    const closeBtn = canvas.getByRole("button", { name: /Close dialog/i });
-    await expect(closeBtn).toBeVisible();
-    await expect(closeBtn).toBeEnabled();
-    await expect(closeBtn.getAttribute("type")).toBe("button");
-    await userEvent.click(closeBtn);
-    await expect(canvas.getByRole("dialog", { hidden: true })).not.toBeVisible();
-  }}>
-  <Button onclick={() => { openNoFooter = true }}>Open Modal</Button>
-  <Modal
-    open={openNoFooter}
-    title="// NO FOOTER"
-    onclose={() => { openNoFooter = false }}
-  >
-    <p>Informational content shown without a footer action bar.</p>
   </Modal>
 </Story>

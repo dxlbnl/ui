@@ -12,7 +12,9 @@
 </script>
 
 <!-- AC-44, AC-45, AC-46, AC-47, AC-50: Off state + Space key toggle -->
-<Story name="Off (Default)" args={{ label: "Dark mode", checked: false }}
+<Story
+  name="Off (Default)"
+  args={{ label: "Dark mode", checked: false }}
   play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     // AC-44: renders a button with role="switch"
@@ -41,10 +43,14 @@
     await expect(sw).toHaveFocus();
     await userEvent.keyboard(" ");
     await expect(sw.getAttribute("aria-checked")).toBe("true");
-  }} />
+    await userEvent.keyboard(" ");
+  }}
+/>
 
 <!-- AC-45, AC-48, AC-52: On state + amber track + pill shape dimensions -->
-<Story name="On" args={{ label: "Dark mode", checked: true }}
+<Story
+  name="On"
+  args={{ label: "Dark mode", checked: true }}
   play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole("switch", { name: "Dark mode" });
@@ -62,10 +68,14 @@
     // AC-6: clicking the label text toggles the switch off
     await userEvent.click(canvas.getByText("Dark mode"));
     await expect(sw.getAttribute("aria-checked")).toBe("false");
-  }} />
+    await userEvent.click(canvas.getByText("Dark mode"));
+  }}
+/>
 
 <!-- AC-49: disabled — toBeDisabled, wrap opacity 0.4, no-toggle, and disabled-on aria-checked -->
-<Story name="Disabled" args={{ label: "Feature flag", disabled: true, checked: false }}
+<Story
+  name="Disabled"
+  args={{ label: "Feature flag", disabled: true, checked: false }}
   play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole("switch", { name: "Feature flag" });
@@ -79,4 +89,6 @@
     // AC-7: clicking the label on a disabled switch must NOT toggle it
     await userEvent.click(canvas.getByText("Feature flag"));
     await expect(sw.getAttribute("aria-checked")).toBe("false");
-  }} />
+    await userEvent.click(canvas.getByText("Feature flag"));
+  }}
+/>

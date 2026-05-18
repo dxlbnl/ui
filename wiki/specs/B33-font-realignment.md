@@ -38,13 +38,18 @@ Item card: [wiki/backlog/doing/B33-font-realignment.md](../backlog/doing/B33-fon
 <Text variant="mono" as="h2" id="modal-title" size="lg" class="modal-title">{title}</Text>
 ```
 
-**After:**
+**After (as implemented in B33):**
 ```svelte
 <Heading level={2} variant="h3" id="modal-title" class="modal-title">{title}</Heading>
 ```
 
 The `Heading` import must be added to the `<script>` block; the existing `Text`
 import may be removed if it is unused afterwards.
+
+> **Note:** This was subsequently revised by the Modal redesign task (post-B34).
+> The current implementation uses `<Text variant="mono" size="xs" as="h2">` (12px,
+> mono, uppercase) — a deliberate design direction change. B33 ACs AC-2 through AC-5
+> no longer describe the live code; the current story assertions reflect the new design.
 
 **AC-1** The modal title element is an `<h2>` tag (verified by querying
 `canvasElement.querySelector('h2#modal-title')`).

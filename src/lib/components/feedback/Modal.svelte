@@ -1,9 +1,7 @@
 <script lang="ts">
   import type { HTMLDialogAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import Inline from '../layout/Inline.svelte'
-  import Spread from '../layout/Spread.svelte'
-  import Heading from '../primitives/Heading.svelte'
+  import Text from '../primitives/Text.svelte'
   import Button from '../primitives/Button.svelte'
 
   type ModalVariant = 'default' | 'confirm' | 'destructive'
@@ -77,24 +75,24 @@
 >
   <div class="modal-inner">
     <header class="modal-header">
-      <Inline gap="xs">
-        {#if variant === 'destructive' || variant === 'confirm'}
-          <span class="modal-icon" aria-hidden="true">!</span>
-        {/if}
-        <Heading level={2} variant="h3" id="modal-title" class="modal-title">{title}</Heading>
-        <Button variant="ghost" type="button" aria-label="Close dialog" onclick={handleClose}>×</Button>
-      </Inline>
+      <Text variant="mono" size="xs" as="h2" id="modal-title" class="modal-title">{title}</Text>
+      <Button variant="ghost" type="button" aria-label="Close dialog" onclick={handleClose} class="modal-close">×</Button>
     </header>
 
     <div class="modal-body">
-      {@render children?.()}
+      {#if variant === 'confirm' || variant === 'destructive'}
+        <div class="modal-body-row">
+          <div class="modal-variant-icon" aria-hidden="true">!</div>
+          <div>{@render children?.()}</div>
+        </div>
+      {:else}
+        {@render children?.()}
+      {/if}
     </div>
 
     {#if footer}
       <footer class="modal-footer">
-        <Spread>
-          {@render footer()}
-        </Spread>
+        {@render footer()}
       </footer>
     {/if}
   </div>
@@ -122,7 +120,7 @@
   }
 
   .modal-inner {
-    background: var(--bg-elev);
+    background: var(--overlay);
     border: 1px solid var(--rule-strong);
     width: 100%;
     max-width: 480px;
@@ -137,6 +135,8 @@
     border-bottom: 1px solid var(--rule);
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: var(--u);
   }
 
   .modal-footer {
@@ -144,31 +144,38 @@
     border-top: 1px solid var(--rule);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: var(--u2);
   }
 
-  .modal-icon {
-    display: inline-flex;
+  .modal-variant-icon {
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 22px;
-    height: 22px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     font-family: var(--mono);
-    font-size: 13px;
+    font-size: 18px;
     font-weight: 700;
     flex-shrink: 0;
   }
 
-  .modal--confirm .modal-icon {
-    background: var(--amber);
-    color: var(--bg);
+  .modal--confirm .modal-variant-icon {
+    border: 2px solid var(--amber);
+    color: var(--amber);
   }
 
-  .modal--destructive .modal-icon {
-    background: var(--danger);
-    color: var(--bg);
+  .modal--destructive .modal-variant-icon {
+    border: 2px solid var(--danger);
+    color: var(--danger);
+  }
+
+  .modal-body-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--u2);
   }
 
   .modal-body {
@@ -181,5 +188,19 @@
 
   .modal-header :global(.modal-title) {
     flex: 1;
+    color: var(--ink);
+  }
+
+  .modal-header :global(.modal-close) {
+    flex-shrink: 0;
+    font-size: 18px;
+    line-height: 1;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: var(--ink-faint);
   }
 </style>

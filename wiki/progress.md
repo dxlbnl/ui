@@ -263,10 +263,19 @@ it records the reason here AND states it in chat.
 - reviewer: PASS
 - result: done — commit `b2b739e`
 
+## 2026-05-18 — B34: Modal close button not in top-right corner
+- manager: start, track: bug; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B34-modal-close-button.md (7 ACs) → user approved
+- test-writer: extended Default play fn with flex/position assertions; 1 red (justifyContent=normal not space-between)
+
 ## 2026-05-18 — B32: Switch — dark mode invisible when off + label click doesn't toggle
 - manager: start, track: bug; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B32-switch-fixes.md (9 ACs, 2 fixes) → user approved
 - test-writer: extended Off/On/DisabledOff play fns; 3 red (--rail invalid token, label no onclick)
+- implementer: --rail→--rule, label onclick; 265/265 green
+- reviewer: PASS
+- post-fix: ink-faint knob color + stories consolidated 6→3 per user feedback — commit 3ea80e4
+- result: done — commit 1c3e3fb
 
 ## 2026-05-18 — B30: Input chrome fixes — number arrows, clearable color, icon color
 - manager: start, track: bug; delegating to spec-writer
