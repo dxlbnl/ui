@@ -345,4 +345,4 @@ it records the reason here AND states it in chat.
 - manager: delegating to implementer (test-writer stage skipped per D42)
 - implementer: SectionFoot removed `margin-top: 20px`; Text added `.body-text, .body-lede, .mono-label, .eyebrow { margin: 0 }`; Heading added variant + bare h4/h5/h6 `margin: 0` rules → 260/260 green, 0 pnpm check errors
 - reviewer: PASS — all 5 ACs met, 260 tests green, D42 honoured (no .stories.svelte changes), no scope creep
-- result: done — commit `07a1245`
+- result: done — commit `9c3f988`
