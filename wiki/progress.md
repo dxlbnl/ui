@@ -390,3 +390,6 @@ it records the reason here AND states it in chat.
 - implementer: added image/imageSrcset/imagePlacement props, .side/.top classes, grid+flex CSS, 2 catalogue stories; 272/272 green
 - user review: class over data-attr; card-body grid-column span fix; align-self stretch + object-position center for side image
 - result: done
+
+## 2026-05-19 17:00 — B44: Regression — Prose should not constrain width by default
+- manager: start, track: bug; D42 applies (prop default change, visual only) — test-writer skipped; delegating to spec-writer

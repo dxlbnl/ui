@@ -5,12 +5,12 @@
   interface ProseProps extends HTMLAttributes<HTMLElement> {
     /** HTML element to render as. @default 'article' */
     as?: string
-    /** Max-width constraint applied to the prose container. @default '72ch' */
+    /** Max-width constraint applied to the prose container. Omit to inherit from the parent. */
     maxWidth?: string
     children?: Snippet
   }
 
-  let { as = 'article', maxWidth = '72ch', children, class: klass = '', ...rest }: ProseProps = $props()
+  let { as = 'article', maxWidth, children, class: klass = '', ...rest }: ProseProps = $props()
 </script>
 
 <svelte:element this={as} class={['prose', klass]} style:max-width={maxWidth} {...rest}>
