@@ -32,9 +32,12 @@ restructure other pages freely.
 
 ## Conventions
 
-- **Adding a page** — create `wiki/<name>.md` (or `wiki/specs/<feature>.md`) and add
-  a row to the Pages table in `INDEX.md` so it is discoverable. An unlinked page is
-  an invisible page.
+- **Adding a page** — create `wiki/<name>.md` and add a row to the Pages table in
+  `INDEX.md` so it is discoverable. **Spec and research pages do NOT need INDEX rows**
+  — the `specs/` and `research/` directory links cover them; the item card's `spec:`
+  (or `report:`) frontmatter is the canonical pointer. Only add INDEX rows for
+  top-level wiki documents (vision, requirements, architecture, audits, cross-cutting
+  summaries).
 - **Backlog items** — each is its own file at `wiki/backlog/<lane>/B<n>-<slug>.md`.
   Lane = directory (no `status:` field). Each item has a `type:`
   (`feature`/`bug`/`research`/`chore`) which selects the manager's track, and an

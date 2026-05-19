@@ -27,7 +27,19 @@ Read `wiki/INDEX.md` and the pages relevant to the area that changed.
    - **Genuine decision** → the change was intentional and significant → append an
      entry to `wiki/decisions.md` and update the affected pages.
 3. **Update `INDEX.md`** if pages were added or restructured.
-4. **Report** what changed in the wiki and what was turned into backlog work.
+4. **Size guardrails** — flag for the user when any of these thresholds is crossed,
+   so token cost on every agent turn stays bounded:
+   - `wiki/decisions.md` Standing Rules table > 12 rows (scannability collapses past
+     that — promote sparingly).
+   - `wiki/INDEX.md` Pages table > 15 rows (the "spec/research pages do not get rows"
+     rule is probably being violated).
+   - `wiki/progress.md` > 1000 lines (consider splitting older entries to
+     `progress-archive-<YYYY>.md`).
+   - Any spec page > 600 lines (signals the item was too big for one cycle — see
+     `wiki/specs/README.md` Length budget).
+   - Any backlog card > 80 lines (signals spec-grade detail leaked into the card —
+     see `wiki/backlog/README.md` Card discipline).
+5. **Report** what changed in the wiki and what was turned into backlog work.
 
 ## Rules
 

@@ -97,6 +97,12 @@ For each item, top of the ordered work plan first:
 2. **Dispatch by track** (above). Every `Task` prompt MUST name the **exact files** the
    agent should read and write — agents do not share your conversation. Read templates
    below.
+   - **After `spec-writer` returns** (feature/bug tracks): scan the item card. If detail
+     beyond description + notes lives there (proposed APIs, AC drafts, code examples,
+     exhaustive findings), move it into the spec page (or confirm spec-writer already
+     did) and trim the card to: description, summary of approach, current open questions,
+     lane-transition lines. The card stays ≤ 80 lines per `wiki/backlog/README.md` Card
+     discipline.
 3. **Review checkpoint #2** — if the item is flagged `review`: after `spec-writer` (or
    the researcher) produces its artifact, re-read it, present it to the user, and
    pause for approval. Resume on approval. Unflagged items continue without pause.
@@ -123,9 +129,10 @@ The exact files matter. Templates for each subagent:
 > Read `wiki/INDEX.md`, then `wiki/backlog/doing/<id>-<slug>.md` (the item card),
 > then `wiki/vision.md`, `wiki/requirements.md`, `wiki/architecture.md`, and any
 > existing `wiki/specs/` pages it cross-references. Write
-> `wiki/specs/<id>-<slug>.md` following `wiki/specs/README.md`. Add a row for it to
-> the Pages table in `wiki/INDEX.md`. Update the item card's `spec:` frontmatter
-> field to point at the new spec page. Report back: spec path, one-line summary,
+> `wiki/specs/<id>-<slug>.md` following `wiki/specs/README.md`. Update the item
+> card's `spec:` frontmatter field to point at the new spec page. Do **not** add a
+> row to `wiki/INDEX.md` — spec pages are discovered via the `specs/` directory link
+> and the item card's `spec:` frontmatter. Report back: spec path, one-line summary,
 > any blocking open questions.
 
 **test-writer**:

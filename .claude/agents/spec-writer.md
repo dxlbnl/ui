@@ -35,11 +35,10 @@ following the format in `wiki/specs/README.md`:
 
 After writing the spec page:
 
-1. Add a row for it to the **Pages table** in `wiki/INDEX.md` (the markdown table at
-   the top of the page, not a separate "specs list" — there is no such list).
-2. Update the item card's `spec:` frontmatter field to point at the new spec page
-   (e.g. `spec: wiki/specs/B3-user-login.md`).
-3. Do **not** move the item card between lanes — that is the manager's job.
+1. Update the item card's `spec:` frontmatter field to point at the new spec page
+   (e.g. `spec: wiki/specs/B3-user-login.md`). Spec pages are discovered via the
+   `specs/` directory link and this frontmatter — do **not** add a row to `wiki/INDEX.md`.
+2. Do **not** move the item card between lanes — that is the manager's job.
 
 ## Rules
 
@@ -47,6 +46,15 @@ After writing the spec page:
   the criteria you can, list the gaps under Open questions, and report that back — do
   not invent requirements.
 - Do not write tests or implementation code. Your output is the spec page only.
-- If you make a notable scoping or design decision, append it to `wiki/decisions.md`.
+- If you make a notable scoping or design decision, append it to the **Archive**
+  section of `wiki/decisions.md`. Do **not** add entries to the Standing Rules table —
+  that is a deliberate user/manager call, not a normal cycle output.
+- **Length budget**: target ≤ 300 lines for routine items, ≤ 600 lines for major
+  multi-component items. If the spec is heading past 600 lines, **stop** and tell the
+  manager — that usually means the item should be split, not that the spec should be
+  longer. See `wiki/specs/README.md` Length budget.
+- **Prune resolved open questions** before reporting back. An OQ that you answered
+  during writing does not belong in the spec; collapse the answer into the AC body or
+  move the discussion to the item card's `## Notes`.
 - Report back to the manager: the path of the spec page, a one-line summary, and
   whether there are blocking open questions.

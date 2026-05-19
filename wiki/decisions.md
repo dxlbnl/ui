@@ -1,10 +1,13 @@
 # Decision Log
 
-> Append-only, ADR-style. Any agent that makes a notable design or technical choice adds
-> an entry here. Newest at the bottom. Never edit past entries — supersede them with a
-> new one.
+> ADR-style. Agents append new entries to **Archive — Full ADR History** below. Never
+> edit past entries — supersede them with a new one.
+>
+> The **Standing Rules** section is a curated subset of cross-cutting rules every agent
+> applies on every item. Promotion into Standing Rules is a deliberate user/manager call
+> — agents do not promote rules from a normal spec/implementation cycle.
 
-## Format
+## Format (Archive entries)
 
 ```
 ## D<n>: <title>
@@ -17,6 +20,27 @@
 ```
 
 ---
+
+## Standing Rules
+
+Cross-cutting rules every agent applies on every item. Promotion here is a deliberate user/manager call.
+
+| ADR | Rule |
+|-----|------|
+| [D1](#d1-tests-are-storybook-play-functions-only) | Tests = Storybook play functions only. No `.test.ts`. |
+| [D2](#d2-stack-and-architecture-choices) | Stack: SvelteKit + Svelte 5 runes + CSS custom-property tokens. No Tailwind. SSR-compatible. |
+| [D3](#d3-fonts-self-hosted-via-fontsource-not-google-cdn) | Fonts via Fontsource npm packages. No Google CDN. |
+| [D4](#d4-chakra-style-composable-components--strict-typescript) | Polymorphic `as` prop + `...rest` forwarding + strict TS. No `any`, no `@ts-ignore`. |
+| [D5](#d5-no-global-utility-classes--css-scoped-to-components) | CSS scoped to components. `app.css` = fonts + tokens + base elements only. |
+| [D38](#d38-primitives-first--always-use-design-system-primitives-in-higher-order-components) | Primitives first. Higher-order components must use design system primitives. |
+| [D42](#d42-no-play-fn-assertions-for-visual-only-changes) | No play-fn assertions for visual-only changes. Test-writer is skipped on visual tracks. |
+| [D43](#d43-text-or-snippet-slots-use-a-single-prop-string--snippet) | Text-or-snippet slots: single `prop?: string \| Snippet`. No parallel `*Content` props. |
+
+---
+
+## Archive — Full ADR History
+
+Append-only. Newest at the bottom. Never edit past entries — supersede with a new one. New ADRs go here by default.
 
 ## D1: Tests are Storybook play functions only
 - **Date**: 2026-05-15

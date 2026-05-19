@@ -38,6 +38,24 @@ spec: wiki/specs/B3-user-login.md   # populated once the spec page exists
 For non-feature items, replace `spec:` with the artifact path the track produces (e.g.
 `report: wiki/research/<topic>.md`).
 
+## Card discipline
+
+The card is a thin handle, not a workspace. Once the spec page exists, **detail belongs
+in the spec, not the card** — item cards in `ready/` + `doing/` are read by the manager
+on every resume, so verbose cards are a live token cost.
+
+- **Description**: 1-2 paragraphs in the user's voice — why this exists, rough what.
+  Does not grow during the pipeline.
+- **Notes**: terse audit lines — links, decisions made, lane transitions. Each note is
+  ≤ 1 line. Multi-paragraph design discussion goes in the spec page or `decisions.md`,
+  with a 1-line pointer in Notes.
+- **No spec-grade content in the card**: proposed APIs, code examples, exhaustive
+  findings, AC tables — all of these go in the spec page. If the spec doesn't exist yet
+  (still in `inbox/` or `ready/`), keep the card as the description only; let
+  spec-writer write the detail into `wiki/specs/`.
+- **Hard target**: ≤ 80 lines per card. If a card crosses 80, prune it: move detail
+  into the spec, leave a 1-line pointer.
+
 ## Tracks (the manager dispatches on `type:`)
 
 | Type | Track |
