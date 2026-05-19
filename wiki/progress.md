@@ -358,4 +358,4 @@ it records the reason here AND states it in chat.
 - manager + user (post-review API refinement): D43 codified — text-or-snippet slots use a single `prop?: string | Snippet`. B36's `headingContent` removed; PageHero gets `eyebrow?: string | Snippet`, `heading?: string | Snippet`, and rename `headingVariant` → `variant`. Re-dispatching implementer for the API simplification + docs/README sync.
 - implementer (pass 2): consolidated eyebrow/heading props, renamed headingVariant→variant, single wrapper templates with inner discriminator, docs/patterns.md + docs/primitives.md synced. 263/263 green, 0 check errors.
 - reviewer (pass 2): PASS — all in-scope ACs met (revised Sections 1+2 and carried-over 3-9), D43 compliance verified (only legitimate `headingContent` remaining is the local snippet const in SnippetHeading story), docs reflect new API, 263/263 green, no scope creep.
-- result: done — commit TBD
+- result: done — commit `4fca914`
