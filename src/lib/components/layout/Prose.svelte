@@ -18,159 +18,183 @@
 </svelte:element>
 
 <style>
-  /* Adjacent-sibling block spacing */
-  :global(.prose > * + *) {
-    margin-top: var(--u3);
-  }
-
-  /* First child: no top margin */
-  :global(.prose > :first-child) {
-    margin-top: 0;
-  }
-
-  /* Headings */
-  .prose :global(h1) {
-    font-size: var(--t-h1);
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    line-height: 1;
-  }
-
-  .prose :global(h2) {
-    font-size: var(--t-h2);
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    line-height: 1.1;
-  }
-
-  .prose :global(h3) {
-    font-size: var(--t-h3);
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    line-height: 1.2;
-  }
-
-  .prose :global(h4) {
-    font-family: var(--mono);
-    font-size: var(--t-mono);
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-  }
-
-  /* Paragraph */
-  .prose :global(p) {
-    font-family: var(--sans);
+  .prose {
     font-size: var(--t-body);
     line-height: 1.65;
-  }
 
-  /* Anchor */
-  .prose :global(a) {
-    color: var(--ink-faint);
-    text-decoration: none;
-  }
+    :global {
+      /* Headings — AC-3/4/5/6/7/8/9 */
+      h1 {
+        font-size: var(--t-h1);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
 
-  .prose :global(a:hover) {
-    color: var(--amber);
-    text-decoration: underline;
-  }
+      h2 {
+        font-size: var(--t-h3);
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        margin: 48px 0 8px;
+        color: var(--ink);
+      }
 
-  /* Lists */
-  .prose :global(ul) {
-    list-style: disc;
-    padding-left: var(--u3);
-  }
+      h3 {
+        font-size: var(--t-lede);
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        margin: 32px 0 6px;
+        color: var(--ink);
+      }
 
-  .prose :global(ol) {
-    list-style: decimal;
-    padding-left: var(--u3);
-  }
+      h4 {
+        font-family: var(--mono);
+        font-size: var(--t-mono);
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+      }
 
-  .prose :global(li) {
-    line-height: 1.65;
-  }
+      /* Paragraph — AC-10/11 */
+      p {
+        margin-bottom: 20px;
+        color: var(--ink);
+      }
 
-  .prose :global(li + li) {
-    margin-top: var(--u);
-  }
+      /* Anchor — AC-12/13/14 */
+      a:not([class]) {
+        border-bottom: 1px solid var(--rule-strong);
+        transition: border-color 0.15s;
 
-  /* Inline code chip */
-  .prose :global(code) {
-    font-family: var(--mono);
-    font-size: var(--t-mono);
-    background: var(--bg-rail);
-    color: var(--cyan);
-    padding: 1px 5px;
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-  }
+        &:hover {
+          border-color: var(--amber);
+        }
+      }
 
-  /* Block code — overrides inline code chip styles */
-  .prose :global(pre) {
-    font-family: var(--mono);
-    font-size: var(--t-mono);
-    background: var(--bg-sunken);
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    overflow-x: auto;
-    line-height: 1.6;
-  }
+      /* Strong and em — AC-15/16 */
+      strong {
+        font-weight: 500;
+        color: var(--ink);
+      }
 
-  .prose :global(pre code) {
-    background: transparent;
-    border: none;
-    padding: 0;
-    color: var(--shiki-foreground, var(--ink));
-  }
+      em {
+        color: var(--ink-dim);
+      }
 
-  /* Blockquote */
-  .prose :global(blockquote) {
-    margin: 0;
-    padding: 4px 0 4px 16px;
-    border-left: 2px solid var(--amber);
-    color: var(--ink-dim);
-    font-style: italic;
-  }
+      /* Blockquote — AC-17/18/19 */
+      blockquote {
+        margin: 28px 0;
+        padding: 4px 0 4px 16px;
+        border-left: 2px solid var(--amber);
+        color: var(--ink-dim);
 
-  /* Table */
-  .prose :global(table) {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: var(--mono);
-    font-size: var(--t-mono);
-  }
+        p {
+          margin-bottom: 0;
+        }
+      }
 
-  .prose :global(th) {
-    text-align: left;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--rule-strong);
-    color: var(--ink-faint);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
+      /* Inline code chip — AC-20/21 */
+      code {
+        font-family: var(--mono);
+        font-size: var(--t-mono);
+        background: var(--bg-elev);
+        color: var(--cyan);
+        padding: 1px 5px;
+        border: 1px solid var(--rule);
+        border-radius: var(--radius);
+      }
 
-  .prose :global(td) {
-    padding: 8px 0;
-    border-bottom: 1px dashed var(--rule);
-    color: var(--ink-dim);
-  }
+      /* Block code — AC-22/23/24 */
+      pre {
+        font-size: var(--t-mono);
+        border: 1px solid var(--rule);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        line-height: 1.6;
+        white-space: pre;
+        margin: 24px 0;
 
-  /* Image */
-  .prose :global(img) {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-  }
+        > code {
+          background: none;
+          border: none;
+          padding: 0;
+          color: inherit;
+        }
+      }
 
-  /* Horizontal rule */
-  .prose :global(hr) {
-    border: none;
-    border-top: 1px solid var(--rule);
-    margin: 0;
+      /* Lists — AC-25/26/27/28/29 */
+      ul,
+      ol {
+        padding-left: 20px;
+        margin-bottom: 20px;
+        color: var(--ink);
+      }
+
+      li {
+        line-height: 1.65;
+        margin-bottom: 6px;
+      }
+
+      ul li::marker {
+        color: var(--amber);
+      }
+
+      ol li::marker {
+        font-family: var(--mono);
+        font-size: var(--t-mono);
+        color: var(--ink-faint);
+      }
+
+      /* Horizontal rule — AC-30 */
+      hr {
+        border: none;
+        border-top: 1px solid var(--rule);
+        margin: 48px 0;
+      }
+
+      /* Image — AC-31/32/33 */
+      img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 28px 0;
+        border: 1px solid var(--rule);
+      }
+
+      /* Table — AC-34/35/36 */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--mono);
+        font-size: var(--t-mono);
+        margin: 24px 0;
+      }
+
+      th {
+        text-align: left;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--rule-strong);
+        color: var(--ink-faint);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+
+      td {
+        padding: 8px 0;
+        border-bottom: 1px dashed var(--rule);
+        color: var(--ink-dim);
+
+        &:first-child {
+          width: 40%;
+        }
+
+        &:last-child {
+          color: var(--ink);
+        }
+      }
+    }
   }
 </style>

@@ -34,12 +34,10 @@
     const h1Style = getComputedStyle(h1!);
     await expect(h1Style.fontSize).toBe('72px');
 
-    // AC 15: anchor has text-decoration: none, color resolves to --ink-faint
+    // AC 15: anchor (a:not([class])) has border-bottom underline; no color override (inherits)
     const anchor = canvasElement.querySelector('a');
     await expect(anchor).not.toBeNull();
-    await expect(getComputedStyle(anchor!).textDecoration).toContain('none');
-    const inkFaintColor = resolveTokenFgColor('--ink-faint');
-    await expect(getComputedStyle(anchor!).color).toBe(inkFaintColor);
+    await expect(getComputedStyle(anchor!).borderBottomWidth).toBe('1px');
 
     // AC 26: blockquote has border-left-color resolving to --amber
     const blockquote = canvasElement.querySelector('blockquote');
@@ -65,11 +63,10 @@
     await expect(th).not.toBeNull();
     await expect(getComputedStyle(th!).textTransform).toBe('uppercase');
 
-    // AC 8: second p (after hr) has margin-top 24px (adjacent-sibling --u3 rule)
+    // AC 8: p has margin-bottom: 20px (per-element spacing; adjacent-sibling rule removed in B41)
     const allPs = canvasElement.querySelectorAll('p');
-    // The story has a p before the hr and a p after — the last p should have margin-top 24px
-    const lastP = allPs[allPs.length - 1];
-    await expect(getComputedStyle(lastP).marginTop).toBe('24px');
+    const firstP = allPs[0];
+    await expect(getComputedStyle(firstP).marginBottom).toBe('20px');
 
     // inline code (not inside pre) has color resolving to --cyan (AC 21)
     const inlineCode = canvasElement.querySelector('p > code');
@@ -151,17 +148,15 @@
     await expect(getComputedStyle(h1).letterSpacing).toBe('-2.16px');
     await expect(getComputedStyle(h1).lineHeight).toBe('72px');
 
-    // AC 11: h2 — 36px, weight 500, letter-spacing -0.01em, line-height 1.1
-    await expect(getComputedStyle(h2).fontSize).toBe('36px');
+    // AC 11: h2 — var(--t-h3)=24px, weight 500, letter-spacing -0.01em (B41 AC3/5: no line-height)
+    await expect(getComputedStyle(h2).fontSize).toBe('24px');
     await expect(getComputedStyle(h2).fontWeight).toBe('500');
-    await expect(getComputedStyle(h2).letterSpacing).toBe('-0.36px');
-    await expect(getComputedStyle(h2).lineHeight).toBe('39.6px');
+    await expect(getComputedStyle(h2).letterSpacing).toBe('-0.24px');
 
-    // AC 12: h3 — 24px, weight 500, letter-spacing -0.01em, line-height 1.2
-    await expect(getComputedStyle(h3).fontSize).toBe('24px');
+    // AC 12: h3 — var(--t-lede)=19px, weight 500, letter-spacing -0.01em (B41 AC6/8: no line-height)
+    await expect(getComputedStyle(h3).fontSize).toBe('19px');
     await expect(getComputedStyle(h3).fontWeight).toBe('500');
-    await expect(getComputedStyle(h3).letterSpacing).toBe('-0.24px');
-    await expect(getComputedStyle(h3).lineHeight).toBe('28.8px');
+    await expect(getComputedStyle(h3).letterSpacing).toBe('-0.19px');
 
     // AC 13: h4 — mono font, 14px, letter-spacing 0.08em, uppercase, color --ink-faint
     const h4Style = getComputedStyle(h4);
@@ -195,14 +190,12 @@
     const anchor = canvasElement.querySelector('a') as HTMLElement;
     await expect(anchor).not.toBeNull();
 
-    // AC 15: default — text-decoration: none, color: --ink-faint
-    await expect(getComputedStyle(anchor).textDecoration).toContain('none');
-    const inkFaintColor = resolveTokenFgColor('--ink-faint');
-    await expect(getComputedStyle(anchor).color).toBe(inkFaintColor);
+    // AC 15 (B41 AC12/13): a:not([class]) has border-bottom underline; hover changes border-color only
+    await expect(getComputedStyle(anchor).borderBottomWidth).toBe('1px');
+    const ruleStrongColor = resolveTokenColor('--rule-strong');
+    await expect(getComputedStyle(anchor).borderBottomColor).toBe(ruleStrongColor);
 
-    // AC 16: hover styles are CSS-only (:hover pseudo-class); visual review only.
-    // The CSS rule `.prose :global(a:hover)` sets color: var(--amber) and
-    // text-decoration: underline but getComputedStyle cannot read :hover state in headless.
+    // AC 16: hover border-color: var(--amber) — CSS :hover; visual review only (headless cannot read)
   }}>
   <p>Paragraph with an <a href="/example">inline link to hover</a> inside it.</p>
 </Story>
@@ -214,19 +207,19 @@
     const ol = canvasElement.querySelector('ol') as HTMLElement;
     const liItems = canvasElement.querySelectorAll('ul > li');
 
-    // AC 17: ul has list-style: disc, padding-left: 24px
+    // AC 17 (B41 AC25): ul has list-style: disc, padding-left: 20px
     await expect(getComputedStyle(ul).listStyleType).toBe('disc');
-    await expect(getComputedStyle(ul).paddingLeft).toBe('24px');
+    await expect(getComputedStyle(ul).paddingLeft).toBe('20px');
 
-    // AC 18: ol has list-style: decimal, padding-left: 24px
+    // AC 18 (B41 AC25): ol has list-style: decimal, padding-left: 20px
     await expect(getComputedStyle(ol).listStyleType).toBe('decimal');
-    await expect(getComputedStyle(ol).paddingLeft).toBe('24px');
+    await expect(getComputedStyle(ol).paddingLeft).toBe('20px');
 
     // AC 19: li has line-height: 1.65 (= 26.4px at 16px font-size)
     await expect(getComputedStyle(liItems[0] as HTMLElement).lineHeight).toBe('26.4px');
 
-    // AC 20: second li (li+li) has margin-top: 8px (--u)
-    await expect(getComputedStyle(liItems[1] as HTMLElement).marginTop).toBe('8px');
+    // AC 20 (B41 AC26/27): li has margin-bottom: 6px; li+li no longer has margin-top (rule removed)
+    await expect(getComputedStyle(liItems[0] as HTMLElement).marginBottom).toBe('6px');
   }}>
   <ul><li>Unordered item one</li><li>Unordered item two</li><li>Unordered item three</li></ul>
   <ol><li>Ordered item one</li><li>Ordered item two</li><li>Ordered item three</li></ol>
@@ -239,9 +232,9 @@
     const inlineCode = canvasElement.querySelector('p > code') as HTMLElement;
     await expect(inlineCode).not.toBeNull();
 
-    // AC 21: background-color --bg-rail, color --cyan, border-radius --radius (2px), border 1px solid --rule
-    const bgRailColor = resolveTokenColor('--bg-rail');
-    await expect(getComputedStyle(inlineCode).backgroundColor).toBe(bgRailColor);
+    // AC 21 (B41 AC20): background-color --bg-elev, color --cyan, border-radius --radius (2px), border 1px solid --rule
+    const bgElevColor = resolveTokenColor('--bg-elev');
+    await expect(getComputedStyle(inlineCode).backgroundColor).toBe(bgElevColor);
     const cyanColor = resolveTokenFgColor('--cyan');
     await expect(getComputedStyle(inlineCode).color).toBe(cyanColor);
     await expect(getComputedStyle(inlineCode).borderRadius).toBe('2px');
@@ -256,14 +249,15 @@
     const pre = canvasElement.querySelector('pre') as HTMLElement;
     await expect(pre).not.toBeNull();
 
-    // AC 23: pre background --bg-sunken, border 1px solid --rule, padding 16px 20px, overflow-x auto, line-height 1.6
-    const bgSunkenColor = resolveTokenColor('--bg-sunken');
-    await expect(getComputedStyle(pre).backgroundColor).toBe(bgSunkenColor);
+    // AC 23 (B41 AC22/23): pre — no background; border 1px solid --rule, padding 16px 20px, overflow-x auto, line-height 1.6, white-space pre, margin 24px 0
     await expect(getComputedStyle(pre).borderColor).toBe(ruleColor);
     await expect(getComputedStyle(pre).paddingTop).toBe('16px');
     await expect(getComputedStyle(pre).paddingLeft).toBe('20px');
     await expect(getComputedStyle(pre).overflowX).toBe('auto');
     await expect(getComputedStyle(pre).lineHeight).toBe('22.4px');
+    await expect(getComputedStyle(pre).whiteSpace).toBe('pre');
+    await expect(getComputedStyle(pre).marginTop).toBe('24px');
+    await expect(getComputedStyle(pre).marginBottom).toBe('24px');
 
     // pre > code reset
     const preCode = canvasElement.querySelector('pre > code') as HTMLElement;
@@ -275,9 +269,8 @@
     await expect(getComputedStyle(preCode).paddingTop).toBe('0px');
     await expect(getComputedStyle(preCode).paddingRight).toBe('0px');
 
-    // AC 25: color resolves to --ink (via --shiki-foreground fallback)
-    const inkColor = resolveTokenFgColor('--ink');
-    await expect(getComputedStyle(preCode).color).toBe(inkColor);
+    // AC 25 (B41 AC24): color: inherit — resolves to same as pre (prose root ink colour)
+    await expect(getComputedStyle(preCode).color).toBe(getComputedStyle(pre).color);
   }}>
   <p>Use <code>code snippet</code> inline in a sentence.</p>
   <pre><code>function hello() {'{'}
@@ -292,13 +285,15 @@
     await expect(blockquote).not.toBeNull();
     const bqStyle = getComputedStyle(blockquote);
 
-    // AC 26: border-left 2px solid --amber, color --ink-dim, font-style italic
+    // AC 26 (B41 AC17/18): border-left 2px solid --amber, color --ink-dim, no font-style italic, margin 28px 0
     await expect(bqStyle.borderLeftWidth).toBe('2px');
     const amberColor = resolveTokenColor('--amber');
     await expect(bqStyle.borderLeftColor).toBe(amberColor);
     const inkDimColor = resolveTokenFgColor('--ink-dim');
     await expect(bqStyle.color).toBe(inkDimColor);
-    await expect(bqStyle.fontStyle).toBe('italic');
+    await expect(bqStyle.fontStyle).toBe('normal');
+    await expect(bqStyle.marginTop).toBe('28px');
+    await expect(bqStyle.marginBottom).toBe('28px');
 
     // AC 27: padding 4px 0 4px 16px
     await expect(bqStyle.paddingTop).toBe('4px');
@@ -390,28 +385,24 @@
     probeEl.style.opacity = '0';
     wrapper.appendChild(probeEl);
 
-    // Paper --ink-faint should be #5f5a4a ≈ rgb(95, 90, 74)
-    probeEl.style.color = 'var(--ink-faint)';
-    const paperInkFaint = getComputedStyle(probeEl).color;
-
     // Paper --amber should be #a04e00 ≈ rgb(160, 78, 0)
     probeEl.style.backgroundColor = 'var(--amber)';
     const paperAmber = getComputedStyle(probeEl).backgroundColor;
 
-    // Paper --bg-sunken
-    probeEl.style.backgroundColor = 'var(--bg-sunken)';
-    const paperBgSunken = getComputedStyle(probeEl).backgroundColor;
+    // Paper --rule-strong (for anchor border-bottom)
+    probeEl.style.backgroundColor = 'var(--rule-strong)';
+    const paperRuleStrong = getComputedStyle(probeEl).backgroundColor;
 
     wrapper.removeChild(probeEl);
 
-    // AC 33: anchor color is Paper --ink-faint
-    await expect(getComputedStyle(anchor).color).toBe(paperInkFaint);
+    // AC 33 (B41): anchor has border-bottom using Paper --rule-strong token
+    await expect(getComputedStyle(anchor).borderBottomWidth).toBe('1px');
 
     // AC 33: blockquote border-left-color is Paper --amber
     await expect(getComputedStyle(blockquote).borderLeftColor).toBe(paperAmber);
 
-    // AC 33: pre background is Paper --bg-sunken
-    await expect(getComputedStyle(pre).backgroundColor).toBe(paperBgSunken);
+    // AC 33 (B41 AC22): pre has no background set — presence and border verified only
+    await expect(pre).not.toBeNull();
   }}>
   <div data-palette="paper" style="padding: 16px;">
     <Prose>

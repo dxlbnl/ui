@@ -35,6 +35,7 @@ Cross-cutting rules every agent applies on every item. Promotion here is a delib
 | [D38](#d38-primitives-first--always-use-design-system-primitives-in-higher-order-components) | Primitives first. Higher-order components must use design system primitives. |
 | [D42](#d42-no-play-fn-assertions-for-visual-only-changes) | No play-fn assertions for visual-only changes. Test-writer is skipped on visual tracks. |
 | [D43](#d43-text-or-snippet-slots-use-a-single-prop-string--snippet) | Text-or-snippet slots: single `prop?: string \| Snippet`. No parallel `*Content` props. |
+| [D45](#d45-native-css-nesting-required----global-blocks-and-all-component-style-blocks) | Use native CSS nesting in all `<style>` blocks. Flat `.host :global(child)` selectors are banned. |
 
 ---
 
@@ -812,3 +813,19 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   - Spec-writer must reach for `prop: string | Snippet` before proposing a parallel `propContent` prop.
   - Documentation must show both string and snippet usages under the same prop name.
 - **Supersedes**: B36's two-prop `heading` + `headingContent` pattern.
+
+## D44: B41 — `color: inherit` replaces Shiki fallback in `pre > code`
+- **Date**: 2026-05-19
+- **By**: spec-writer (B41)
+- **Context**: The existing `Prose.svelte` `pre > code` colour was `var(--shiki-foreground, var(--ink))`. MarkdownBody's canonical version uses `color: inherit`, inheriting from the `pre` block (which itself inherits from `.prose`). The B41 paste-ready style block uses `color: inherit`.
+- **Decision**: Accept `color: inherit` in B41. The Shiki CSS variable fallback is removed. If active Shiki syntax highlighting is wired up in the future, the colour override lives in the Shiki CSS layer, not in Prose's base stylesheet.
+- **Consequences**: In contexts where Shiki is not active (plain `<pre><code>`) the `pre > code` text inherits the prose ink colour correctly. If Shiki is activated without further work, its injected `--shiki-*` variables will not be picked up by Prose automatically — a follow-up item will be needed.
+- **Supersedes**: none
+
+## D45: Native CSS nesting required — `:global` blocks and all component `<style>` blocks
+- **Date**: 2026-05-19
+- **By**: user
+- **Context**: The initial B41 implementation used flat `.prose :global(element)` selectors. The user mandated native CSS nesting as a **general rule** across all components, not just Prose.
+- **Decision**: All component `<style>` blocks use native CSS nesting wherever elements or states are logically related. For `:global` escapes specifically, use `.host-class { :global { child { … } } }` rather than flat `.host-class :global(child)` selectors. Inside any `:global { }` block, standard CSS nesting applies (`&:hover`, `> child`, nested elements, etc.).
+- **Consequences**: Style blocks are more compact and reflect document structure. The flat `.host-class :global(element)` form is banned for new code. Svelte + Vite both support native nesting; no build-tool change needed.
+- **Supersedes**: D26 (which sanctioned the flat `.prose :global(element)` form)

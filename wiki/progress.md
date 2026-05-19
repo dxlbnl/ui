@@ -362,3 +362,10 @@ it records the reason here AND states it in chat.
 
 ## 2026-05-19 14:00 — B40: Regression — PageHero and Container have no mobile-responsive vertical padding
 - manager: start, track: bug; D42 applies (visual-only CSS fix) — test-writer skipped; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B40-responsive-vertical-padding.md (7 ACs); no blocking questions
+- implementer: added @media (max-width: 720px) blocks to PageHero.svelte + Container.svelte; 263/263 green, 0 check errors
+- reviewer: PASS — all 7 ACs met, 263/263 green, no scope creep
+- result: done — commit `31a5446`
+
+## 2026-05-19 14:30 — B41: Regression — Prose should match MarkdownBody's typography
+- manager: start, track: bug; D42 applies (visual-only CSS rewrite) — test-writer skipped; delegating to spec-writer
