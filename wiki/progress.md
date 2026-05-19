@@ -369,3 +369,12 @@ it records the reason here AND states it in chat.
 
 ## 2026-05-19 14:30 — B41: Regression — Prose should match MarkdownBody's typography
 - manager: start, track: bug; D42 applies (visual-only CSS rewrite) — test-writer skipped; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B41-prose-typography-alignment.md (37 ACs); logged D44 (color: inherit replaces Shiki fallback); no blocking questions
+- implementer (pass 1): replaced style block using flat selectors; 263/263 green — user redirected: native CSS nesting required
+- implementer (pass 2): rewrote style block with `.prose { :global { … } }` nesting (D45); 263/263 green, 0 check errors
+- manager: D45 promoted to Standing Rules per user direction; spec AC-37 updated to require nesting
+- reviewer: PASS — all 37 ACs met, 263/263 green, no scope creep
+- result: done — commit `c9ed524`
+
+## 2026-05-19 15:00 — B42: Regression — Grid has no responsive collapse
+- manager: start, track: bug; layout behavior change — D42 does not apply, full pipeline; delegating to spec-writer

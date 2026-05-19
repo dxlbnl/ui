@@ -17,11 +17,14 @@
     await expect(root).toBeVisible();
     const style = getComputedStyle(root);
     await expect(style.display).toBe("grid");
-    // The implementer sets inline style — check element.style for the template string
+    // AC-8: data-cols attribute must be set
+    await expect(root.dataset.cols).toBe("3");
+    // AC-8: grid-template-columns must NOT be in the inline style (moved to --grid-cols)
+    await expect(root.style.gridTemplateColumns).toBe("");
+    // AC-8: --grid-cols custom property must contain the column template
     await expect(
-      root.style.gridTemplateColumns.includes("3") ||
-      root.style.gridTemplateColumns === "repeat(3, 1fr)"
-    ).toBe(true);
+      getComputedStyle(root).getPropertyValue("--grid-cols").trim()
+    ).toContain("repeat(3, 1fr)");
     // gap="sm" → var(--u2) → 16px
     const gap = style.gap || style.columnGap;
     await expect(gap.includes("16px")).toBe(true);
@@ -42,10 +45,14 @@
     const root = canvasElement.firstElementChild as HTMLElement;
     const style = getComputedStyle(root);
     await expect(style.display).toBe("grid");
+    // AC-9: data-cols attribute must be set
+    await expect(root.dataset.cols).toBe("2");
+    // AC-9: grid-template-columns must NOT be in the inline style
+    await expect(root.style.gridTemplateColumns).toBe("");
+    // AC-9: --grid-cols custom property must contain the column template
     await expect(
-      root.style.gridTemplateColumns.includes("2") ||
-      root.style.gridTemplateColumns === "repeat(2, 1fr)"
-    ).toBe(true);
+      getComputedStyle(root).getPropertyValue("--grid-cols").trim()
+    ).toContain("repeat(2, 1fr)");
     const gap = style.gap || style.columnGap;
     await expect(gap.includes("32px")).toBe(true);
   }}>
@@ -60,10 +67,14 @@
     const root = canvasElement.firstElementChild as HTMLElement;
     const style = getComputedStyle(root);
     await expect(style.display).toBe("grid");
+    // AC-10: data-cols attribute must be set
+    await expect(root.dataset.cols).toBe("4");
+    // AC-10: grid-template-columns must NOT be in the inline style
+    await expect(root.style.gridTemplateColumns).toBe("");
+    // AC-10: --grid-cols custom property must contain the column template
     await expect(
-      root.style.gridTemplateColumns.includes("4") ||
-      root.style.gridTemplateColumns === "repeat(4, 1fr)"
-    ).toBe(true);
+      getComputedStyle(root).getPropertyValue("--grid-cols").trim()
+    ).toContain("repeat(4, 1fr)");
   }}>
   <div style="background: var(--bg-elev); padding: 16px;">1</div>
   <div style="background: var(--bg-elev); padding: 16px;">2</div>
@@ -80,12 +91,14 @@
     const root = canvasElement.firstElementChild as HTMLElement;
     const style = getComputedStyle(root);
     await expect(style.display).toBe("grid");
-    const templateCols = root.style.gridTemplateColumns;
-    await expect(
-      templateCols.includes("auto-fill") || templateCols.includes("minmax")
-    ).toBe(true);
-    // minColWidth="160px" should be reflected in the template string
-    await expect(templateCols.includes("160px")).toBe(true);
+    // AC-12: data-cols attribute must be set
+    await expect(root.dataset.cols).toBe("auto");
+    // AC-12: grid-template-columns must NOT be in the inline style
+    await expect(root.style.gridTemplateColumns).toBe("");
+    // AC-12: --grid-cols custom property must contain auto-fill and minColWidth
+    const gridCols = getComputedStyle(root).getPropertyValue("--grid-cols").trim();
+    await expect(gridCols).toContain("auto-fill");
+    await expect(gridCols).toContain("160px");
   }}>
   <TagPill>Alpha</TagPill>
   <TagPill variant="amber">Beta</TagPill>
@@ -100,8 +113,14 @@
     const root = canvasElement.firstElementChild as HTMLElement;
     const style = getComputedStyle(root);
     await expect(style.display).toBe("grid");
-    const templateCols = root.style.gridTemplateColumns;
-    await expect(templateCols).toBe("1fr");
+    // AC-11: data-cols attribute must be set
+    await expect(root.dataset.cols).toBe("1");
+    // AC-11: grid-template-columns must NOT be in the inline style
+    await expect(root.style.gridTemplateColumns).toBe("");
+    // AC-11: --grid-cols custom property must be '1fr'
+    await expect(
+      getComputedStyle(root).getPropertyValue("--grid-cols").trim()
+    ).toBe("1fr");
   }}>
   <div style="background: var(--bg-elev); padding: 16px;">Row 1</div>
   <div style="background: var(--bg-elev); padding: 16px;">Row 2</div>

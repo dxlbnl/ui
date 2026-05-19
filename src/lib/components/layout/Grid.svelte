@@ -41,7 +41,8 @@
 <svelte:element
   this={as}
   class="grid-layout"
-  style="grid-template-columns: {colsTemplate}; gap: {gapMap[gap]};"
+  data-cols={cols}
+  style="--grid-cols: {colsTemplate}; --grid-gap: {gapMap[gap]};"
   {...rest}
 >
   {@render children?.()}
@@ -50,5 +51,22 @@
 <style>
   .grid-layout {
     display: grid;
+    grid-template-columns: var(--grid-cols);
+    gap: var(--grid-gap);
+
+    @container (max-width: 900px) {
+      &[data-cols="3"],
+      &[data-cols="4"] {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @container (max-width: 720px) {
+      &[data-cols="2"],
+      &[data-cols="3"],
+      &[data-cols="4"] {
+        grid-template-columns: 1fr;
+      }
+    }
   }
 </style>
