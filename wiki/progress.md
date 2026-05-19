@@ -19,6 +19,14 @@ it records the reason here AND states it in chat.
 
 <!-- entries start here -->
 
+## 2026-05-19 10:00 — B46: ProjectCard image props + empty-state placeholder
+- manager: start, track: bug; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B46-projectcard-image-props.md (18 ACs, visual-only D42); no blocking questions
+- manager: skipping test-writer (D42); delegating to implementer
+- implementer: added image/imageLight/imageSrcset/imageLightSrcset props; conditional rendering; D45 CSS nesting; 2 new visual stories; 274/274 green, 0 check errors
+- reviewer: PASS — all 18 ACs met, 274/274 green, 0 check errors, no scope creep
+- result: done
+
 ## 2026-05-19 09:00 — B45: Text and Heading should default to color: inherit
 - manager: start, track: feature; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B45-text-heading-color-inherit.md (13 ACs, visual-only track D42); no blocking questions

@@ -86,3 +86,7 @@
     await expect(desc).not.toBeNull();
     await expect(desc!.textContent!.trim()).toBe("");
   }} />
+
+<Story name="With Image" args={{ href: "#with-image", slug: "with-image", title: "With Image", description: "A project card with a single dark-palette image.", image: "https://placehold.co/800x450" }} />
+
+<Story name="With Dark And Light Image" args={{ href: "#dual-image", slug: "dual-image", title: "With Dark And Light Image", description: "A project card with separate dark and light palette images.", image: "https://placehold.co/800x450/222/eee", imageLight: "https://placehold.co/800x450/eee/222" }} />

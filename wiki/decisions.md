@@ -836,6 +836,25 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
 - **Consequences**: Style blocks are more compact and reflect document structure. The flat `.host-class :global(element)` form is banned for new code. Svelte + Vite both support native nesting; no build-tool change needed.
 - **Supersedes**: D26 (which sanctioned the flat `.prose :global(element)` form)
 
+## D48: B46 — ProjectCard dual-image palette toggle uses CSS-only `:global([data-palette='paper'])` nesting
+- **Date**: 2026-05-19
+- **By**: spec-writer
+- **Context**: Two `<img>` elements (`.dark-img` / `.light-img`) need to toggle
+  visibility based on `[data-palette='paper']` on `<html>`. The selector must reach
+  outside the component's own DOM subtree. Options: (a) a Svelte store/reactive prop that
+  passes display state as a boolean, or (b) a CSS-only `:global` selector nested inside
+  the existing `:global(.project-card)` block.
+- **Decision**: CSS-only via native nesting inside `:global(.project-card)`. The
+  `.light-img { display: none }` default and the `[data-palette='paper']` override are
+  co-located in the `.card-img` nested block. No JavaScript, no Svelte store, no `$effect`.
+  This matches the canonical local component approach and keeps the palette toggle
+  independent of the component's hydration state (works identically on SSR-rendered HTML).
+- **Consequences**: The exact nesting form must compile through Svelte's CSS processor.
+  The implementer must verify no flat selectors are introduced (D45). The spec's AC-11
+  gives a reference nesting skeleton but allows alternate forms if they satisfy the
+  behaviour and D45 constraints.
+- **Supersedes**: none
+
 ## D46: B42 — Grid collapse stories placed in a separate Grid.collapse.stories.svelte file
 - **Date**: 2026-05-19
 - **By**: spec-writer
