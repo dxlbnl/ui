@@ -6,6 +6,12 @@
 > The **Standing Rules** section is a curated subset of cross-cutting rules every agent
 > applies on every item. Promotion into Standing Rules is a deliberate user/manager call
 > — agents do not promote rules from a normal spec/implementation cycle.
+>
+> **What belongs here**: project-level design and tech choices that affect how future
+> agents write code across the codebase — stack choices, CSS conventions, API patterns,
+> cross-cutting rules. **What does NOT belong here**: per-item pipeline decisions (e.g.
+> "this item uses the visual-only track", "test-writer skipped for this item"). Those
+> go in the item card's `## Notes` or `wiki/progress.md`.
 
 ## Format (Archive entries)
 
@@ -829,3 +835,11 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
 - **Decision**: All component `<style>` blocks use native CSS nesting wherever elements or states are logically related. For `:global` escapes specifically, use `.host-class { :global { child { … } } }` rather than flat `.host-class :global(child)` selectors. Inside any `:global { }` block, standard CSS nesting applies (`&:hover`, `> child`, nested elements, etc.).
 - **Consequences**: Style blocks are more compact and reflect document structure. The flat `.host-class :global(element)` form is banned for new code. Svelte + Vite both support native nesting; no build-tool change needed.
 - **Supersedes**: D26 (which sanctioned the flat `.prose :global(element)` form)
+
+## D46: B42 — Grid collapse stories placed in a separate Grid.collapse.stories.svelte file
+- **Date**: 2026-05-19
+- **By**: spec-writer
+- **Context**: The new container-query collapse stories for B42 require `<Container>` and `<Grid>` to be co-instantiated in the story slot. The primary `Grid.stories.svelte` has `component: Grid` in `defineMeta`, which wraps the story slot with one outer `<Grid>` instance. Nesting another explicit `<Grid>` inside produces a double-render (a grid inside a grid with unintended column inheritance). Forcing the container width via inline style also differs from how the existing static stories work.
+- **Decision**: The B42 collapse stories live in a sibling `Grid.collapse.stories.svelte` file with no `component:` set in its `defineMeta`. This follows the composition-story precedent from D9. The primary `Grid.stories.svelte` retains `component: Grid` for autodocs and is only updated to fix the existing play functions (AC-8 through AC-12).
+- **Consequences**: Two story files for `<Grid>`. Storybook will show them under `Layout/Grid` and `Layout/Grid Collapse` (or similar title set in the collapse file's `defineMeta`). Play function count increases correctly. No double-render risk.
+- **Supersedes**: none

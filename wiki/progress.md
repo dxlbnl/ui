@@ -378,3 +378,11 @@ it records the reason here AND states it in chat.
 
 ## 2026-05-19 15:00 — B42: Regression — Grid has no responsive collapse
 - manager: start, track: bug; layout behavior change — D42 does not apply, full pipeline; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B42-grid-responsive-collapse.md (18 ACs); no blocking questions
+- test-writer: updated 5 existing Grid stories + created Grid.collapse.stories.svelte (7 new stories); 12 red
+- implementer: added data-cols attr, --grid-cols custom prop, @container collapse rules to Grid.svelte; 270/270 green
+- reviewer: PASS — all 18 ACs met, 270/270 green, no scope creep
+- result: done — commit `7c31106`
+
+## 2026-05-19 16:00 — B43: Regression — NoteCard needs an image prop with side / top placement
+- manager: start, track: bug; new props + conditional layout — full pipeline; delegating to spec-writer

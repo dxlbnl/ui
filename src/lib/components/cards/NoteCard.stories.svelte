@@ -92,3 +92,9 @@
     const ledeEl = canvasElement.querySelector('.note-lede') as HTMLElement;
     await expect(ledeEl.getAttribute('style')).toBeNull();
   }} />
+
+<!-- B43 AC-16: Side image placement (default) — visual catalogue only, no play assertions -->
+<Story name="Side With Image" args={{ href: "#note-0x07", idx: 7, kind: "PROJECT-LOG", title: "Building the Image Pipeline", lede: "How we wire Vercel's image transformation API into the notes index for responsive thumbnails.", date: "19 May 2026", image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=480", imageSrcset: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=240 240w, https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=480 480w", imagePlacement: "side" }} />
+
+<!-- B43 AC-17: Top image placement — visual catalogue only, no play assertions -->
+<Story name="Top With Image" args={{ href: "#note-0x08", idx: 8, kind: "LOG", title: "Card Grid Explorations", lede: "Trying out a 3-column grid of NoteCards with the image stacked above the text.", date: "19 May 2026", image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800", imagePlacement: "top" }} />
