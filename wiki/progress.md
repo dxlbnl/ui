@@ -359,3 +359,6 @@ it records the reason here AND states it in chat.
 - implementer (pass 2): consolidated eyebrow/heading props, renamed headingVariant→variant, single wrapper templates with inner discriminator, docs/patterns.md + docs/primitives.md synced. 263/263 green, 0 check errors.
 - reviewer (pass 2): PASS — all in-scope ACs met (revised Sections 1+2 and carried-over 3-9), D43 compliance verified (only legitimate `headingContent` remaining is the local snippet const in SnippetHeading story), docs reflect new API, 263/263 green, no scope creep.
 - result: done — commit `4fca914`
+
+## 2026-05-19 14:00 — B40: Regression — PageHero and Container have no mobile-responsive vertical padding
+- manager: start, track: bug; D42 applies (visual-only CSS fix) — test-writer skipped; delegating to spec-writer

@@ -48,5 +48,17 @@
       padding-left: 16px;
       padding-right: 16px;
     }
+
+    .container-wrap[data-size="lg"] {
+      padding-bottom: 56px;
+    }
+
+    .container-wrap[data-size="md"] {
+      padding-bottom: 48px;
+    }
+
+    .container-wrap[data-size="sm"] {
+      padding-bottom: 40px;
+    }
   }
 </style>

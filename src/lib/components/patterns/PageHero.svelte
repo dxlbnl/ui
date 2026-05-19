@@ -78,4 +78,10 @@
     font-style: normal;
     color: var(--ink-faint);
   }
+
+  @media (max-width: 720px) {
+    .page-hero {
+      padding: var(--u6) 0 var(--u4);
+    }
+  }
 </style>
