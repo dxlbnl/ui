@@ -11,7 +11,7 @@
   });
 </script>
 
-<Story name="Full" args={{ eyebrow: "// DEXTERLABS · WORKBENCH · 2026", heading: "Things built in the lab.", lede: "Software engineer by day; hardware builder by night." }}
+<Story name="Full" args={{ eyebrow: "// DEXTERLABS · WORKBENCH · 2026", heading: "Things built in the lab.", lede: "Software engineer by day; hardware builder by night.", border: true }}
   play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole("heading", { level: 1, name: "Things built in the lab." })).toBeVisible();

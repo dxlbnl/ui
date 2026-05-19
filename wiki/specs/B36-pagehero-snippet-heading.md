@@ -143,11 +143,17 @@ directly via computed-style checks.
 
 **File:** `src/lib/components/patterns/PageHero.svelte`
 
-`Props` must declare `border?: boolean` with default `true` in the destructure:
+`Props` must declare `border?: boolean` with default `false` in the destructure:
 
 ```ts
-let { eyebrow, heading, headingContent, lede, border = true, children, ...rest }: Props = $props()
+let { eyebrow, heading, headingContent, lede, border = false, children, ...rest }: Props = $props()
 ```
+
+> **Note (2026-05-19, post-B38):** the default was flipped from `true` → `false`
+> per the "no boolean prop defaults to true" rule. The `Full` story now passes
+> `border: true` explicitly in its args to keep its borderBottomStyle assertion
+> valid; AC-7's "default `border=true` preserved" line is superseded by this
+> flip.
 
 The `.page-hero` CSS rule must be split so that:
 

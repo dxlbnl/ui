@@ -13,7 +13,7 @@
     headingContent?: Snippet
     /** Subtitle / lede text shown below the heading. */
     lede?: string
-    /** Show bottom border rule. @default true */
+    /** Show bottom border rule. @default false */
     border?: boolean
     children?: Snippet
     [key: string]: unknown
@@ -24,7 +24,7 @@
     heading,
     headingContent,
     lede,
-    border = true,
+    border = false,
     children,
     ...rest
   }: Props = $props()
