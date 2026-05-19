@@ -19,6 +19,14 @@ it records the reason here AND states it in chat.
 
 <!-- entries start here -->
 
+## 2026-05-19 09:00 — B45: Text and Heading should default to color: inherit
+- manager: start, track: feature; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B45-text-heading-color-inherit.md (13 ACs, visual-only track D42); no blocking questions
+- manager: skipping test-writer (D42 visual-only); delegating to implementer
+- implementer: removed 3 color declarations from Text.svelte; added color="faint" to CtaBlock eyebrow; NoteCard lede :global rule confirmed sufficient; 272/272 green, 0 check errors
+- reviewer: PASS (pass 2, pre-existing ProjectCard.svelte diff clarified as B46 scope) — all 13 ACs met, 272/272 green, 0 check errors, no scope creep
+- result: done
+
 ## 2026-05-18 — B28: Nav overhaul — match website design
 - manager: start, track: feature; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B28-nav-overhaul.md (58 ACs, 8 Nav stories + 1 Button story); revised per user: Breadcrumb root → div, Button nav variant, D38 recorded → user approved
@@ -393,3 +401,6 @@ it records the reason here AND states it in chat.
 
 ## 2026-05-19 17:00 — B44: Regression — Prose should not constrain width by default
 - manager: start, track: bug; D42 applies (prop default change, visual only) — test-writer skipped; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B44-prose-no-default-maxwidth.md (6 ACs); no blocking questions
+- implementer: dropped maxWidth default; consumer route files are in website project (out of scope); 272/272 green
+- result: done

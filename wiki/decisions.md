@@ -843,3 +843,25 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
 - **Decision**: The B42 collapse stories live in a sibling `Grid.collapse.stories.svelte` file with no `component:` set in its `defineMeta`. This follows the composition-story precedent from D9. The primary `Grid.stories.svelte` retains `component: Grid` for autodocs and is only updated to fix the existing play functions (AC-8 through AC-12).
 - **Consequences**: Two story files for `<Grid>`. Storybook will show them under `Layout/Grid` and `Layout/Grid Collapse` (or similar title set in the collapse file's `defineMeta`). Play function count increases correctly. No double-render risk.
 - **Supersedes**: none
+
+## D47: B45 — Text scoped color removal is visual-only; CtaBlock needs explicit `color="faint"` on eyebrow
+- **Date**: 2026-05-19
+- **By**: spec-writer
+- **Context**: B45 removes three `color` declarations from `Text.svelte`'s scoped CSS. All
+  affected callsites were audited. Most are unaffected (they either already pass an explicit
+  `color` prop, or a parent `:global` class rule supplies the color). Two callsites require
+  attention: (1) `ProjectCard`/`ProductCard` — these are the primary broken cases; they fix
+  themselves once the scoped color is removed (hover color flows through). (2) `CtaBlock`
+  eyebrow — the only callsite that loses its default color without a replacement mechanism:
+  CtaBlock's `.cta-block { color: inherit }` would make the eyebrow inherit page default
+  ink instead of faint. Adding `color="faint"` to the eyebrow `<Text>` is the canonical
+  prop-based fix per the design system contract.
+- **Decision**: B45 is classified as visual-only (D42): test-writer is skipped, pipeline is
+  spec-writer → implementer → reviewer. The single code change beyond Text.svelte is adding
+  `color="faint"` to the eyebrow `<Text>` in `CtaBlock.svelte`.
+- **Consequences**: The visual-only classification means no new play-fn assertions are added.
+  The reviewer verifies hover color in `ProjectCard` and `ProductCard` Storybook stories,
+  and confirms eyebrow faint color in `CtaBlock`. `NoteCard`'s existing `:global(.note-lede)`
+  rule is expected to continue supplying the lede's dim color; the implementer must confirm
+  this and fall back to `color="dim"` on the `<Text>` if not.
+- **Supersedes**: none

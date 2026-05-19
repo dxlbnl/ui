@@ -31,7 +31,7 @@
   <Spread gap="md">
     <Stack gap="xs">
       {#if eyebrow}
-        <Text variant="eyebrow" class="cta-eyebrow">{eyebrow}</Text>
+        <Text variant="eyebrow" color="faint" class="cta-eyebrow">{eyebrow}</Text>
       {/if}
       <span class="cta-heading">{heading}</span>
       {#if subtext}
