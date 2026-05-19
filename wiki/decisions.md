@@ -773,3 +773,18 @@
   - Exception: when a computed value is the **observable contract of a behaviour** (e.g. a focus-visible outline appears on Tab, a scroll position lands at a specific Y), an assertion is fine — that is testing behaviour, not visual decoration.
 - **Consequences**: Spec pages get shorter and more honest for visual work. Test-writer's queue shrinks. The pipeline for visual fixes is `spec-writer → implementer → reviewer`. `stories-guide.md` gets a new "When NOT to assert" section pointing here.
 - **Supersedes**: none
+
+## D43: Text-or-snippet slots use a single `prop?: string | Snippet`
+- **Date**: 2026-05-19
+- **By**: user (B39 review checkpoint)
+- **Context**: B36 introduced the convention of pairing a text prop with a parallel snippet prop (`heading` + `headingContent`, with the snippet taking precedence). B39 was about to add the same pair for `eyebrow` + `eyebrowContent`. The user observed this doubles the prop surface for every text slot a component exposes.
+- **Decision**: Component slots that may be either a plain string or arbitrary Svelte markup use a **single** prop typed `string | Snippet`. The component template discriminates at render time with `typeof prop === 'function'`. Examples:
+  - `<PageHero eyebrow="// SECTION" />` — string branch wraps in `<Text variant="eyebrow">`.
+  - `<PageHero eyebrow={mySnippet} />` — snippet branch renders as-is.
+  No parallel `eyebrowContent` / `headingContent` props.
+- **Consequences**:
+  - B36's `headingContent` prop on `PageHero` is removed in B39; `heading?: string | Snippet` replaces both `heading?: string` and `headingContent?: Snippet`. Same for the new `eyebrow`.
+  - Any future text-or-markup slot follows the single-prop pattern. Audit / sweep of other components (existing `*Content` props or candidate slots) is filed as a follow-up.
+  - Spec-writer must reach for `prop: string | Snippet` before proposing a parallel `propContent` prop.
+  - Documentation must show both string and snippet usages under the same prop name.
+- **Supersedes**: B36's two-prop `heading` + `headingContent` pattern.

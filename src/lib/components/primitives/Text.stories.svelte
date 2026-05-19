@@ -180,7 +180,7 @@
   play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const eyebrow = canvas.getByTestId("natural-eyebrow");
-    await expect(getComputedStyle(eyebrow).fontSize).toBe("12px");
+    await expect(getComputedStyle(eyebrow).fontSize).toBe("14px");
     const mono = canvas.getByTestId("natural-mono");
     await expect(getComputedStyle(mono).fontSize).toBe("14px");
     const body = canvas.getByTestId("natural-body");

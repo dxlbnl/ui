@@ -5,12 +5,12 @@
   import Heading from '../primitives/Heading.svelte'
 
   interface Props {
-    /** Small mono label shown above the heading. */
-    eyebrow?: string
-    /** Hero heading text. */
-    heading?: string
-    /** Snippet-based hero heading — takes precedence over `heading` string when provided. */
-    headingContent?: Snippet
+    /** Eyebrow label. String renders inside <Text variant="eyebrow">; a Snippet renders as-is. */
+    eyebrow?: string | Snippet
+    /** Hero heading. String renders as text; a Snippet renders as-is. */
+    heading?: string | Snippet
+    /** Heading scale variant. @default 'title' */
+    variant?: 'hero' | 'title'
     /** Subtitle / lede text shown below the heading. */
     lede?: string
     /** Show bottom border rule. @default false */
@@ -22,7 +22,7 @@
   let {
     eyebrow,
     heading,
-    headingContent,
+    variant = 'title',
     lede,
     border = false,
     children,
@@ -32,9 +32,13 @@
 
 <header class="page-hero" class:page-hero--bordered={border} {...rest}>
   {#if eyebrow}
-    <div class="page-hero-eyebrow"><Text variant="eyebrow">{eyebrow}</Text></div>
+    <div class="page-hero-eyebrow">
+      {#if typeof eyebrow === 'function'}{@render eyebrow()}{:else}<Text variant="eyebrow">{eyebrow}</Text>{/if}
+    </div>
   {/if}
-  <Heading level={1} variant="hero">{#if headingContent}{@render headingContent()}{:else}{heading}{/if}</Heading>
+  <Heading level={1} variant={variant}>
+    {#if typeof heading === 'function'}{@render heading()}{:else}{heading}{/if}
+  </Heading>
   {#if lede}
     <div class="page-hero-lede"><Text variant="lede">{lede}</Text></div>
   {/if}
@@ -49,7 +53,7 @@
 
 <style>
   .page-hero {
-    padding: 48px 0 40px;
+    padding: var(--u10) 0 var(--u5);
   }
 
   .page-hero--bordered {
@@ -61,15 +65,16 @@
   }
 
   .page-hero-lede {
-    margin-top: 20px;
+    margin-top: var(--u2);
     max-width: 62ch;
   }
 
   .page-hero-actions {
-    margin-top: 24px;
+    margin-top: var(--u4);
   }
 
-  .page-hero :global(.hero-heading em) {
+  .page-hero :global(.hero-heading em),
+  .page-hero :global(.title-heading em) {
     font-style: normal;
     color: var(--ink-faint);
   }

@@ -346,3 +346,16 @@ it records the reason here AND states it in chat.
 - implementer: SectionFoot removed `margin-top: 20px`; Text added `.body-text, .body-lede, .mono-label, .eyebrow { margin: 0 }`; Heading added variant + bare h4/h5/h6 `margin: 0` rules → 260/260 green, 0 pnpm check errors
 - reviewer: PASS — all 5 ACs met, 260 tests green, D42 honoured (no .stories.svelte changes), no scope creep
 - result: done — commit `9c3f988`
+
+## 2026-05-19 — B39: Regression — /order/cancel/ on dexterlabs.nl (PageHero/Heading/Rule/Button/Text + Signoff)
+- manager: start, track: bug; renamed inbox/regression-order-cancel.md → doing/B39-order-cancel-regression.md, frontmatter updated (id REG-… → B39, flags [review] auto-added — large multi-component change). Delegating to spec-writer.
+- spec-writer: wrote wiki/specs/B39-order-cancel-regression.md (9 findings, originally 30 ACs split 23 src / 7 play; 5 OQs, none blocking).
+- manager + user review: (a) Section 2 revised — PageHero gains `headingVariant: 'hero' | 'title'` prop (default `'title'`) instead of hard-coded internal switch; (b) Section 5 (Signoff) dropped — abstraction too thin, kept local in website; (c) test-writer skipped entirely — user directive that even the [play] ACs are reviewer-verification notes, not test code. Stories may be added as visual demos but without `play=` blocks.
+- manager: delegating to implementer (test-writer stage skipped)
+- implementer (pass 1): all 8 in-scope sections implemented; 263/263 green; 0 pnpm check errors; OQ-1/OQ-2 confirmed (Rule + Button back already lock contract — defensive only). PageHero used raw px values.
+- manager + user: PageHero refactored to use `--u<n>` tokens (`var(--u10)` 80, `var(--u5)` 40, `var(--u2)` 16, `var(--u4)` 32; `12px` and `62ch` kept as literals — no matching tokens). Spec Section 9 + Out-of-scope updated.
+- reviewer (pass 1): PASS — all in-scope ACs met, 263/263 green, no scope creep.
+- manager + user (post-review API refinement): D43 codified — text-or-snippet slots use a single `prop?: string | Snippet`. B36's `headingContent` removed; PageHero gets `eyebrow?: string | Snippet`, `heading?: string | Snippet`, and rename `headingVariant` → `variant`. Re-dispatching implementer for the API simplification + docs/README sync.
+- implementer (pass 2): consolidated eyebrow/heading props, renamed headingVariant→variant, single wrapper templates with inner discriminator, docs/patterns.md + docs/primitives.md synced. 263/263 green, 0 check errors.
+- reviewer (pass 2): PASS — all in-scope ACs met (revised Sections 1+2 and carried-over 3-9), D43 compliance verified (only legitimate `headingContent` remaining is the local snippet const in SnippetHeading story), docs reflect new API, 263/263 green, no scope creep.
+- result: done — commit TBD

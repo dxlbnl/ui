@@ -71,7 +71,8 @@
   .body-lede {
     font-family: var(--sans);
     font-size: var(--t-lede);
-    line-height: 1.55;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
     color: var(--ink-dim);
   }
 
@@ -85,7 +86,7 @@
 
   .eyebrow {
     font-family: var(--mono);
-    font-size: var(--t-micro);
+    font-size: var(--t-mono);
     letter-spacing: 0.12em;
     color: var(--ink-faint);
     text-transform: uppercase;

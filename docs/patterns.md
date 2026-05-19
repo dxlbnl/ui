@@ -269,9 +269,11 @@ Full-width page header with eyebrow, large fluid heading, optional lede paragrap
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `eyebrow` | `string` | `undefined` | Small mono label above the heading. |
-| `heading` | `string` | — | Main page heading. Rendered using `--t-hero` (fluid 48–112px). |
+| `eyebrow` | `string \| Snippet` | `undefined` | Small label above the heading. String renders inside `<Text variant="eyebrow">`; a Snippet renders as-is. |
+| `heading` | `string \| Snippet` | `undefined` | Main page heading. String renders as plain text inside an `<h1>`; a Snippet renders as-is. |
+| `variant` | `'hero' \| 'title'` | `'title'` | Heading scale. `'title'` uses `--t-title` (clamp 36–56px). `'hero'` uses `--t-hero` (fluid 48–112px). |
 | `lede` | `string` | `undefined` | Optional lead paragraph. Capped at `max-width: 62ch`. |
+| `border` | `boolean` | `false` | Render a `border-bottom: 1px solid var(--rule)` on the root `<header>`. |
 | `children` | `Snippet` | `undefined` | Action buttons or other content below the lede. |
 | `...rest` | `[key: string]: unknown` | — | All additional attributes forwarded to the root `<header>` element. |
 
@@ -279,25 +281,39 @@ Full-width page header with eyebrow, large fluid heading, optional lede paragrap
 
 ```svelte
 <script>
-  import { PageHero, Button, Inline } from 'dxlb-design'
+  import { PageHero, Button, Inline, Led, Text } from 'dxlb-design'
 </script>
 
+<!-- String forms — both eyebrow and heading as plain strings -->
 <PageHero
-  eyebrow="Dexterlabs"
+  eyebrow="// DEXTERLABS"
   heading="Open-source Eurorack"
-  lede="Hardware modules designed in Delft. Schematics, firmware, and panel files released under open licences."
+  lede="Hardware modules designed in Delft."
+  border
 >
-  <Inline gap="sm">
-    <Button variant="primary" href="/shop">Shop modules</Button>
-    <Button variant="cta" href="/projects">View projects</Button>
-  </Inline>
+  <Button variant="primary" href="/shop">Shop modules</Button>
+  <Button variant="cta" href="/projects">View projects</Button>
 </PageHero>
+
+<!-- Snippet forms — pass markup to eyebrow / heading via the same prop -->
+{#snippet eyebrow()}
+  <Inline gap="xs">
+    <Led color="amber" />
+    <Text variant="eyebrow" color="amber">ORDER CANCELLED</Text>
+  </Inline>
+{/snippet}
+{#snippet heading()}
+  Dexter.<br /><em>Things built</em><br />in the lab.
+{/snippet}
+<PageHero {eyebrow} {heading} lede="No charge made." />
 ```
 
 ### Notable behaviour
 
-- Renders as a `<header>` element with `padding: 48px 0 40px` and `border-bottom: 1px solid var(--rule)`.
-- Heading is an h1 at `--t-hero` size with `letter-spacing: -0.03em` and `line-height: 1`.
-- `lede` is `--ink-dim`, `--t-lede` size, `max-width: 62ch`, `line-height: 1.55`.
-- Children are wrapped in an `Inline gap="sm"` with `margin-top: 24px`.
-- `eyebrow` has `margin-bottom: 12px` to separate it from the heading.
+- Renders as a `<header>` element with `padding: var(--u10) 0 var(--u5)` (80px top, 40px bottom).
+- No `border-bottom` by default. Pass `border` to opt in to a `1px solid var(--rule)` divider.
+- Heading defaults to the `title` variant — `<Heading level={1} variant="title">` → `--t-title` (clamp 36–56px), `letter-spacing: -0.02em`, `line-height: 1`. Pass `variant="hero"` for the larger marketing scale.
+- `lede` is `--ink-dim`, `--t-lede` size, `max-width: 62ch`, `line-height: 1.5`, `margin-top: var(--u2)` (16px).
+- Children are wrapped in an `Inline gap="sm"` with `margin-top: var(--u4)` (32px).
+- `eyebrow` wrapper has `margin-bottom: 12px` to separate it from the heading. The wrapper is rendered exactly once — the string-vs-snippet branch is inside it.
+- `em` elements inside the rendered heading (either `.hero-heading` or `.title-heading`) render as upright `--ink-faint` text via a scoped `:global` rule, so callers can use `<em>` as a faded-emphasis token inside a heading snippet.

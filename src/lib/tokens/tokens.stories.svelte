@@ -39,7 +39,7 @@
     await expect(getComputedStyle(mono).textTransform).toBe("uppercase");
     await expect(getComputedStyle(mono).fontFamily.toLowerCase().includes("jetbrains") || getComputedStyle(mono).fontFamily.toLowerCase().includes("mono")).toBe(true);
     const eyebrow = canvas.getByTestId("scale-eyebrow");
-    await expect(getComputedStyle(eyebrow).fontSize).toBe("12px");
+    await expect(getComputedStyle(eyebrow).fontSize).toBe("14px");
   }}>
   <div style="padding: 24px; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; gap: 20px;">
     <div>

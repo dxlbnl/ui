@@ -170,7 +170,7 @@ Renders `<h1>`–`<h6>` with a named typography variant class. Zero CSS of its o
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `level` | `1 \| 2 \| 3 \| 4 \| 5 \| 6` | `2` | HTML heading level to render. |
-| `variant` | `'display' \| 'hero' \| 'h1' \| 'h2' \| 'h3'` | Level default | Typography class. Defaults: level 1→`'h1'`, level 2→`'h2'`, level 3→`'h3'`, levels 4–6→`undefined` (no class applied). |
+| `variant` | `'display' \| 'hero' \| 'title' \| 'h1' \| 'h2' \| 'h3'` | Level default | Typography class. Defaults: level 1→`'h1'`, level 2→`'h2'`, level 3→`'h3'`, levels 4–6→`undefined` (no class applied). |
 | `color` | `'ink' \| 'dim' \| 'faint' \| 'amber' \| 'cyan' \| 'ok' \| 'danger'` | `undefined` | Optional colour override applied as an inline style. |
 | `children` | `Snippet` | `undefined` | Heading text. |
 | `class` | `ClassValue \| null` | `''` | Additional CSS classes. |
@@ -193,6 +193,9 @@ Renders `<h1>`–`<h6>` with a named typography variant class. Zero CSS of its o
 <!-- Hero landing heading -->
 <Heading level={1} variant="hero">Build Hardware</Heading>
 
+<!-- Title (content page) heading — smaller scale than hero -->
+<Heading level={1} variant="title">Order cancelled.</Heading>
+
 <!-- h3 with amber colour -->
 <Heading level={3} color="amber">Module Status</Heading>
 ```
@@ -200,6 +203,6 @@ Renders `<h1>`–`<h6>` with a named typography variant class. Zero CSS of its o
 ### Notable behaviour
 
 - The element rendered is always `<h{level}>` regardless of `variant`. Variant only controls the CSS class applied.
-- `display` maps to `display-heading` class (140px); `hero` maps to `hero-heading` (fluid 48–112px); `h1`/`h2`/`h3` map to the corresponding heading size classes.
+- `display` maps to `display-heading` class (140px); `hero` maps to `hero-heading` (fluid 48–112px); `title` maps to `title-heading` (fluid 36–56px via `--t-title`); `h1`/`h2`/`h3` map to the corresponding heading size classes.
 - For levels 4–6 with no explicit `variant`, no typography class is applied — the element renders with browser default heading styles.
 - `color` and `style` merge in the same way as `Text`: colour style is prepended.

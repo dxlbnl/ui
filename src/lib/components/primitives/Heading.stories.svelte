@@ -54,6 +54,11 @@
   Dexterlabs
 </Story>
 
+<!-- B39 Section 2: level=1 variant="title" demo (no play block per spec) -->
+<Story name="Title" args={{ level: 1, variant: "title" }}>
+  Things built in the lab.
+</Story>
+
 <!-- AC-26: level=1 variant="display" renders <h1 class="display-heading"> -->
 <Story name="DisplayVariant" args={{ level: 1, variant: "display" }}
   play={async ({ canvasElement }) => {

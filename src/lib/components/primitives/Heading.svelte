@@ -3,7 +3,7 @@
   import type { Snippet } from 'svelte'
 
   type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6
-  type HeadingVariant = 'display' | 'hero' | 'h1' | 'h2' | 'h3'
+  type HeadingVariant = 'display' | 'hero' | 'title' | 'h1' | 'h2' | 'h3'
   type TextColor = 'ink' | 'dim' | 'faint' | 'amber' | 'cyan' | 'ok' | 'danger'
   interface Props {
     /** HTML heading level (h1–h6). @default 2 */
@@ -27,6 +27,7 @@
   const VARIANT_CLASS: Record<HeadingVariant, string> = {
     display: 'display-heading',
     hero: 'hero-heading',
+    title: 'title-heading',
     h1: 'h1',
     h2: 'h2',
     h3: 'h3',
@@ -55,7 +56,7 @@
 </svelte:element>
 
 <style>
-  .h1, .h2, .h3, .hero-heading, .display-heading { margin: 0 }
+  .h1, .h2, .h3, .hero-heading, .title-heading, .display-heading { margin: 0 }
   h4, h5, h6 { margin: 0 }
 
   .h1 {
@@ -86,7 +87,15 @@
     font-family: var(--sans);
     font-weight: 500;
     font-size: var(--t-hero);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .title-heading {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: var(--t-title);
+    letter-spacing: -0.02em;
     line-height: 1;
   }
 

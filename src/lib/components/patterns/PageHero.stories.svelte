@@ -3,6 +3,9 @@
   import { expect, within } from "storybook/test";
   import PageHero from "./PageHero.svelte";
   import Button from "$lib/components/primitives/Button.svelte";
+  import Inline from "$lib/components/layout/Inline.svelte";
+  import Led from "$lib/components/primitives/Led.svelte";
+  import Text from "$lib/components/primitives/Text.svelte";
 
   const { Story } = defineMeta({
     title: "Patterns/PageHero",
@@ -80,9 +83,25 @@
     {#snippet headingContent()}
       Dexter.<br /><em>Things built</em><br />in the lab.
     {/snippet}
-    <PageHero eyebrow="// DEXTERLABS" headingContent={headingContent} />
+    <PageHero eyebrow="// DEXTERLABS" heading={headingContent} />
   {/snippet}
 </Story>
+
+<!-- B39 Section 1: eyebrow snippet demo (no play block per spec) -->
+<Story name="EyebrowSnippet">
+  {#snippet template(_args)}
+    {#snippet eyebrow()}
+      <Inline gap="xs">
+        <Led color="amber" />
+        <Text variant="eyebrow" color="amber">ORDER CANCELLED</Text>
+      </Inline>
+    {/snippet}
+    <PageHero {eyebrow} heading="No charge made." lede="Your order was cancelled before any payment was taken." />
+  {/snippet}
+</Story>
+
+<!-- B39 Section 2: variant='hero' demo (no play block per spec) -->
+<Story name="HeroVariant" args={{ variant: "hero", heading: "Dexterlabs", lede: "Software engineer by day; hardware builder by night." }} />
 
 <!-- B36 AC-5, AC-6: border prop — suppresses bottom rule -->
 <Story name="NoBorder" args={{ eyebrow: "// DEXTERLABS", heading: "Homepage", border: false }}
