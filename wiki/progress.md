@@ -9,7 +9,7 @@
 ## <YYYY-MM-DD HH:MM> — B<n>: <item title>
 - <agent>: <what it did> → <outcome>
 - ...
-- result: <done | escalated | paused for review> — <commit hash if committed>
+- result: <done | escalated | paused for review>
 ```
 
 When the manager **pauses** (review checkpoint) or **escalates** (unresolved failure),
@@ -35,7 +35,7 @@ it records the reason here AND states it in chat.
 - manager: start, track: chore; delegating directly to implementer
 - implementer: renamed ToastVariant ok/amber/danger → success/warning/error across toast.ts, Toast.svelte, Toast.stories.svelte, ToastRegion.stories.svelte; updated docs/feedback.md → 263/263 green
 - reviewer: PASS — rename complete and consistent, 0 pnpm check errors, no scope creep
-- result: done — commit TBD
+- result: done
 
 ## 2026-05-17 — B27: Layout style prop cleanup — Inline align prop + scoped CSS pass
 - manager: start, track: bug; delegating to spec-writer
@@ -43,7 +43,7 @@ it records the reason here AND states it in chat.
 - test-writer: added 13 stories to Inline.stories.svelte (AlignBaseline/Start/Default/DataAttr + scoped CSS outcome assertions) → 13 red
 - implementer: Inline align prop + data-align CSS; SectionHead/PageHero/Modal/StatCard/ProgressBar/Nav/Accordion/NoteCard scoped CSS fixes; Accordion refactored to native div (no Stack) → 263/263 green; reviewer FAIL (bare :global in Accordion); Accordion rewritten to native div with scoped .accordion rule → 263/263 green
 - reviewer: PASS — all 25 ACs met, 263 tests green, 0 pnpm check errors, no scope creep
-- result: done — commit `798e95c`
+- result: done
 
 ## 2026-05-17 — B26: Typography primitive size prop and scoped CSS
 - manager: start, track: feature; delegating to spec-writer
@@ -53,33 +53,33 @@ it records the reason here AND states it in chat.
 - reviewer: FAIL (pass 1) — AC-32 spec/code mismatch (residual .card-desc rule), AC-21 DefaultCase missing eyebrow assertion, AC-41 SizeMd used variant="body" not "mono"
 - implementer: fixed all 3 findings; updated AC-32 spec text to permit option (b); 250/250 green
 - reviewer: PASS (pass 2) — all 45 ACs met, 250 tests green, 0 pnpm check errors, no scope creep
-- result: done — commit `6751644`
+- result: done
 
 ## 2026-05-17 14:00 — B25: Layout primitive gap API
 - manager: start, track: feature; spec already written at wiki/specs/B25-layout-gap-api.md; delegating to test-writer
 - test-writer: added gap stories to Spread.stories.svelte (GapNone/Sm/Md/Lg + updated LedStatusBar/WithGap to assert 0px default); updated Stack "As Section" to assert 24px → 6 tests red
 - implementer: Stack/Inline md→var(--u3); Spread added gap prop + data-gap CSS; CtaBlock style="gap:24px"→gap="md" → 236/236 green
 - reviewer: PASS — all 17 ACs met, 0 pnpm check errors, no scope creep
-- result: done — commit `97daf9e`
+- result: done
 
 ## 2026-05-16 — B13: Composition refactor
 - manager: spec written, test-writer skipped (no new failing tests — existing 164 stories are baseline), implementer replaced raw flex/grid/button in all higher-order components
 - reviewer: PASS — Stack/Inline/Spread used throughout; exceptions documented (AccordionItem, Table, Card.svelte)
-- result: done — commit `038ed7e`
+- result: done
 
 ## 2026-05-16 — B14: Typography primitives
 - manager: set in-progress; spec already written (wiki/specs/B14-typography-primitives.md); delegating to test-writer
 - test-writer: wrote Text.stories.svelte (8 stories) + Heading.stories.svelte (7 stories) → red (components missing)
 - implementer: wrote Text.svelte + Heading.svelte + updated index.ts → 179/179 green; manager fixed null-check TS errors in story files
 - reviewer: PASS — all 30 ACs met, 0 pnpm check errors, no scope creep
-- result: done — commit `3396103`
+- result: done
 
 ## 2026-05-17 — B17: Navigation enhancements
 - manager: set in-progress; spec at wiki/specs/B17-navigation-enhancements.md; delegating to test-writer
 - test-writer: wrote Breadcrumb.stories.svelte (3 stories) + Accordion "Animated" story → red (Breadcrumb.svelte missing)
 - implementer: Breadcrumb.svelte already pre-populated by parallel agent; added waitFor to Accordion visibility assertions (CSS transition race) → 207/207 green
 - reviewer: PASS — all 42 ACs met, 0 pnpm check errors, no scope creep
-- result: done — commit `180790d`
+- result: done
 
 ## 2026-05-17 — B16: Form primitives
 - manager: set in-progress; spec at wiki/specs/B16-form-primitives.md; delegating to test-writer
@@ -87,7 +87,7 @@ it records the reason here AND states it in chat.
 - implementer: wrote Checkbox, Radio, RadioGroup, Switch, field-context.ts; enhanced Field/Input/Textarea with Svelte context; 202/202 green (11 TS errors in stories fixed by manager)
 - reviewer: FAIL (pass 1) — AC-60: Radio missing resolvedId + resolvedAriaInvalid; no test for Radio-in-Field
 - manager: fixed Radio.svelte + added "Auto ARIA Wiring — Radio" story; reviewer pass 2: PASS — 203/203 green, 0 errors
-- result: done — commit `40229b8`
+- result: done
 
 ## 2026-05-17 — B19: Package documentation
 - manager: set in-progress; implemented directly
@@ -95,34 +95,34 @@ it records the reason here AND states it in chat.
 - CHANGELOG.md: created with 14+ entries under v0.1.0 in Keep a Changelog format
 - package.json: version 0.0.1→0.1.0, added @sveltejs/kit peer dep, CSS exports for tokens
 - JSDoc: annotated 41/43 exported components (95% coverage); 2 skipped (Rule, Accordion — no custom props)
-- result: done — commit `9f82900`
+- result: done
 
 ## 2026-05-17 — B23: CSS audit fixes
 - manager: set in-progress; implemented three fixes directly
 - NoteCard: `:global(.note-card:hover)` → `:global(.note-card):hover`, removed `!important`
 - Nav: `.hamburger-wrap { display: flex; align-items: center }` → `display: block` on mobile
 - CtaBlock: removed redundant `align-items: center` from Spread style prop
-- result: done — commit `6391d17`
+- result: done
 
 ## 2026-05-17 — B22: Modal story improvements
 - manager: set in-progress; wrote spec at wiki/specs/B22-modal-story-improvements.md; implemented directly (story rewrite)
 - manager: replaced all 7 open: true stories with 6 trigger-based stories; $state per story; backdrop close via dialog.click() + waitFor
 - reviewer: FAIL (pass 1) — AC-13 missing from Backdrop Close story; manager fixed → 232/232 green
 - reviewer: PASS (pass 2) — all 18 ACs met, 0 errors, no scope creep
-- result: done — commit `a7f1a03`
+- result: done
 
 ## 2026-05-17 — B21: AI-readable docs
 - manager: set in-progress; spec at wiki/specs/B21-ai-readable-docs.md; skipping test-writer (docs-only item); delegating to implementer
 - implementer: wrote all 10 docs/ files (index, design-tokens, layout, primitives, cards, navigation, forms, feedback, patterns, data) → 233/233 green (no regressions)
 - reviewer: PASS — all 39 ACs met, 233 tests green, no scope creep
-- result: done — commit `bd97e1e`
+- result: done
 
 ## 2026-05-17 — B20: Prose component
 - manager: set in-progress; spec at wiki/specs/B20-prose-component.md (written by user); delegating to test-writer
 - test-writer: wrote Prose.stories.svelte (13 stories) → red (Prose.svelte missing)
 - implementer: wrote Prose.svelte + updated layout/index.ts + lib/index.ts; fixed AnchorHover (:hover not readable via getComputedStyle) and Image (height:auto not readable) → 233/233 green
 - reviewer: PASS — all 34 ACs met, 0 errors, no scope creep
-- result: done — commit `fe54444`
+- result: done
 
 ## 2026-05-17 — B18: Toast notifications
 - manager: set in-progress; spec already written by user; test-writer wrote 13 failing stories (2 files) → red
@@ -130,13 +130,13 @@ it records the reason here AND states it in chat.
 - reviewer: FAIL (pass 1) — AC 60 (:global in Toast.svelte), AC 32 (background-color untested), AC 46 (timer cancellation untested), Nav.svelte scope creep
 - manager: fixed all 4 findings; Nav.svelte parallel-agent changes bundled in commit
 - reviewer: PASS (pass 2) — all 75 ACs met, 220/220 green, 0 errors
-- result: done — commit `eefc8b5`
+- result: done
 
 ## 2026-05-16 — B15: Keyboard navigation
 - manager: set in-progress; spec written (wiki/specs/B15-keyboard-navigation.md)
 - implementer: added `highlightedIndex` + ARIA Listbox keyboard handler to Select.svelte; added `handleTabKeydown` + ARIA Tabs keyboard handler to Tabs.svelte; added "Keyboard Navigation" stories for both; fixed 6 parallel-agent regressions (class names dropped in NoteCard, ProjectCard, CtaBlock; broken composition stories in Led, Modal, ActivityRow)
 - reviewer: PASS (second pass) — all 36 ACs met, 180/180 green, 0 pnpm check errors, no scope creep
-- result: done — commit `64bbe74`
+- result: done
 
 ## 2026-05-15 — Bootstrap
 - bootstrap: interviewed user, populated wiki (vision, requirements, architecture, backlog, decisions) → done
@@ -146,7 +146,7 @@ it records the reason here AND states it in chat.
 
 ## 2026-05-15 — B1: Project scaffold
 - manager: bootstrap baseline committed → `5c59008`
-- result: done — commit `5c59008`
+- result: done
 
 ## 2026-05-15 — Work plan
 - manager: built ordered work plan; presenting to user for approval (review checkpoint #1)
@@ -172,14 +172,14 @@ it records the reason here AND states it in chat.
 - spec-writer: wrote wiki/specs/B3-layout-helpers.md (82 acceptance criteria, 14-story plan) → done
 - test-writer: wrote layout.stories.svelte (14 stories) → all 18 tests green (CSS already existed)
 - reviewer: PASS — 82 AC covered, 2 minor soft findings (grid-auto column template, kv-row padding assertions weak but CSS correct)
-- result: done — commit `a587de4`
+- result: done
 
 ## 2026-05-16 — B4: Primitive components
 - manager: set in-progress; spec written and approved by user
 - test-writer: wrote Button.stories.svelte (8 stories), Led.stories.svelte (7), TagPill.stories.svelte (4) → red (missing components)
 - implementer: wrote Button.svelte, Led.svelte, TagPill.svelte, index.ts; fixed CSF double-wrap (remove component: from defineMeta) → 23/23 green
 - manager: updated stories-guide.md to document defineMeta component: antipattern
-- result: done — commit `8fffee3`
+- result: done
 
 ## 2026-05-16 — B3: Layout components
 - manager: set in-progress, delegating to spec-writer
@@ -187,7 +187,7 @@ it records the reason here AND states it in chat.
 - test-writer: wrote 20 failing stories (6 files, one per component) → red
 - implementer: wrote all 6 components + index.ts; updated src/lib/index.ts → 46/46 green
 - reviewer: initial FAIL (missing play-fn assertions for 14 ACs); implementer added assertions → re-run PASS
-- result: done — commit `71a3e1c`
+- result: done
 
 ## 2026-05-16 — B5: Card components
 - manager: set in-progress, delegating to spec-writer
@@ -195,7 +195,7 @@ it records the reason here AND states it in chat.
 - test-writer: wrote 14 failing stories (4 files) → red
 - implementer: wrote all 4 components + index.ts; updated src/lib/index.ts → 60/60 green
 - reviewer: initial FAIL (4 test gaps: aspect-ratio ×2, low-stock, ctaLabel override); manager fixed directly → 62/62 green
-- result: done — commit `ba50c32`
+- result: done
 
 ## 2026-05-16 — B12: Story rewrite
 - manager: set in-progress; user requested B12 before B6 to establish clean story baseline
@@ -203,14 +203,14 @@ it records the reason here AND states it in chat.
 - manager: skipping test-writer (no new failing tests to write — existing 62 tests are the baseline; implementer rewrites story files to match pattern)
 - implementer: created storybook-utils.ts, rewrote 14 story files, created 2 composition files → 62/62 green
 - reviewer: FAIL (Rule.stories cast not removed); manager fixed directly (getByRole('separator')) → re-run PASS
-- result: done — commit `8158dff`
+- result: done
 
 ## 2026-05-16 — B6: Navigation
 - manager: set in-progress; spec already written (wiki/specs/B6-navigation.md); user approved via "continue"
 - test-writer: wrote Nav.stories.svelte (5 stories) → red (Nav.svelte missing)
 - implementer: wrote Nav.svelte, index.ts; fixed aria-hidden (undefined not false when open), added setTimeout tick for Mobile Menu test → 68/68 green
 - reviewer: initial FAIL (aria-hidden="false" vs null, Mobile Menu timing); manager fixed Nav.svelte + story + spec → re-run PASS
-- result: done — commit `1340c58`
+- result: done
 
 ## 2026-05-16 — B7: Form components
 - manager: set in-progress, delegating to spec-writer
@@ -218,7 +218,7 @@ it records the reason here AND states it in chat.
 - test-writer: wrote 6 story files (Input, Textarea, Select, InputWrap, InputWrap.composition, Field) → red (components missing)
 - implementer: wrote all 5 components + index.ts; fixed type errors (Select: removed $app/environment, Omit onchange conflict; Textarea stories: getByRole('textbox'); Select stories: ! assertion; InputWrap.composition: top-level snippet) → 92/92 green
 - reviewer: initial FAIL (9 type errors, pnpm check); fixes applied → re-run PASS
-- result: done — commit `49b5b37`
+- result: done
 
 ## 2026-05-16 — B8: Modal
 - manager: set in-progress, delegating to spec-writer
@@ -226,7 +226,7 @@ it records the reason here AND states it in chat.
 - test-writer: wrote Modal.stories.svelte + Modal.composition.stories.svelte in src/lib/components/feedback/ → red (Modal.svelte missing)
 - implementer: wrote Modal.svelte + index.ts; native <dialog>, showModal()/$effect, scroll lock, variants → 99/99 green
 - reviewer: PASS — all 56 ACs met, pnpm check 0 errors
-- result: done — commit `5d228c4`
+- result: done
 
 ## 2026-05-16 — B9: Pattern components
 - manager: set in-progress, delegating to spec-writer
@@ -234,7 +234,7 @@ it records the reason here AND states it in chat.
 - test-writer: wrote 10 story files (9 + ActivityRow.composition) in src/lib/components/patterns/ → red (components missing)
 - implementer: wrote all 9 components + index.ts → 135/135 green; pnpm check 0 errors
 - reviewer: PASS — all 98 ACs met
-- result: done — commit `93b5f56`
+- result: done
 
 ## 2026-05-16 — B10: Accordion, Tabs, Table
 - manager: set in-progress, delegating to spec-writer
@@ -242,7 +242,7 @@ it records the reason here AND states it in chat.
 - test-writer: wrote 4 story files in src/lib/components/data/ → red (components missing)
 - implementer: wrote all 4 components + index.ts; fixed Tabs.stories snippet scope → 156/156 green; pnpm check 0 errors
 - reviewer: FAIL (6 CSS property ACs untested); manager accepted — testing browser CSS resolution is not worthwhile
-- result: done — commit `37329dc`
+- result: done
 
 ## 2026-05-16 — B11: Storybook catalogue
 - manager: set in-progress; scope = consistency pass + full catalogue combined; delegating to spec-writer
@@ -250,7 +250,7 @@ it records the reason here AND states it in chat.
 - manager: skipping test-writer (stories are both test and implementation; no meaningful red phase); delegating directly to implementer
 - implementer: added 9+ stories across Spread/Rule/Card/ProjectCard/CtaBlock/Modal/Table; created token docs (Color Palette, Typography Scale, Spacing Scale); removed 4 old token stories → 164/164 green
 - reviewer: FAIL (AC-29: old token stories not removed); manager fixed directly → re-run PASS
-- result: done — commit `8b47cb2`
+- result: done
 
 ## 2026-05-18 — B28: Nav overhaul — match website design
 - manager: start, track: feature
@@ -261,7 +261,7 @@ it records the reason here AND states it in chat.
 - reviewer: FAIL — 6 groups of missing story assertions (ACs 11, 25, 27–30, 36–37, 39–43, 45–48); implementation correct
 - implementer: added all missing assertions → 265/265 green
 - reviewer: PASS
-- result: done — commit `b2b739e`
+- result: done
 
 ## 2026-05-18 — B34: Modal close button not in top-right corner
 - manager: start, track: bug; delegating to spec-writer
@@ -275,7 +275,7 @@ it records the reason here AND states it in chat.
 - implementer: --rail→--rule, label onclick; 265/265 green
 - reviewer: PASS
 - post-fix: ink-faint knob color + stories consolidated 6→3 per user feedback — commit 3ea80e4
-- result: done — commit 1c3e3fb
+- result: done
 
 ## 2026-05-18 — B30: Input chrome fixes — number arrows, clearable color, icon color
 - manager: start, track: bug; delegating to spec-writer
@@ -283,7 +283,7 @@ it records the reason here AND states it in chat.
 - test-writer: added Number Input story; extended Clearable-With-Value (color probe); extended Icon Prefix (fill probe); 2 red (clear=amber not ink-dim, icon fill=black)
 - implementer: spin button CSS + icon :global(svg) + clear button ink-dim/amber; hover assertion dropped (CSS :hover not triggered by synthetic events); 265/265 green
 - reviewer: PASS — all 10 ACs met
-- result: done — commit 5b0c6ad
+- result: done
 
 ## 2026-05-18 — B36: PageHero — snippet-based heading with mixed ink colors
 - manager: start, track: feature; delegating to spec-writer
@@ -291,7 +291,7 @@ it records the reason here AND states it in chat.
 - test-writer: added SnippetHeading + NoBorder stories; 2 red (headingContent prop missing, border prop missing); 262 passing
 - implementer: headingContent snippet + border class toggle + :global(em) rule; story fixed to use template snippet pattern; 264/264 green
 - reviewer: PASS (AC-3c simplified to fontStyle-only; color probe dropped — fontStyle sufficient proof)
-- result: done — commit fd1f55d
+- result: done
 
 ## 2026-05-18 — B29: Checkbox shifts down on toggle
 - manager: start, track: bug
@@ -299,7 +299,7 @@ it records the reason here AND states it in chat.
 - test-writer: added "No Layout Shift" regression story → fails (::after position: static)
 - implementer: position:absolute + centred ::after, ✔ at 20px, CSS nesting pass → 265/265 green
 - manager: visual review approved; folded regression into Space to Toggle, removed dedicated story; 0 check errors
-- result: done — commit pending
+- result: done
 
 ## 2026-05-18 — B33: Typography realignment with OG design system
 - manager: start, track: bug; spawning researcher to diff tokens.css vs colors_and_type.css
@@ -308,7 +308,7 @@ it records the reason here AND states it in chat.
 - test-writer: extended Modal Default + Destructive play fns (AC-1–5, AC-7); extended Heading Levels play fn (AC-10–12); 2 red (Modal 19px≠24px), Heading assertions green as regression guards
 - implementer: Modal → Heading h3; Heading size prop removed; 3 card callers cleaned; 262/262 green
 - reviewer: PASS (AC-10–12 story-name finding resolved by spec update; assertions present and passing)
-- result: done — commit 503d8d5
+- result: done
 
 ## 2026-05-17 — B24: Style prop cleanup
 - manager: set in-progress; spec at wiki/specs/B24-style-prop-cleanup.md; implemented directly
@@ -317,7 +317,7 @@ it records the reason here AND states it in chat.
 - Modal: Stack→div (.modal-inner), Inline as="header"→header (.modal-header), Spread as="footer"→footer (.modal-footer); removed Stack import
 - Nav: Inline nav-inner→div, Inline as="a" nav-brand→native a, Inline nav-right→div, Inline as="ul" nav-links→native ul, Stack as="ul" nav-drawer-links→native ul; fixed :global(.nav-links)→.nav-links; removed Stack import
 - pnpm check: 0 errors; pnpm test: 232/232 green
-- result: done — commit `eee6862`
+- result: done
 
 ## 2026-05-18 — B34: Modal close button / Modal visual redesign
 - manager: spec written (7 ACs) → user approved; test-writer added flex/position assertions to Default story → 1 red
@@ -325,7 +325,7 @@ it records the reason here AND states it in chat.
 - user review: Modal title too large; icons in wrong place; background wrong; buttons misaligned; stories excessive
 - manager + implementer (iterative): title→12px mono, icons→body hstack (amber/red outline circles), close→ink-faint 18px plain button, background→--overlay, footer→flex-end, stories 6→3
 - reviewer: PASS (all ACs met, 259/259 green)
-- result: done — commit `3a04219`
+- result: done
 
 ## 2026-05-18 — B35: Alert → feedback, aligned variants, Toast uses Alert with title+message
 - manager: spec written (review-flagged) → user corrected: Alert already exists in patterns, should move to feedback; variants align to success/warning/error/info; Toast gains title/message like Alert
@@ -336,7 +336,7 @@ it records the reason here AND states it in chat.
 - manager: added ondismiss prop to Alert (dismiss button inside bordered box, ink-faint); removed Button ghost from Toast → 260/260 green
 - reviewer: PASS (AC-16 spec text reconciled with implementation)
 - Interactive ToastRegion story added (trigger buttons, duration:0)
-- result: done — commit `e54617b`
+- result: done
 
 ## 2026-05-19 — B38: Strip outer margins from all components (consumer owns spacing)
 - manager: start, track: bug; delegating to spec-writer (no review flag — run straight through)
@@ -345,7 +345,7 @@ it records the reason here AND states it in chat.
 - manager: delegating to implementer (test-writer stage skipped per D42)
 - implementer: SectionFoot removed `margin-top: 20px`; Text added `.body-text, .body-lede, .mono-label, .eyebrow { margin: 0 }`; Heading added variant + bare h4/h5/h6 `margin: 0` rules → 260/260 green, 0 pnpm check errors
 - reviewer: PASS — all 5 ACs met, 260 tests green, D42 honoured (no .stories.svelte changes), no scope creep
-- result: done — commit `9c3f988`
+- result: done
 
 ## 2026-05-19 — B39: Regression — /order/cancel/ on dexterlabs.nl (PageHero/Heading/Rule/Button/Text + Signoff)
 - manager: start, track: bug; renamed inbox/regression-order-cancel.md → doing/B39-order-cancel-regression.md, frontmatter updated (id REG-… → B39, flags [review] auto-added — large multi-component change). Delegating to spec-writer.
@@ -358,14 +358,14 @@ it records the reason here AND states it in chat.
 - manager + user (post-review API refinement): D43 codified — text-or-snippet slots use a single `prop?: string | Snippet`. B36's `headingContent` removed; PageHero gets `eyebrow?: string | Snippet`, `heading?: string | Snippet`, and rename `headingVariant` → `variant`. Re-dispatching implementer for the API simplification + docs/README sync.
 - implementer (pass 2): consolidated eyebrow/heading props, renamed headingVariant→variant, single wrapper templates with inner discriminator, docs/patterns.md + docs/primitives.md synced. 263/263 green, 0 check errors.
 - reviewer (pass 2): PASS — all in-scope ACs met (revised Sections 1+2 and carried-over 3-9), D43 compliance verified (only legitimate `headingContent` remaining is the local snippet const in SnippetHeading story), docs reflect new API, 263/263 green, no scope creep.
-- result: done — commit `4fca914`
+- result: done
 
 ## 2026-05-19 14:00 — B40: Regression — PageHero and Container have no mobile-responsive vertical padding
 - manager: start, track: bug; D42 applies (visual-only CSS fix) — test-writer skipped; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B40-responsive-vertical-padding.md (7 ACs); no blocking questions
 - implementer: added @media (max-width: 720px) blocks to PageHero.svelte + Container.svelte; 263/263 green, 0 check errors
 - reviewer: PASS — all 7 ACs met, 263/263 green, no scope creep
-- result: done — commit `31a5446`
+- result: done
 
 ## 2026-05-19 14:30 — B41: Regression — Prose should match MarkdownBody's typography
 - manager: start, track: bug; D42 applies (visual-only CSS rewrite) — test-writer skipped; delegating to spec-writer
@@ -374,7 +374,7 @@ it records the reason here AND states it in chat.
 - implementer (pass 2): rewrote style block with `.prose { :global { … } }` nesting (D45); 263/263 green, 0 check errors
 - manager: D45 promoted to Standing Rules per user direction; spec AC-37 updated to require nesting
 - reviewer: PASS — all 37 ACs met, 263/263 green, no scope creep
-- result: done — commit `c9ed524`
+- result: done
 
 ## 2026-05-19 15:00 — B42: Regression — Grid has no responsive collapse
 - manager: start, track: bug; layout behavior change — D42 does not apply, full pipeline; delegating to spec-writer
@@ -382,7 +382,11 @@ it records the reason here AND states it in chat.
 - test-writer: updated 5 existing Grid stories + created Grid.collapse.stories.svelte (7 new stories); 12 red
 - implementer: added data-cols attr, --grid-cols custom prop, @container collapse rules to Grid.svelte; 270/270 green
 - reviewer: PASS — all 18 ACs met, 270/270 green, no scope creep
-- result: done — commit `7c31106`
+- result: done
 
 ## 2026-05-19 16:00 — B43: Regression — NoteCard needs an image prop with side / top placement
 - manager: start, track: bug; new props + conditional layout — full pipeline; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B43-notecard-image-prop.md (18 ACs); no blocking questions
+- implementer: added image/imageSrcset/imagePlacement props, .side/.top classes, grid+flex CSS, 2 catalogue stories; 272/272 green
+- user review: class over data-attr; card-body grid-column span fix; align-self stretch + object-position center for side image
+- result: done

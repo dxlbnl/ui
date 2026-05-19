@@ -113,9 +113,11 @@ For each item, top of the ordered work plan first:
      attached. A second rejection **escalates**.
 5. **Done** — when the reviewer passes AND the full test suite is green:
    - `git mv wiki/backlog/doing/<id>-<slug>.md wiki/backlog/done/`.
+   - Append `- result: done` to the item's `wiki/progress.md` entry.
    - Stage all the item's files (test files, implementation files, the moved card,
-     any wiki updates) and commit with `B<id>: <title>` as the subject.
-   - Append the outcome + commit hash to `wiki/progress.md`.
+     `wiki/progress.md`, any other wiki updates) and commit with `B<id>: <title>`
+     as the subject. **Include `wiki/progress.md` in this commit** — no separate
+     follow-up commit needed, no hash to record.
    - Pull the next item from `ready/` and loop.
 
 Run **until blocked** — keep pulling items until `ready/` is empty, you hit a review
