@@ -337,3 +337,12 @@ it records the reason here AND states it in chat.
 - reviewer: PASS (AC-16 spec text reconciled with implementation)
 - Interactive ToastRegion story added (trigger buttons, duration:0)
 - result: done — commit `e54617b`
+
+## 2026-05-19 — B38: Strip outer margins from all components (consumer owns spacing)
+- manager: start, track: bug; delegating to spec-writer (no review flag — run straight through)
+- spec-writer: wrote wiki/specs/B38-strip-outer-margins.md — audit of 28 components → 1 real offender (SectionFoot `margin-top: 20px`) + 2 reset-dependent primitives (Text/Heading) tightened to self-owned scoped `margin: 0`. Original draft proposed 40 per-component play-fn margin assertions.
+- manager + user: decision D42 recorded — no play-fn assertions for visual-only changes. Spec ACs slimmed from 40 to 5; visual-only tracks skip test-writer (spec-writer → implementer → reviewer). stories-guide.md updated with "When NOT to assert" section.
+- manager: delegating to implementer (test-writer stage skipped per D42)
+- implementer: SectionFoot removed `margin-top: 20px`; Text added `.body-text, .body-lede, .mono-label, .eyebrow { margin: 0 }`; Heading added variant + bare h4/h5/h6 `margin: 0` rules → 260/260 green, 0 pnpm check errors
+- reviewer: PASS — all 5 ACs met, 260 tests green, D42 honoured (no .stories.svelte changes), no scope creep
+- result: done — commit `07a1245`

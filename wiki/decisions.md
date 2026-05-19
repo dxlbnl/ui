@@ -762,3 +762,14 @@
 - **Decision**: Alert accepts an optional `ondismiss?: () => void` prop. When provided, Alert renders a plain `<button>` (ink-faint, 18px, `margin-left: auto`) inside its own flex row — inside the bordered container. Toast passes `ondismiss={() => ondismiss(id)}` to Alert and has no separate dismiss button element. The `role`/`aria-live`/`aria-atomic` attributes remain on Toast's outer wrapper.
 - **Consequences**: Alert is now optionally dismissible. The dismiss button is always visually inside the bordered Alert box. Future persistent Alert usage that needs a dismiss action can use the same prop.
 - **Supersedes**: none
+
+## D42: No play-fn assertions for visual-only changes
+- **Date**: 2026-05-19
+- **By**: user
+- **Context**: B38's spec inflated a 1-line CSS fix (remove `margin-top: 20px` from `SectionFoot`) into 40 per-component play-fn assertions that locked a zero-outer-margin contract in every component's existing stories file. The user pushed back: "drop the damn stories for the visual changes."
+- **Decision**: For visual / CSS-only changes (margin, padding, color, font, layout values), do **not** add play-fn assertion stories — neither new stories nor expanded play functions on existing stories — for the purpose of locking the visual contract. Make the source change and rely on the existing stories as visual development surfaces. Play-fn assertions are reserved for **behaviour** (interactions, state, accessibility, conditional rendering, focus management, keyboard nav, etc.), not for asserting computed CSS values.
+  - `test-writer` is **skipped** for visual-only bug/feature tracks. Manager dispatches `spec-writer → implementer → reviewer` for those items.
+  - `spec-writer` must not write ACs of the form "assert `getComputedStyle(root).margin* === '0px'`" or analogous computed-style locks for clean components. ACs for visual changes name the source-file change and the visual outcome; the reviewer verifies the change by reading the diff and (where useful) opening the affected story in Storybook.
+  - Exception: when a computed value is the **observable contract of a behaviour** (e.g. a focus-visible outline appears on Tab, a scroll position lands at a specific Y), an assertion is fine — that is testing behaviour, not visual decoration.
+- **Consequences**: Spec pages get shorter and more honest for visual work. Test-writer's queue shrinks. The pipeline for visual fixes is `spec-writer → implementer → reviewer`. `stories-guide.md` gets a new "When NOT to assert" section pointing here.
+- **Supersedes**: none

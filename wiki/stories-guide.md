@@ -171,6 +171,26 @@ play={async ({ canvasElement, userEvent }) => {
 }}
 ```
 
+### When NOT to assert (visual-only changes)
+
+Play functions are for **behaviour**, not for locking visual CSS values on
+otherwise-static components. Do not add play-fn assertions whose only purpose is
+to assert a computed CSS value (margin, padding, color, font, gap) for a change
+that is purely visual.
+
+- **Skip:** a margin/padding/color sweep that adds `expect(getComputedStyle(root).marginTop).toBe('0px')`
+  across every component "to lock the contract".
+- **Keep:** a play-fn that verifies the **observable behaviour** of a CSS change
+  — focus-visible outline appearing on Tab, a scroll target landing at a known
+  position, an `aria-expanded` toggle, a transition completing.
+
+For a visual-only bug or feature, the manager pipeline runs
+`spec-writer → implementer → reviewer` — no `test-writer` stage. The spec page
+names the source change and the visual outcome; the reviewer verifies by
+reading the diff and opening the affected story.
+
+See [decisions.md](decisions.md) → **D42**.
+
 ---
 
 ## Token color resolution

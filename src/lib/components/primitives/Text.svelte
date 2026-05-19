@@ -60,6 +60,8 @@
 </svelte:element>
 
 <style>
+  .body-text, .body-lede, .mono-label, .eyebrow { margin: 0 }
+
   .body-text {
     font-family: var(--sans);
     font-size: var(--t-body);

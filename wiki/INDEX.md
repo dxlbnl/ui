@@ -37,6 +37,7 @@ Every agent reads this page first, before doing anything else.
 | [specs/B32-switch-fixes.md](specs/B32-switch-fixes.md) | Spec: Switch — off-state border `--rule` fix (dark mode visibility) + label-click toggle; 9 ACs, extends existing stories only. |
 | [specs/B34-modal-close-button.md](specs/B34-modal-close-button.md) | Spec: Modal visual redesign — 12px mono title, variant icons in body hstack, ink-faint close button, `--overlay` background, footer right-aligned; stories 6→3. |
 | [specs/B35-toast-uses-alert.md](specs/B35-toast-uses-alert.md) | Spec: Alert moved patterns→feedback; variants `ok/amber/danger→success/warning/error`; Alert gains `ondismiss` prop; Toast uses Alert with `title`+`message`; 24 ACs. |
+| [specs/B38-strip-outer-margins.md](specs/B38-strip-outer-margins.md) | Spec: Strip outer margins from component roots — only SectionFoot offends (`margin-top: 20px` removed); Text+Heading get self-owned scoped `margin: 0`. Visual-only (D42) — no contract-locking play-fn assertions. |
 | [design-system-audit.md](design-system-audit.md) | Audit: OG flat-CSS vs Svelte implementation — token alignment, component drifts, missing pieces. |
 | [research/B33-token-diff.md](research/B33-token-diff.md) | Research: B33 — token diff (colors_and_type.css vs tokens.css) + Modal/Text/Heading size-prop audit. |
 

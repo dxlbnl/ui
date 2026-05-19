@@ -47,7 +47,6 @@
     font-family: var(--mono);
     font-size: var(--t-mono);
     letter-spacing: 0.06em;
-    margin-top: 20px;
   }
 
   .section-foot-link {
