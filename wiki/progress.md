@@ -25,6 +25,9 @@ it records the reason here AND states it in chat.
 - manager: delegating to test-writer
 - test-writer: 3 new failing stories (Controlled Palette Phosphor, Controlled Palette Paper, In-flow Nav); 275 existing pass, 3 new fail for right reasons; total 278
 - manager: delegating to implementer
+- implementer: added palette/onPaletteToggle/sticky/maxWidth props; controlled mode logic; 4 additional gap stories; restored nav-sep span; 282/282 green, 0 check errors
+- reviewer: PASS — all 23 ACs met, 282/282 green, no scope creep
+- result: done
 
 ## 2026-05-20 07:20 — B47: ProductCard visual regression (image, sans desc, aligned price, CTA arrow)
 - manager: start, track: bug (visual-only, D42); delegating to spec-writer
