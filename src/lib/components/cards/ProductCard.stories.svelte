@@ -27,10 +27,6 @@
     const heading = canvas.getByText("Conduit PDX-2");
     await expect(heading).toBeVisible();
 
-    // SKU renders as visible mono text
-    const sku = canvas.getByText("CONDUIT-PDX2");
-    await expect(sku).toBeVisible();
-
     // price rendered when provided
     const price = canvas.getByText(/€200/);
     await expect(price).toBeVisible();

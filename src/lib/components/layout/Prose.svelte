@@ -1,19 +1,30 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
-  import type { Snippet } from 'svelte'
+  import type { HTMLAttributes } from "svelte/elements";
+  import type { Snippet } from "svelte";
 
   interface ProseProps extends HTMLAttributes<HTMLElement> {
     /** HTML element to render as. @default 'article' */
-    as?: string
+    as?: string;
     /** Max-width constraint applied to the prose container. Omit to inherit from the parent. */
-    maxWidth?: string
-    children?: Snippet
+    maxWidth?: string;
+    children?: Snippet;
   }
 
-  let { as = 'article', maxWidth, children, class: klass = '', ...rest }: ProseProps = $props()
+  let {
+    as = "article",
+    maxWidth,
+    children,
+    class: klass = "",
+    ...rest
+  }: ProseProps = $props();
 </script>
 
-<svelte:element this={as} class={['prose', klass]} style:max-width={maxWidth} {...rest}>
+<svelte:element
+  this={as}
+  class={["prose", klass]}
+  style:max-width={maxWidth}
+  {...rest}
+>
   {@render children?.()}
 </svelte:element>
 
@@ -59,7 +70,7 @@
       /* Paragraph — AC-10/11 */
       p {
         margin-bottom: 20px;
-        color: var(--ink);
+        color: var(--ink-dim);
       }
 
       /* Anchor — AC-12/13/14 */
@@ -129,7 +140,7 @@
       ol {
         padding-left: 20px;
         margin-bottom: 20px;
-        color: var(--ink);
+        color: var(--ink-dim);
       }
 
       li {

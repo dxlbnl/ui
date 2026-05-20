@@ -1,46 +1,50 @@
 <script lang="ts">
-  import type { Snippet } from 'svelte'
-  import Inline from '../layout/Inline.svelte'
-  import Text from '../primitives/Text.svelte'
-  import Heading from '../primitives/Heading.svelte'
+  import type { Snippet } from "svelte";
+  import Inline from "../layout/Inline.svelte";
+  import Text from "../primitives/Text.svelte";
+  import Heading from "../primitives/Heading.svelte";
 
   interface Props {
     /** Eyebrow label. String renders inside <Text variant="eyebrow">; a Snippet renders as-is. */
-    eyebrow?: string | Snippet
+    eyebrow?: string | Snippet;
     /** Hero heading. String renders as text; a Snippet renders as-is. */
-    heading?: string | Snippet
+    heading?: string | Snippet;
     /** Heading scale variant. @default 'title' */
-    variant?: 'hero' | 'title'
+    variant?: "hero" | "title";
     /** Subtitle / lede text shown below the heading. */
-    lede?: string
+    lede?: string;
     /** Show bottom border rule. @default false */
-    border?: boolean
-    children?: Snippet
-    [key: string]: unknown
+    border?: boolean;
+    children?: Snippet;
+    [key: string]: unknown;
   }
 
   let {
     eyebrow,
     heading,
-    variant = 'title',
+    variant = "title",
     lede,
     border = false,
     children,
     ...rest
-  }: Props = $props()
+  }: Props = $props();
 </script>
 
 <header class="page-hero" class:page-hero--bordered={border} {...rest}>
   {#if eyebrow}
     <div class="page-hero-eyebrow">
-      {#if typeof eyebrow === 'function'}{@render eyebrow()}{:else}<Text variant="eyebrow">{eyebrow}</Text>{/if}
+      {#if typeof eyebrow === "function"}{@render eyebrow()}{:else}<Text
+          variant="eyebrow">{eyebrow}</Text
+        >{/if}
     </div>
   {/if}
-  <Heading level={1} variant={variant}>
-    {#if typeof heading === 'function'}{@render heading()}{:else}{heading}{/if}
+  <Heading level={1} {variant}>
+    {#if typeof heading === "function"}{@render heading()}{:else}{heading}{/if}
   </Heading>
   {#if lede}
-    <div class="page-hero-lede"><Text variant="lede">{lede}</Text></div>
+    <div class="page-hero-lede">
+      <Text variant="lede">{lede}</Text>
+    </div>
   {/if}
   {#if children}
     <div class="page-hero-actions">
@@ -53,7 +57,7 @@
 
 <style>
   .page-hero {
-    padding: var(--u10) 0 var(--u5);
+    padding: var(--u6) 0 var(--u5);
   }
 
   .page-hero--bordered {
@@ -67,6 +71,7 @@
   .page-hero-lede {
     margin-top: var(--u2);
     max-width: 62ch;
+    color: var(--ink-dim);
   }
 
   .page-hero-actions {
@@ -81,7 +86,7 @@
 
   @media (max-width: 720px) {
     .page-hero {
-      padding: var(--u6) 0 var(--u4);
+      padding: var(--u2) 0 var(--u4);
     }
   }
 </style>

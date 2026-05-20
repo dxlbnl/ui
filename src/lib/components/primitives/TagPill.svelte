@@ -1,14 +1,14 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
+  import type { HTMLAttributes } from "svelte/elements";
 
-  type TagPillVariant = 'default' | 'amber' | 'cyan'
+  type TagPillVariant = "default" | "amber" | "cyan";
 
   interface Props extends HTMLAttributes<HTMLSpanElement> {
     /** Colour variant of the pill. @default 'default' */
-    variant?: TagPillVariant
+    variant?: TagPillVariant;
   }
 
-  let { variant = 'default', children, ...rest }: Props = $props()
+  let { variant = "default", children, ...rest }: Props = $props();
 </script>
 
 <span class="pill pill-{variant}" {...rest}>
@@ -28,17 +28,17 @@
   }
 
   .pill-default {
-    color: var(--ink-faint);
-    border-color: var(--ink-faint);
+    color: var(--bg);
+    background: var(--ink-dim);
   }
 
   .pill-amber {
-    color: var(--amber);
-    border-color: var(--amber);
+    color: var(--bg);
+    background: var(--amber);
   }
 
   .pill-cyan {
-    color: var(--cyan);
-    border-color: var(--cyan);
+    color: var(--bg);
+    background: var(--cyan);
   }
 </style>

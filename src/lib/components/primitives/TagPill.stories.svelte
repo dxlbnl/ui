@@ -26,8 +26,10 @@
       "jetbrains",
     );
     await expect(getComputedStyle(pill).textTransform).toBe("uppercase");
-    const inkFaintColor = resolveTokenFgColor("--ink-faint");
-    await expect(getComputedStyle(pill).color).toBe(inkFaintColor);
+    const bgColor = resolveTokenFgColor("--bg");
+    await expect(getComputedStyle(pill).color).toBe(bgColor);
+    const dimBgColor = resolveTokenColor("--ink-dim");
+    await expect(getComputedStyle(pill).backgroundColor).toBe(dimBgColor);
   }}
 >
   Utility
@@ -40,11 +42,10 @@
     const canvas = within(canvasElement);
     const pill = canvas.getByText("Featured");
     await expect(pill).toBeVisible();
-    const amberColor = resolveTokenFgColor("--amber");
-    await expect(getComputedStyle(pill).color).toBe(amberColor);
-    // borderColor resolves as an RGB value; use same helper via background trick
+    const bgColor = resolveTokenFgColor("--bg");
+    await expect(getComputedStyle(pill).color).toBe(bgColor);
     const amberBgColor = resolveTokenColor("--amber");
-    await expect(getComputedStyle(pill).borderColor).toBe(amberBgColor);
+    await expect(getComputedStyle(pill).backgroundColor).toBe(amberBgColor);
   }}
 >
   Featured
@@ -57,10 +58,10 @@
     const canvas = within(canvasElement);
     const pill = canvas.getByText("New");
     await expect(pill).toBeVisible();
-    const cyanColor = resolveTokenFgColor("--cyan");
-    await expect(getComputedStyle(pill).color).toBe(cyanColor);
+    const bgColor = resolveTokenFgColor("--bg");
+    await expect(getComputedStyle(pill).color).toBe(bgColor);
     const cyanBgColor = resolveTokenColor("--cyan");
-    await expect(getComputedStyle(pill).borderColor).toBe(cyanBgColor);
+    await expect(getComputedStyle(pill).backgroundColor).toBe(cyanBgColor);
   }}
 >
   New
