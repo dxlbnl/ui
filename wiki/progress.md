@@ -19,6 +19,14 @@ it records the reason here AND states it in chat.
 
 <!-- entries start here -->
 
+## 2026-05-20 07:20 — B47: ProductCard visual regression (image, sans desc, aligned price, CTA arrow)
+- manager: start, track: bug (visual-only, D42); delegating to spec-writer
+- spec-writer: wrote wiki/specs/B47-productcard-visual-regression.md (20 ACs, visual-only D42); no blocking questions
+- manager: skipping test-writer (D42); delegating to implementer
+- implementer: added image/imageSrcset props; 4/3 aspect-ratio; sans card-desc; align-items:center on footer row; 14px/0.1em CTA; With Image story; 275/275 green, 0 check errors
+- reviewer: PASS (pass 2, AC-3 sku.toUpperCase() fix applied inline) — all 20 ACs met, 275/275 green, no scope creep
+- result: done
+
 ## 2026-05-19 10:00 — B46: ProjectCard image props + empty-state placeholder
 - manager: start, track: bug; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B46-projectcard-image-props.md (18 ACs, visual-only D42); no blocking questions

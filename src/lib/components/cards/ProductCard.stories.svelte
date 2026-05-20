@@ -39,12 +39,14 @@
     const cta = canvas.getByText(/PRE-ORDER/);
     await expect(cta).toBeVisible();
 
-    // .card-img hatch gradient present and aspect-ratio is 14/9
+    // .card-img hatch gradient present and aspect-ratio is 4/3
     const cardImg = canvasElement.querySelector(".card-img") as HTMLElement;
     const imgBg = getComputedStyle(cardImg).backgroundImage;
     await expect(imgBg).not.toBe("none");
-    await expect(getComputedStyle(cardImg).aspectRatio).toBe("14 / 9");
+    await expect(getComputedStyle(cardImg).aspectRatio).toBe("4 / 3");
   }} />
+
+<Story name="With Image" args={{ href: "#conduit-pdx2", sku: "CONDUIT-PDX2", name: "Conduit PDX-2", description: "Power your entire Eurorack from a laptop charger.", price: "€200", status: "coming-soon", image: "/placeholder.jpg" }} />
 
 <Story name="In Stock" args={{ sku: "DISTRANS-AR1", name: "Distrans AR-1", description: "A precision attenuverter.", price: "€150", status: "in-stock" }}
   play={async ({ canvasElement }) => {

@@ -25,6 +25,10 @@
     status?: StockStatus
     /** Override the generated CTA label. */
     ctaLabel?: string
+    /** Resolved image URL shown at the top of the card. */
+    image?: string
+    /** Responsive srcset string for the image. */
+    imageSrcset?: string
     [key: string]: unknown
   }
 
@@ -36,6 +40,8 @@
     price,
     status = 'out-of-stock',
     ctaLabel,
+    image,
+    imageSrcset,
     ...rest
   }: Props = $props()
 
@@ -65,13 +71,17 @@
 
 <Card as={as} class="product-card" {...rest}>
   <div class="card-img">
-    <Text variant="mono" color="faint">{sku} · PRODUCT</Text>
+    {#if image}
+      <img src={image} srcset={imageSrcset ?? undefined} alt="" />
+    {:else}
+      <Text variant="mono" color="faint">{sku.toUpperCase()} · MODULE</Text>
+    {/if}
   </div>
   <div class="card-body">
     <Stack gap="xs">
       <Text variant="eyebrow">{sku}</Text>
       <Heading level={3}>{name}</Heading>
-      <Text variant="mono" case="none" color="dim" class="card-desc">{description}</Text>
+      <p class="card-desc">{description}</p>
       <div class="card-footer-row">
         <Spread>
           {#if price}
@@ -105,7 +115,7 @@
   }
 
   .card-footer-row {
-    align-items: baseline;
+    align-items: center;
     margin-top: auto;
     padding-top: 8px;
     display: flex;
@@ -113,38 +123,52 @@
     gap: var(--u2);
   }
 
+  .card-desc {
+    font-family: var(--sans);
+    font-size: var(--t-body);
+    color: var(--ink-dim);
+    line-height: 1.4;
+    margin: 0;
+  }
+
   /* :global needed — .product-card is on Card's root, invisible to Svelte's scoped CSS analysis */
   :global(.product-card) {
     text-decoration: none;
     color: inherit;
     cursor: pointer;
-  }
 
-  .card-img {
-    aspect-ratio: 14 / 9;
-    background: repeating-linear-gradient(
-      135deg,
-      var(--bg-sunken) 0 10px,
-      var(--bg-elev) 10px 20px
-    );
-    border-bottom: 1px solid var(--rule);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    & .card-img {
+      aspect-ratio: 4 / 3;
+      background: repeating-linear-gradient(
+        135deg,
+        var(--bg-sunken) 0 10px,
+        var(--bg-elev) 10px 20px
+      );
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
 
-  :global(.card-desc) {
-    line-height: 1.4;
-  }
+      & img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+    }
 
-  .card-cta {
-    border-top: 1px solid var(--rule);
-    padding: 10px 14px;
-    transition: background var(--transition), color var(--transition);
-  }
+    & .card-cta {
+      border-top: 1px solid var(--rule);
+      padding: 10px 14px;
+      transition: background var(--transition), color var(--transition);
+      font-size: 14px;
+      letter-spacing: 0.1em;
+    }
 
-  :global(.product-card):hover .card-cta {
-    background: var(--amber);
-    color: var(--bg);
+    &:hover .card-cta {
+      background: var(--amber);
+      color: var(--bg);
+    }
   }
 </style>
