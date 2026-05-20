@@ -1,6 +1,7 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, within } from "storybook/test";
+  import { vi } from "vitest";
   import Nav from "./Nav.svelte";
   import { resolveTokenColor, resolveTokenFgColor } from "$lib/storybook-utils.js";
 
@@ -78,6 +79,9 @@
     // AC-18: no #nav-drawer in DOM
     const drawer = canvasElement.querySelector('#nav-drawer');
     await expect(drawer).toBeNull();
+
+    // AC-15: .nav-inner max-width is 1200px by default
+    await expect(getComputedStyle(inner!).maxWidth).toBe('1200px');
   }} />
 
 <!-- AC-B28-3 (15,17), AC-B28-9 (44) -->
@@ -320,4 +324,140 @@
     // AC-43 (last-child): last dropdown link has border-bottom-width of 0px
     const lastLink = dropdownLinks[dropdownLinks.length - 1] as HTMLElement;
     await expect(getComputedStyle(lastLink).borderBottomWidth).toBe('0px');
+  }} />
+
+<!-- AC-20: Controlled mode — palette="phosphor" -->
+<Story name="Controlled Palette Phosphor" args={{
+  palette: 'phosphor',
+  onPaletteToggle: vi.fn(),
+}}
+  play={async ({ canvasElement, args, userEvent }) => {
+    const canvas = within(canvasElement);
+
+    // AC-2: toggle button text is ◐ when palette="phosphor"
+    const btn = canvas.getByRole('button', { name: /toggle colour palette/i });
+    await expect(btn.textContent?.trim()).toBe('◐');
+
+    // snapshot localStorage and data-palette before click
+    const lsBefore = localStorage.getItem('dxlb-palette');
+    const attrBefore = document.documentElement.getAttribute('data-palette');
+
+    // AC-4: clicking calls the spy exactly once
+    await userEvent.click(btn);
+    await expect(args.onPaletteToggle).toHaveBeenCalledTimes(1);
+
+    // AC-5: localStorage is unchanged after the click
+    await expect(localStorage.getItem('dxlb-palette')).toBe(lsBefore);
+
+    // AC-6: data-palette is unchanged immediately after the click
+    await expect(document.documentElement.getAttribute('data-palette')).toBe(attrBefore);
+  }} />
+
+<!-- AC-21: Controlled mode — palette="paper" -->
+<Story name="Controlled Palette Paper" args={{
+  palette: 'paper',
+  onPaletteToggle: vi.fn(),
+}}
+  play={async ({ canvasElement, args, userEvent }) => {
+    const canvas = within(canvasElement);
+
+    // AC-3: toggle button text is ◑ when palette="paper"
+    const btn = canvas.getByRole('button', { name: /toggle colour palette/i });
+    await expect(btn.textContent?.trim()).toBe('◑');
+
+    // AC-4: clicking calls the spy exactly once
+    await userEvent.click(btn);
+    await expect(args.onPaletteToggle).toHaveBeenCalledTimes(1);
+  }} />
+
+<!-- AC-22: In-flow Nav — sticky={false} maxWidth="none" -->
+<Story name="In-flow Nav" args={{
+  sticky: false,
+  maxWidth: 'none',
+}}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // AC-13: <nav> position is NOT fixed when sticky={false}
+    const nav = canvas.getByRole('navigation');
+    await expect(getComputedStyle(nav).position).not.toBe('fixed');
+
+    // AC-16: .nav-inner max-width is "none" (not the 1200px default)
+    const inner = canvasElement.querySelector('.nav-inner') as HTMLElement | null;
+    await expect(inner).not.toBeNull();
+    await expect(getComputedStyle(inner!).maxWidth).toBe('none');
+  }} />
+
+<!-- AC-17: Custom maxWidth prop -->
+<Story name="Custom MaxWidth" args={{
+  sticky: true,
+  maxWidth: '960px',
+}}
+  play={async ({ canvasElement }) => {
+    // AC-17: .nav-inner max-width matches the custom value
+    const inner = canvasElement.querySelector('.nav-inner') as HTMLElement;
+    await expect(getComputedStyle(inner).maxWidth).toBe('960px');
+  }} />
+
+<!-- AC-7: Palette prop reactivity — both glyphs visible with correct palette values -->
+<Story name="Controlled Palette Glyphs"
+  play={async ({ canvasElement }) => {
+    // phosphor Nav shows ◐, paper Nav shows ◑
+    const btns = canvasElement.querySelectorAll('button[aria-label="Toggle colour palette"]');
+    await expect(btns.length).toBe(2);
+    await expect(btns[0].textContent?.trim()).toBe('◐');
+    await expect(btns[1].textContent?.trim()).toBe('◑');
+  }}>
+  {#snippet template(args)}
+    <div>
+      <Nav palette="phosphor" onPaletteToggle={vi.fn()} />
+      <Nav palette="paper" onPaletteToggle={vi.fn()} />
+    </div>
+  {/snippet}
+</Story>
+
+<!-- AC-10: Mixed mode — only palette provided (no onPaletteToggle) -->
+<Story name="Mixed Mode Palette Only" args={{
+  palette: 'phosphor',
+}}
+  play={async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const btn = canvas.getByRole('button', { name: /toggle colour palette/i });
+
+    // record before state
+    const attrBefore = document.documentElement.getAttribute('data-palette');
+    const lsBefore = localStorage.getItem('dxlb-palette');
+
+    // click — should behave as uncontrolled (writes localStorage + mutates data-palette)
+    await userEvent.click(btn);
+
+    // AC-10: data-palette has changed (uncontrolled behaviour)
+    const attrAfter = document.documentElement.getAttribute('data-palette');
+    await expect(attrAfter).not.toBe(attrBefore);
+
+    // AC-10: localStorage has changed
+    const lsAfter = localStorage.getItem('dxlb-palette');
+    await expect(lsAfter).not.toBe(lsBefore);
+  }} />
+
+<!-- AC-11: Mixed mode — only onPaletteToggle provided (no palette) -->
+<Story name="Mixed Mode Callback Only" args={{
+  onPaletteToggle: vi.fn(),
+}}
+  play={async ({ canvasElement, args, userEvent }) => {
+    const canvas = within(canvasElement);
+    const btn = canvas.getByRole('button', { name: /toggle colour palette/i });
+
+    // record before state
+    const attrBefore = document.documentElement.getAttribute('data-palette');
+
+    // click — should behave as uncontrolled (mutates data-palette)
+    await userEvent.click(btn);
+
+    // AC-11: data-palette has changed (uncontrolled)
+    const attrAfter = document.documentElement.getAttribute('data-palette');
+    await expect(attrAfter).not.toBe(attrBefore);
+
+    // AC-11: spy was NOT called
+    await expect(args.onPaletteToggle).toHaveBeenCalledTimes(0);
   }} />

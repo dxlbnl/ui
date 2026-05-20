@@ -892,3 +892,22 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
 - **Decision**: Replace `<Text variant="mono" case="none" color="dim" class="card-desc">` with `<p class="card-desc">` and a scoped CSS rule (`font-family: var(--sans); font-size: var(--t-body); color: var(--ink-dim); line-height: 1.4; margin: 0`). This mirrors ProjectCard's implementation identically and avoids a `:global()` workaround to override Text's variant defaults.
 - **Consequences**: `description` is no longer rendered via the `Text` primitive in ProductCard. This is an accepted deviation from D38 for this specific slot — a plain `<p>` is the semantic element for body prose, and forcing `<Text>` here would require fighting its variant defaults. The `Text` primitive is still used for all other spans (SKU eyebrow, price, stock label, CTA label).
 - **Supersedes**: none
+
+## D50: B48 — Nav controlled mode requires both `palette` and `onPaletteToggle`; partial props treated as uncontrolled
+- **Date**: 2026-05-20
+- **By**: spec-writer
+- **Context**: When specifying the controlled/uncontrolled boundary for Nav's palette
+  toggle, a choice had to be made about what to do when only one of the two props is
+  supplied. Two options: (a) either prop alone activates partial controlled behaviour
+  (e.g. only `onPaletteToggle` suppresses localStorage writes); (b) both must be
+  present to activate controlled mode; partial supply is treated as uncontrolled.
+- **Decision**: Both `palette` and `onPaletteToggle` must be provided to activate
+  controlled mode. If only one is supplied, Nav falls back to full uncontrolled
+  behaviour (internal `$state`, localStorage read/write, `data-palette` mutation) as
+  if neither prop were provided. This avoids a half-controlled state where the glyph
+  and the DOM attribute can diverge unpredictably.
+- **Consequences**: Consumers who accidentally pass only one prop get uncontrolled
+  behaviour silently. The spec documents both mixed-mode cases (AC-10, AC-11) so the
+  test-writer can verify the fallback. The website's correct usage always passes both
+  props together.
+- **Supersedes**: none

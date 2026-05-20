@@ -19,6 +19,13 @@ it records the reason here AND states it in chat.
 
 <!-- entries start here -->
 
+## 2026-05-20 10:35 — B48: Nav controlled palette + layout escape hatches
+- manager: start, track: bug; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B48-nav-controlled-palette.md (23 ACs, full pipeline); no blocking questions
+- manager: delegating to test-writer
+- test-writer: 3 new failing stories (Controlled Palette Phosphor, Controlled Palette Paper, In-flow Nav); 275 existing pass, 3 new fail for right reasons; total 278
+- manager: delegating to implementer
+
 ## 2026-05-20 07:20 — B47: ProductCard visual regression (image, sans desc, aligned price, CTA arrow)
 - manager: start, track: bug (visual-only, D42); delegating to spec-writer
 - spec-writer: wrote wiki/specs/B47-productcard-visual-regression.md (20 ACs, visual-only D42); no blocking questions

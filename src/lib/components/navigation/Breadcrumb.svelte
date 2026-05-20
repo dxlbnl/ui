@@ -1,17 +1,17 @@
 <script lang="ts">
   interface Crumb {
-    label: string
-    href: string
+    label: string;
+    href: string;
   }
 
   interface BreadcrumbProps {
     /** Array of `{ label, href }` crumbs — last item gets `aria-current="page"`. */
-    crumbs: Crumb[]
+    crumbs: Crumb[];
     /** Root element tag. Use `"div"` when embedding inside a `<nav>` to avoid nested landmark. @default 'nav' */
-    as?: string
+    as?: string;
   }
 
-  let { crumbs, as = 'nav' }: BreadcrumbProps = $props()
+  let { crumbs, as = "nav" }: BreadcrumbProps = $props();
 </script>
 
 <svelte:element this={as} class="breadcrumb" aria-label="breadcrumb">
@@ -22,8 +22,9 @@
         <a
           href={crumb.href}
           class="bc-link"
-          aria-current={i === crumbs.length - 1 ? 'page' : undefined}
-        >{crumb.label}</a>
+          aria-current={i === crumbs.length - 1 ? "page" : undefined}
+          >{crumb.label}</a
+        >
       </li>
     {/each}
   </ol>
@@ -32,12 +33,15 @@
 <style>
   .breadcrumb {
     display: block;
+    min-width: 0;
   }
 
   .bc-list {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    min-width: 0;
     gap: 6px;
     list-style: none;
     padding: 0;
@@ -51,11 +55,18 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    min-width: 0;
+    flex-shrink: 1;
   }
 
   .bc-link {
     color: var(--amber);
     text-decoration: none;
+    overflow: hidden;
+    display: block;
+    min-width: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .bc-link:hover {
@@ -66,5 +77,6 @@
   .bc-sep {
     color: var(--ink-faint);
     user-select: none;
+    flex-shrink: 0;
   }
 </style>
