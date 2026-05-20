@@ -884,3 +884,11 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   rule is expected to continue supplying the lede's dim color; the implementer must confirm
   this and fall back to `color="dim"` on the `<Text>` if not.
 - **Supersedes**: none
+
+## D49: B47 — ProductCard uses plain `<p class="card-desc">` for description, mirroring ProjectCard
+- **Date**: 2026-05-20
+- **By**: spec-writer
+- **Context**: ProductCard's description prop was rendered via `<Text variant="mono">`, applying mono 14 px. The correct treatment is sans body 16 px (prose, not metadata). The natural fix is a scoped `<p class="card-desc">` with explicit font-family/size rules — exactly what ProjectCard already does.
+- **Decision**: Replace `<Text variant="mono" case="none" color="dim" class="card-desc">` with `<p class="card-desc">` and a scoped CSS rule (`font-family: var(--sans); font-size: var(--t-body); color: var(--ink-dim); line-height: 1.4; margin: 0`). This mirrors ProjectCard's implementation identically and avoids a `:global()` workaround to override Text's variant defaults.
+- **Consequences**: `description` is no longer rendered via the `Text` primitive in ProductCard. This is an accepted deviation from D38 for this specific slot — a plain `<p>` is the semantic element for body prose, and forcing `<Text>` here would require fighting its variant defaults. The `Text` primitive is still used for all other spans (SKU eyebrow, price, stock label, CTA label).
+- **Supersedes**: none
