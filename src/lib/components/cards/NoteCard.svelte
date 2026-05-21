@@ -84,10 +84,34 @@
     display: flex;
     flex-direction: column;
     grid-column: 1 / span 2;
+
+    :global(.note-lede) {
+      flex: 1;
+      color: var(--ink-dim);
+    }
+  }
+
+  .note-foot {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--rule);
+  }
+
+  .note-card-image {
+    overflow: hidden;
+    border: 1px solid var(--rule);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
   }
 
   :global {
-    .note-card {
+    .card.note-card {
       text-decoration: none;
       color: inherit;
       cursor: pointer;
@@ -128,33 +152,5 @@
         }
       }
     }
-
-    .note-card-image {
-      overflow: hidden;
-      border: 1px solid var(--rule);
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-        display: block;
-      }
-    }
-  }
-
-  .card-body {
-    :global {
-      .note-lede {
-        flex: 1;
-        color: var(--ink-dim);
-      }
-    }
-  }
-
-  .note-foot {
-    margin-top: 8px;
-    padding-top: 12px;
-    border-top: 1px dashed var(--rule);
   }
 </style>
