@@ -67,6 +67,30 @@
     document.documentElement.setAttribute("data-palette", internalPalette);
   });
 
+  let menuEl = $state<HTMLDetailsElement>();
+
+  $effect(() => {
+    const handlePointer = (event: Event) => {
+      if (menuEl?.open && !menuEl.contains(event.target as Node)) {
+        menuEl.open = false;
+      }
+    };
+
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && menuEl?.open) {
+        menuEl.open = false;
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointer);
+    document.addEventListener("keydown", handleKeydown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointer);
+      document.removeEventListener("keydown", handleKeydown);
+    };
+  });
+
   function handlePaletteToggle() {
     if (isControlled) {
       onPaletteToggle!();
@@ -120,7 +144,7 @@
       </Button>
 
       {#if links?.length}
-        <details class="nav-menu">
+        <details class="nav-menu" bind:this={menuEl}>
           <summary class="nav-summary">
             <span class="nav-icon-open">≡</span>
             <span class="nav-icon-close">×</span>

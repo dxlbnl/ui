@@ -440,6 +440,137 @@
     await expect(lsAfter).not.toBe(lsBefore);
   }} />
 
+<!-- B49 AC-1: Outside click (pointerdown/click on document.body) closes the open menu — REGRESSION TEST -->
+<Story name="Dismiss On Outside Click" args={{
+  links: [
+    { href: '/feed',      label: 'FEED' },
+    { href: '/catalogue', label: 'CATALOGUE', active: true },
+    { href: '/projects',  label: 'PROJECTS' },
+    { href: '/notes',     label: 'NOTES' },
+    { href: '/about',     label: 'ABOUT' },
+    { href: '/contact',   label: 'CONTACT' },
+  ]
+}}
+  play={async ({ canvasElement }) => {
+    const details = canvasElement.querySelector('details.nav-menu') as HTMLDetailsElement;
+    await expect(details).not.toBeNull();
+
+    // Open the menu programmatically (viewport-independent — see spec harness note)
+    details.open = true;
+    details.dispatchEvent(new Event('toggle', { bubbles: false }));
+    await new Promise(r => setTimeout(r, 0));
+    await expect(details.open).toBe(true);
+
+    // Dispatch an outside pointerdown + click on an element NOT contained by details.
+    // (Cover both — the dismiss handler may listen on either; assert end state.)
+    await expect(details.contains(document.body)).toBe(false);
+    document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await new Promise(r => setTimeout(r, 0));
+
+    // AC-1: the menu closes — open attribute removed, driven by document handler
+    await expect(details.open).toBe(false);
+    await expect(details.hasAttribute('open')).toBe(false);
+  }} />
+
+<!-- B49 AC-2: Clicks INSIDE the open menu (the .nav-dropdown area) do NOT close it -->
+<Story name="Keep Open On Inside Click" args={{
+  links: [
+    { href: '/feed',      label: 'FEED' },
+    { href: '/catalogue', label: 'CATALOGUE', active: true },
+    { href: '/projects',  label: 'PROJECTS' },
+    { href: '/notes',     label: 'NOTES' },
+    { href: '/about',     label: 'ABOUT' },
+    { href: '/contact',   label: 'CONTACT' },
+  ]
+}}
+  play={async ({ canvasElement }) => {
+    const details = canvasElement.querySelector('details.nav-menu') as HTMLDetailsElement;
+    await expect(details).not.toBeNull();
+
+    // Open the menu
+    details.open = true;
+    details.dispatchEvent(new Event('toggle', { bubbles: false }));
+    await new Promise(r => setTimeout(r, 0));
+    await expect(details.open).toBe(true);
+
+    // Click inside the dropdown (an element contained by details, not the summary)
+    const dropdown = details.querySelector('.nav-dropdown') as HTMLElement;
+    await expect(dropdown).not.toBeNull();
+    await expect(details.contains(dropdown)).toBe(true);
+    dropdown.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    dropdown.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await new Promise(r => setTimeout(r, 0));
+
+    // AC-2: still open after an inside interaction
+    await expect(details.open).toBe(true);
+  }} />
+
+<!-- B49 AC-3: Summary still toggles natively — open then close, no double-toggle -->
+<Story name="Summary Native Toggle" args={{
+  links: [
+    { href: '/feed',      label: 'FEED' },
+    { href: '/catalogue', label: 'CATALOGUE', active: true },
+    { href: '/projects',  label: 'PROJECTS' },
+    { href: '/notes',     label: 'NOTES' },
+    { href: '/about',     label: 'ABOUT' },
+    { href: '/contact',   label: 'CONTACT' },
+  ]
+}}
+  play={async ({ canvasElement, userEvent }) => {
+    const details = canvasElement.querySelector('details.nav-menu') as HTMLDetailsElement;
+    await expect(details).not.toBeNull();
+    const summary = details.querySelector('summary.nav-summary') as HTMLElement;
+    await expect(summary).not.toBeNull();
+
+    // Starts closed
+    await expect(details.open).toBe(false);
+
+    // AC-3 (open): activating the summary opens the menu and the dismiss logic
+    // must NOT immediately treat that same activation as an outside click.
+    await userEvent.click(summary);
+    await new Promise(r => setTimeout(r, 0));
+    await expect(details.open).toBe(true);
+
+    // AC-3 (close): activating again closes it, with no double-toggle re-opening it.
+    await userEvent.click(summary);
+    await new Promise(r => setTimeout(r, 0));
+    await expect(details.open).toBe(false);
+  }} />
+
+<!-- B49 AC-4: Escape closes the open menu; no-op when already closed -->
+<Story name="Dismiss On Escape" args={{
+  links: [
+    { href: '/feed',      label: 'FEED' },
+    { href: '/catalogue', label: 'CATALOGUE', active: true },
+    { href: '/projects',  label: 'PROJECTS' },
+    { href: '/notes',     label: 'NOTES' },
+    { href: '/about',     label: 'ABOUT' },
+    { href: '/contact',   label: 'CONTACT' },
+  ]
+}}
+  play={async ({ canvasElement }) => {
+    const details = canvasElement.querySelector('details.nav-menu') as HTMLDetailsElement;
+    await expect(details).not.toBeNull();
+
+    // AC-4 (no-op when closed): Escape while closed must not open or throw.
+    await expect(details.open).toBe(false);
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await new Promise(r => setTimeout(r, 0));
+    await expect(details.open).toBe(false);
+
+    // Open the menu
+    details.open = true;
+    details.dispatchEvent(new Event('toggle', { bubbles: false }));
+    await new Promise(r => setTimeout(r, 0));
+    await expect(details.open).toBe(true);
+
+    // AC-4: Escape on document closes the open menu
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await new Promise(r => setTimeout(r, 0));
+    await expect(details.open).toBe(false);
+  }} />
+
 <!-- AC-11: Mixed mode — only onPaletteToggle provided (no palette) -->
 <Story name="Mixed Mode Callback Only" args={{
   onPaletteToggle: vi.fn(),

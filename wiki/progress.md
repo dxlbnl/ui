@@ -19,6 +19,17 @@ it records the reason here AND states it in chat.
 
 <!-- entries start here -->
 
+## 2026-05-21 — B49: Navmenu should close when clicking outside of it
+- manager: start, track: bug; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B49-navmenu-close-on-outside-click.md (17 ACs incl. Escape, SSR-safe lifecycle); D51 logged; no blocking questions
+- manager: delegating to test-writer
+- test-writer: added 4 stories (Dismiss On Outside Click [regression], Keep Open On Inside Click, Summary Native Toggle, Dismiss On Escape); 2 fail for right reason, 284 pass (286 total); check 0 errors
+- manager: delegating to implementer
+- implementer: added bind:this menuEl + document $effect (pointerdown+keydown listeners, cleanup); 286/286 green, check 0 errors; D52 logged ($app/environment unresolvable under svelte-check → $effect-only SSR-safety, matches existing palette effect)
+- manager: delegating to reviewer
+- reviewer: PASS — all 17 ACs met, 286/286 green, check 0 errors, regression test present, no scope creep, D52 deviation acceptable
+- result: done
+
 ## 2026-05-20 10:35 — B48: Nav controlled palette + layout escape hatches
 - manager: start, track: bug; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B48-nav-controlled-palette.md (23 ACs, full pipeline); no blocking questions

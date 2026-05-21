@@ -911,3 +911,46 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   test-writer can verify the fallback. The website's correct usage always passes both
   props together.
 - **Supersedes**: none
+
+## D51: B49 — Nav menu dismiss includes Escape; outside-click via $effect-managed document listener
+- **Date**: 2026-05-21
+- **By**: spec-writer
+- **Context**: B28 deliberately left click-outside-to-close out of scope for the
+  `<details>`-based mobile menu. B49 adds it. Two scoping choices arose: (1) whether to
+  also add Escape-to-close (the literal bug report only mentions clicking outside), and
+  (2) how to keep the document listener SSR-safe and leak-free given the menu only
+  renders when `links` is non-empty.
+- **Decision**: (1) Include Escape-to-close as part of the same dismiss behaviour — it
+  is idiomatic for dismissible overlays and shares the listener lifecycle, so the marginal
+  cost is near zero. It is flagged as a non-blocking OQ so it can be dropped if it proves
+  awkward, but the default is in-scope. (2) Require the document listener(s) to be
+  attached/detached inside an `$effect` (browser-guarded per D7) with a returned cleanup;
+  the implementer may keep one always-on listener that early-returns when closed, or
+  attach-while-open — either is acceptable provided no duplicate handlers accumulate. The
+  ACs target the `<details>` `open` attribute and dispatched DOM events rather than the
+  720px media-query visibility, so they are testable at the wide Storybook viewport.
+- **Consequences**: Behaviour-only change; markup, CSS, palette/breadcrumb logic
+  unchanged. The `$effect` must tolerate the menu element being absent (No Links case).
+  Route-change auto-close and focus management remain out of scope.
+- **Supersedes**: none
+
+## D52: B49 — Nav dismiss listeners rely on $effect-only SSR-safety, not a `browser` import
+- **Date**: 2026-05-22
+- **By**: implementer
+- **Context**: B49's non-binding implementation notes (and D7) suggested guarding the
+  document `pointerdown`/`keydown` listeners with `browser` from `$app/environment`.
+  However `svelte-check` in this project cannot resolve `$app/environment` ("Cannot find
+  module"), so importing it makes `pnpm check` fail (AC-15 requires 0 TS errors). The
+  pre-existing palette `$effect` in `Nav.svelte` already accesses `localStorage`/`document`
+  directly with no `browser` guard and passes `pnpm check`.
+- **Decision**: Attach/detach the dismiss listeners inside a plain `$effect` (which only
+  runs in the browser after hydration, never on the server) with a returned cleanup that
+  removes both listeners — no `browser` import. AC-5 explicitly accepts an `$effect`
+  "and/or" a `browser` flag, so the `$effect` alone satisfies SSR-safety (D7). This
+  matches the established pattern in this file and keeps `pnpm check` clean.
+- **Consequences**: One always-on document listener per mounted Nav; the pointer handler
+  early-returns unless `menuEl?.open` and the target is outside `menuEl`, the keydown
+  handler early-returns unless Escape and open. Tolerates `links` empty (`menuEl`
+  undefined) without throwing. If `$app/environment` resolution is fixed project-wide
+  later, a `browser` guard could be reintroduced, but it is not required.
+- **Supersedes**: none
