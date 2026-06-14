@@ -954,3 +954,51 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   undefined) without throwing. If `$app/environment` resolution is fixed project-wide
   later, a `browser` guard could be reintroduced, but it is not required.
 - **Supersedes**: none
+
+## D53: B56 — Popover is controlled/bindable and anchored to a `position:relative` parent
+- **Date**: 2026-06-14
+- **By**: spec-writer (B56)
+- **Context**: Porting the design-system `Popover` (`Popover.jsx`) raised two API
+  questions: (1) does Popover manage its own open state or is it controlled? (2) how is
+  positioning anchored — built-in trigger vs. relative-parent? The reference React
+  component keeps `open` in the parent `Trigger` and conditionally mounts `<Popover>`,
+  positioning the panel `position:absolute` relative to a `position:relative` wrapper,
+  with the trigger button as a sibling outside the panel.
+- **Decision**: (1) **Controlled, bindable.** Popover takes `open = $bindable(false)` and
+  an `onclose` callback; it never mutates `open` itself, only calls `onclose` on a dismiss
+  request (outside `mousedown` or Escape) — identical to the existing `Modal` contract.
+  This matches Svelte 5 `$bindable` idioms and keeps state ownership with the consumer.
+  (2) **Anchored to the parent.** The panel renders `position:absolute` relative to its
+  nearest positioned ancestor (a consumer-provided `position:relative` wrapper). Popover
+  ships **no** built-in trigger and **no** `trigger` snippet — the trigger is consumer-
+  provided and lives outside the panel. Dismiss listeners (document `mousedown` for
+  outside-click, document `keydown` for Escape) are attached only while `open`, inside a
+  single `$effect` with returned cleanup, **without** a `browser` import (per D52). Popover
+  is non-modal: no `aria-modal`, no focus trap, no backdrop.
+- **Consequences**: Consumers wrap the trigger + `<Popover>` in a `position:relative`
+  element and own the `open` state (`bind:open` or `open` + `onclose`). Auto-positioning/
+  flipping, focus management, a compound `Popover.Trigger`, and animation are out of scope
+  (future items). Behaviour ACs mirror Nav/B49's dismissal stories; visual ACs are limited
+  to the load-bearing anchoring + surface-token contract per D42.
+- **Supersedes**: none
+
+---
+
+### ADR: B56 Popover — positive-control guard against a trivially-passing inside-click test
+
+- **Date**: 2026-06-14
+- **By**: test-writer (B56)
+- **Context**: AC-12 ("a mousedown inside the panel does NOT call onclose") is a
+  negative assertion. Against a no-op / unmounted component it passes vacuously — there
+  are simply no listeners — violating the red-green requirement that every test fail when
+  the feature is missing. Verified empirically: a minimal stub that ignored all props
+  passed the "Keep Open On Inside Click" story while failing the other eight.
+- **Decision**: The "Keep Open On Inside Click" story (Story 6) runs a **positive control**
+  after the negative assertion: an OUTSIDE `mousedown` MUST call `onclose` exactly once.
+  This proves the dismiss machinery is actually wired, so the "inside does not dismiss"
+  assertion becomes non-trivial — a no-op component fails the positive control. Re-running
+  against the stub confirmed all 9 stories then fail.
+- **Consequences**: Story 6 asserts both halves of the outside/inside containment contract
+  in one play function. The implementer must wire the document `mousedown` listener (not
+  just avoid calling `onclose`) to make it green.
+- **Supersedes**: none

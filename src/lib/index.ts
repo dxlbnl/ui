@@ -4,7 +4,7 @@ export { Stack, Inline, Spread, Grid, Container, Rule, Prose } from './component
 export { Card, ProductCard, ProjectCard, NoteCard } from './components/cards/index.js'
 export { Nav, Breadcrumb } from './components/navigation/index.js'
 export { Input, Textarea, Select, InputWrap, Field, Checkbox, Radio, RadioGroup, Switch } from './components/forms/index.js'
-export { Alert, Modal, Toast, ToastRegion } from './components/feedback/index.js'
+export { Alert, Modal, Popover, Toast, ToastRegion } from './components/feedback/index.js'
 export { toast } from './stores/toast.js'
 export type { ToastItem, ToastVariant, ToastOptions } from './stores/toast.js'
 export { CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero } from './components/patterns/index.js'

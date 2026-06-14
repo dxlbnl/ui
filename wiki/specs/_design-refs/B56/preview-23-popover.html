@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Components" name="Components — Popover" subtitle="Anchored layer; outside-click + Esc to close; align left / right" viewport="700x320" -->
+<html lang="en" data-palette="phosphor">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<style>
+  body { padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+  .label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+  .row { display: flex; gap: 48px; align-items: flex-start; flex-wrap: wrap; margin-top: 26px; }
+  .pin { font-size: 12px; color: var(--ink-dim); line-height: 1.5; padding: 12px 14px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="../ui_kits/components/Popover.jsx"></script>
+<script type="text/babel">
+function Trigger({ align }) {
+  const [open, setOpen] = React.useState(true);
+  return (
+    <div style={{ position: "relative", display: "inline-block" }}>
+      <button onClick={() => setOpen(v => !v)} style={{ fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--amber)", border: "1px solid var(--amber)", background: "none", padding: "8px 14px", cursor: "pointer" }}>
+        {open ? "Close" : "Open"} · align {align}
+      </button>
+      {open && (
+        <Popover onClose={() => setOpen(false)} align={align} width={220}>
+          <div className="pin">
+            <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-faint)", marginBottom: 6 }}>// panel</div>
+            Outside-click or <span style={{ color: "var(--amber)" }}>Esc</span> dismisses. Anchored to a relative parent.
+          </div>
+        </Popover>
+      )}
+    </div>
+  );
+}
+function Demo() {
+  return (
+    <React.Fragment>
+      <div className="label">// popover — toggle the trigger; click outside or press Esc to close</div>
+      <div className="row"><Trigger align="left" /><Trigger align="right" /></div>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+</script>
+</body>
+</html>

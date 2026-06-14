@@ -441,3 +441,20 @@ it records the reason here AND states it in chat.
 - spec-writer: wrote wiki/specs/B44-prose-no-default-maxwidth.md (6 ACs); no blocking questions
 - implementer: dropped maxWidth default; consumer route files are in website project (out of scope); 272/272 green
 - result: done
+
+## 2026-06-14 — Work plan (B50–B60: port new design-system components)
+- manager: filed B50–B60 from the Dexterlabs Design System (claude.ai/design) — 9 new components + 2 enhancements (Accordion sticky, ProgressBar states); all feature/high, no review flags per user
+- manager: presented ordered plan B50→B60; user approved "start now"; refs vendored under wiki/specs/_design-refs/B<id>/ then cleaned up after the run
+- result: user approved work plan — proceeding
+
+## 2026-06-14 — Reorder: Popover first (dependency)
+- manager: vendored refs revealed StatusPill (B50) composes Popover (B56); Inbox/AppShell likely too. Popover is foundational → reordered to B56 → B50 → B51–B55 → B57 → B58 → B59 → B60. Inbox cards are untracked (never committed) so lane moves use plain mv, not git mv.
+
+## 2026-06-14 — B56: Popover component
+- manager: start, track: feature; mv inbox→doing; vendored design refs (preview 23 + Popover.jsx) to wiki/specs/_design-refs/B56/
+- spec-writer: wrote wiki/specs/B56-popover.md (23 ACs, 9 stories); D53 logged (controlled/bindable, anchored-to-parent, non-modal, no built-in trigger)
+- test-writer: wrote feedback/Popover.stories.svelte (9 stories); red for right reason (missing component); positive-control ADR logged for AC-12
+- implementer: wrote Popover.svelte + feedback/index.ts + lib/index.ts exports; 293/295 — flagged 2 test defects (AC-6 `=="auto"` computed-style impossible; 9 strict-TS null-narrowing errors in stories)
+- test-writer (fix): corrected AlignRight/AlignLeft assertions (active edge 0px + inactive ≠0px + inline-style `auto` fallback) and added `as HTMLElement` casts; 295/295 green, pnpm check 0 errors; non-vacuity verified
+- reviewer: PASS — all 23 ACs met, 295/295 green, 0 check errors, no scope creep; non-blocking follow-up: tighten AC-6 prose ("computed active edge = 0px; inactive edge = auto in inline style")
+- result: done
