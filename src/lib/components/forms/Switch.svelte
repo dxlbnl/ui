@@ -46,6 +46,10 @@
   >
     <span class="switch-knob" aria-hidden="true"></span>
   </button>
+  <!-- Pointer-only convenience that mirrors the adjacent role="switch" button (AC-5/6/7);
+       keyboard users operate the button itself, which is fully accessible. -->
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <span class="switch-label" onclick={() => { if (!disabled) checked = !checked }}>{label}</span>
 </span>
 

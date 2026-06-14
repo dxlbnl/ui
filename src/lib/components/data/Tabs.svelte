@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import { untrack } from 'svelte'
   import Stack from '../layout/Stack.svelte'
   import Button from '../primitives/Button.svelte'
 
@@ -23,7 +24,9 @@
 
   let { tabs, active = tabs[0]?.id, variant = 'underline', ...rest }: TabsProps = $props()
 
-  let activeId = $state(active)
+  // `active` seeds the initial tab only (Tabs is uncontrolled after mount), so
+  // untrack() the one-time read to silence the state_referenced_locally hint.
+  let activeId = $state(untrack(() => active))
 
   function handleTabKeydown(e: KeyboardEvent, index: number) {
     const count = tabs.length

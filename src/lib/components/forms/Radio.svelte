@@ -28,6 +28,9 @@
 </script>
 
 <label class="radio-wrap" class:disabled={disabled}>
+  <!-- svelte-ignore a11y_role_supports_aria_props_implicit -->
+  <!-- aria-invalid is intentionally wired by Field via context (AC-60) so AT
+       announces an invalid radio; the role-table check is overly strict here. -->
   <input
     type="radio"
     class="radio-input"

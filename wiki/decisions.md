@@ -1684,3 +1684,38 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   that `@container` query must be **different** elements (parent vs descendant). B58 spec
   carries a matching amendment note.
 - **Amends**: B58 (clarifies AC-1/AC-6/AC-7 structure; no API change, no decision superseded)
+
+## D75: `pnpm test` is one-shot; lint-clean conventions for `pnpm check`
+- **Date**: 2026-06-14
+- **By**: top-level session (user-directed — "fix pnpm test and pnpm check")
+- **Context**: Two release/quality-gate problems. (1) `"test": "vitest"` runs the **watch**
+  watcher in a TTY — it hangs as a one-shot/CI/`prepublishOnly` gate (it only happened to exit
+  in non-TTY runs). (2) `pnpm check` passed (0 errors) but emitted **8 warnings** across 6
+  components, so it wasn't a clean gate: a CSS compat note (`Input` `-moz-appearance` with no
+  standard `appearance`), three `state_referenced_locally` hints (`Select`/`Tabs`/`Accordion`
+  reading a prop once to seed local state), and three a11y warnings (`Radio` `aria-invalid`,
+  `Switch` label-click span, `Select` `<li>` option click).
+- **Decision**:
+  - **Scripts**: `"test": "vitest run"` (one-shot) + add `"test:watch": "vitest"`.
+  - **`state_referenced_locally`** (intentional init-only read of a prop into `$state`): wrap the
+    read in `untrack(() => prop)`. This is now the house pattern for seed-once-then-uncontrolled
+    (or effect-synced) local state; it documents intent and keeps `check` clean.
+  - **a11y false-positives**: suppress with a **justified** `svelte-ignore`, never by removing a
+    load-bearing attribute. `Radio`'s `aria-invalid` is **required by AC-60** (Field wires it via
+    context) — Svelte's role-table check is overly strict, so ignore
+    `a11y_role_supports_aria_props_implicit`. `Select` options are an ARIA listbox whose keyboard
+    nav lives on the container via `aria-activedescendant` (tested Arrow/Home/End/Enter), so the
+    per-`<li>` `a11y_click_events_have_key_events` is ignored. `Switch`'s label is a pointer-only
+    convenience mirroring the adjacent `role="switch"` button (AC-5/6/7), so its click/static
+    warnings are ignored.
+  - **CSS compat**: add the standard `appearance` alongside vendor-prefixed properties.
+  - **`svelte-ignore` gotcha (this Svelte 5.55 toolchain)**: multiple codes on one comment
+    (`<!-- svelte-ignore a b -->`) only honoured the **first** code. Use **one code per
+    comment**, stacked; the `svelte-ignore` comment(s) must be the lines immediately preceding
+    the element (a plain justification comment may sit above the ignore line, not between it and
+    the element).
+- **Consequences**: `pnpm check` → **0 errors, 0 warnings**; `pnpm test` → one-shot, **326
+  passed**. No behaviour/API change — all suppressed warnings are documented false-positives or
+  intentional reads. These gates are now usable for the proposed `prepublishOnly` (see the
+  release-scripts discussion; not yet wired).
+- **Amends**: none (tooling + cross-cutting code-quality convention; supersedes nothing)

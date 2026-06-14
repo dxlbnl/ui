@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { HTMLAttributes } from "svelte/elements";
+  import { untrack } from "svelte";
   import Button from "../primitives/Button.svelte";
 
   interface SelectOption {
@@ -37,8 +38,10 @@
   let rootEl: HTMLDivElement | undefined = $state(undefined);
   let highlightedIndex = $state(-1);
   // internal committed value — tracks the last selection so displayLabel
-  // reflects the user's choice even when the caller doesn't update the value prop
-  let internalValue = $state(value);
+  // reflects the user's choice even when the caller doesn't update the value prop.
+  // Intentional one-time read of the initial `value`; the $effect below keeps it
+  // in sync afterward, so untrack() to silence the state_referenced_locally hint.
+  let internalValue = $state(untrack(() => value));
 
   // keep internalValue in sync when the value prop changes from outside
   $effect(() => {
@@ -141,6 +144,9 @@
   {#if open}
     <ul class="select-panel" role="listbox" aria-label="Options">
       {#each options as option, i}
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- Listbox keyboard nav is handled on the container via aria-activedescendant
+             (Arrow/Home/End/Enter); options are not individually focusable by design. -->
         <li
           id="select-opt-{i}"
           class="select-option"

@@ -19,7 +19,8 @@
 
 - **Test runner**: `@storybook/addon-vitest` (Vitest browser mode, driven by Story
   play functions)
-- **Test command**: `pnpm test` (runs `vitest` — `test.projects` defined inline in `vite.config.ts`)
+- **Test command**: `pnpm test` (runs `vitest run` — one-shot, CI/gate-safe; `test.projects`
+  defined inline in `vite.config.ts`). Use `pnpm test:watch` for the interactive watcher (D75).
 - **Test file location / naming**: `src/lib/components/<category>/<Name>.stories.svelte`
   (Svelte CSF format via `@storybook/addon-svelte-csf` — one stories file per component,
   no separate `.test.ts` files)

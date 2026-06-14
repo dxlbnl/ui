@@ -618,3 +618,14 @@ it records the reason here AND states it in chat.
   chrome-devtools (desktop + mobile screenshots match the reference). Stories-only, no component
   change. 326 tests green (57 files; 3 fewer = the merged stories), pnpm check 0 errors. B58 spec
   Story-plan/amendments updated.
+- **Tooling: `pnpm test` + `pnpm check` made gate-clean** (user — "fix pnpm test and pnpm
+  check"). `test` was `vitest` (watch — hangs as a one-shot/CI gate) → now `vitest run`, with a
+  new `test:watch` for the watcher. `check` passed but emitted 8 warnings across 6 files; all
+  resolved with no behaviour change: `Input` got a standard `appearance` next to
+  `-moz-appearance`; `Select`/`Tabs`/`Accordion` wrap their intentional init-only prop reads in
+  `untrack()`; and three a11y false-positives got justified `svelte-ignore`s (`Radio`
+  `aria-invalid` is required by AC-60; `Select` listbox keyboard is on the container via
+  `aria-activedescendant`; `Switch` label is a pointer convenience mirroring its `role="switch"`
+  button, AC-5/6/7). Result: `pnpm check` 0 errors / **0 warnings**, `pnpm test` one-shot **326
+  passed**. Toolchain note: multi-code `svelte-ignore` only honoured the first code — use one
+  code per stacked comment. D75 logged; architecture.md test-command updated.

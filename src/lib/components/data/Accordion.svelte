@@ -23,7 +23,7 @@
 
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
-  import { setContext } from 'svelte'
+  import { setContext, untrack } from 'svelte'
 
   interface AccordionProps extends HTMLAttributes<HTMLDivElement> {
     /** Enable sticky section headers. @default false */
@@ -76,9 +76,11 @@
     },
   }
 
+  // setContext runs once at init; `sticky` is read a single time here, so
+  // untrack() it to silence the state_referenced_locally hint.
   setContext<StickyRegistry | null>(
     STICKY_CONTEXT_KEY,
-    sticky ? registry : null,
+    untrack(() => sticky) ? registry : null,
   )
 </script>
 
