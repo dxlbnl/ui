@@ -1264,3 +1264,57 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   width animation, value-label formatting, and a compound `CompareBars.Row` API are out of
   scope.
 - **Supersedes**: none
+
+## D62: B55 — Pager lives in `navigation/`, uses native `<button>` + `<nav>` landmark + `aria-live` label
+- **Date**: 2026-06-14
+- **By**: spec-writer (B55)
+- **Context**: Porting the design-system `Pager` (`Pager.jsx`) — a controlled
+  prev / label / next stepper (two arrow `<button>`s flanking a centered uppercase mono
+  label, arrows disabling at range edges). Three decisions needed pinning before
+  test-writer: (1) home category, (2) native `<button>` vs the `Button` primitive for the
+  bespoke arrows, and (3) the a11y model, given the glyphs `‹`/`›` carry no accessible
+  name and the label changes after each click.
+- **Decision**: (1) **`navigation/`** — Pager is a pagination control; it files under
+  `src/lib/components/navigation/` beside `Nav`/`Breadcrumb`, exported from
+  `navigation/index.ts` + `src/lib/index.ts`; story title `Navigation/Pager`. (2) **Native
+  `<button>`, not `Button`** — the arrow styling is bespoke (`6px 12px` padding, mono
+  `14px`, `--ink-dim` enabled / `--rule-strong` disabled, `cursor: not-allowed`) and
+  matches none of `Button`'s six variants; forcing `Button` would mean fighting its
+  variant defaults. This is an accepted narrow exception to **D38**, on the same footing
+  as D49 (ProductCard plain `<p>`) and D54 (StatusPill native trigger). (3) **A11y**: root
+  is a **`<nav>` landmark** with `aria-label` (default `'Pagination'`, overridable via
+  `...rest`); each arrow gets an explicit accessible name via `prevLabel`/`nextLabel`
+  props (`aria-label`, defaults `'Previous'`/`'Next'`) because the glyphs are
+  non-readable; the label `<span>` is an **`aria-live="polite"`** region so the new page
+  label is announced after a click. Disabled arrows use the **native `disabled`**
+  attribute (removes them from tab order and suppresses the callback). Pager is
+  controlled and stateless (no `$state`/`$effect`/browser globals → SSR-safe). `onPrev`/
+  `onNext` are optional (a disabled-edge pager needs no callback).
+- **Consequences**: Behaviour + a11y ACs run the full test-writer → implementer →
+  reviewer pipeline with play-function assertions; load-bearing visual tokens
+  (`--rule-strong` border, `--bg-rail` bg, `--ink-dim`/`--rule-strong` arrow colours,
+  `--ink` label) are also asserted (the design's defining surface). CSS is scoped with
+  native nesting (D45) and references **only** tokens that exist in `tokens.css`; the
+  micro font-sizes (`14px`/`12px`), paddings (`6px 12px`/`0 10px`), `letter-spacing
+  0.08em`, and `min-width` are literal px — there is no matching token, and the house
+  convention permits literal px for mono micro-labels (StatusPill `11px`, Breadcrumb
+  `11px`). Explicitly do NOT invent tokens (regression guard for the earlier `--u1` bug).
+  Numbered page buttons, first/last jump buttons, and a compound API are out of scope.
+- **Supersedes**: none
+
+## D63: B55 — Pager label span carries `data-part="label"` as the test/styling hook
+- **Date**: 2026-06-14
+- **By**: test-writer (B55)
+- **Context**: The Pager play functions must target the centered label `<span>` to
+  assert its text, `aria-live="polite"`, typography tokens, and `min-width`. Arrow
+  buttons are reachable by `getByRole('button', { name })` and the root by
+  `getByRole('navigation', { name })`, but the label span has no role and no accessible
+  name of its own, so it needs a stable, structural selector that survives refactors.
+- **Decision**: The label `<span>` carries **`data-part="label"`**. Tests select it via
+  `canvasElement.querySelector('[data-part="label"]')`. The implementer **must** put
+  `data-part="label"` on the label span. This mirrors the house `data-part` convention
+  used elsewhere for non-role-bearing internal elements.
+- **Consequences**: A small, stable contract hook the implementer honours. No new role
+  or ARIA semantics are implied by `data-part` (it is a data attribute only). If the
+  implementer later gives the label a role/name, the hook can be revisited.
+- **Supersedes**: none

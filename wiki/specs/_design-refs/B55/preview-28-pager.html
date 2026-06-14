@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Components" name="Components — Pager" subtitle="Prev / label / next stepper; disabled edges" viewport="700x180" -->
+<html lang="en" data-palette="phosphor">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<style>
+  body { padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+  .label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="../ui_kits/components/Pager.jsx"></script>
+<script type="text/babel">
+const MONTHS = ["Mar 2026", "Apr 2026", "May 2026", "Jun 2026"];
+function Demo() {
+  const [i, setI] = React.useState(2);
+  return (
+    <React.Fragment>
+      <div>
+        <div className="label">// pager — controlled; disables at range edges</div>
+        <Pager label={MONTHS[i]} onPrev={() => setI(v => Math.max(0, v - 1))} onNext={() => setI(v => Math.min(MONTHS.length - 1, v + 1))} prevDisabled={i === 0} nextDisabled={i === MONTHS.length - 1} />
+      </div>
+      <div>
+        <div className="label">// at the first item — prev disabled</div>
+        <Pager label="Mar 2026" onPrev={() => {}} onNext={() => {}} prevDisabled={true} nextDisabled={false} />
+      </div>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+</script>
+</body>
+</html>

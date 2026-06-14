@@ -514,4 +514,13 @@ it records the reason here AND states it in chat.
 - manager: user reported (live Storybook) the ProportionBar legend "doesn't look like the design" + "no space between label, percentage and color box". Root cause found: `.legend li { gap: var(--u1) }` — `--u1` is undefined (scale is --u/--u2/…) so gap=0; legend text also lacks font-size/letter-spacing so it renders at ~16px not the design's 11px mono. Filed B62 (bug, high, visual-only D42); ACs in card. Delegating to implementer (test-writer skipped per D42).
 - implementer: gap var(--u1)→var(--u); added font-size:11px to .legend-label + .value-label and letter-spacing:0.08em to .legend-label (matches StatusPill house convention); 341/341 green, pnpm check 0 errors
 - manager: verified directly (no --u1 remains; only ProportionBar.svelte changed; CSS matches the 4 ACs). Trivial well-specified visual fix — accepted via manager verification (no separate reviewer agent).
+- result: done → commit 124e1ac
+
+## 2026-06-14 — B55: Pager component
+- manager: start, track: feature; mv inbox→doing; vendored design refs (preview 28 + Pager.jsx)
+- spec-writer: wrote wiki/specs/B55-pager.md (19 ACs, 4 stories); D62 logged (navigation/ home, native buttons, <nav>+aria-live label, ONLY existing tokens + literal px — guard vs the B62 --u1 regression)
+- test-writer: wrote navigation/Pager.stories.svelte (4 stories, storybook/test imports); red for right reason (missing component, 341 baseline green); D63 logged (data-part=label hook)
+- implementer: wrote Pager.svelte + navigation/index.ts + lib/index.ts; 344/345 — flagged 1 test defect (letterSpacing asserted as "0.08em" but browsers serialize computed letter-spacing in px → 0.96px)
+- test-writer (fix): corrected the assertion to "0.96px" (12px × 0.08); 345/345 green, pnpm check 0 errors
+- reviewer: PASS — all 19 ACs met, 345/345 green, 0 check errors, no scope creep, token hygiene clean (5 tokens all exist, no --u1), storybook/test import hygiene clean
 - result: done
