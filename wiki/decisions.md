@@ -1471,3 +1471,67 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   is a thin a11y mirror, not a responsiveness mechanism. If the breakpoint changes, update
   both the `@container (min-width: 760px)` rule and the `BREAKPOINT` constant together.
 - **Supersedes**: none
+
+## D68: B59 — Accordion sticky headers via a context-backed offset registry; scope = sticky only
+- **Date**: 2026-06-14
+- **By**: spec-writer (B59)
+- **Context**: B59 folds the design-system "sticky sections" behaviour into the **existing**
+  `Accordion`/`AccordionItem` as an opt-in `sticky` prop (not a new component). The React
+  reference computes, for each header, a `top` offset (cumulative height of headers above),
+  a `bottom` offset (cumulative height below), and a tiered `z-index = 10 + (n - i)`, so a
+  tall open list tiles its headers into a top stack + bottom stack instead of overlapping.
+  Heights are measured live (ResizeObserver) with a `fallbackHeaderHeight` (46) before
+  measurement. Two problems had to be reconciled: (1) the existing Accordion is a
+  **composition** pattern — items are opaque snippet children and the wrapper cannot
+  enumerate/measure them; (2) SSR-safety forbids `$app/environment` (D52) and any DOM access
+  in the render path.
+- **Decision (measurement / offset model)**: `Accordion` owns a reactive **registry** in
+  `$state` and provides it via `setContext('dxl-accordion-sticky')` **only when `sticky`**
+  (null otherwise). Each `AccordionItem` registers in DOM order, `bind:this` on its
+  `<summary>`, and inside a single `$effect` (browser-only, no `browser` import per D52)
+  reads `offsetHeight` into the registry and observes the element with a `ResizeObserver`
+  (cleanup disconnects + deregisters). The registry `$derived`-exposes `topOffset(i)`,
+  `bottomOffset(i)` (cumulative sums of `height(k)` or `fallbackHeaderHeight`), and
+  `zIndex(i) = 10 + (n - i)`. The item applies `data-sticky="true"` + inline
+  `style="top:…px;bottom:…px;z-index:…"` to its `<summary>`; `position: sticky` and the
+  sticky surface/border tokens (`--bg-sunken` bg, `--rule-strong` top+bottom borders) live
+  in **scoped CSS** keyed on `[data-sticky="true"]` (native nesting, D45). Only the numeric
+  offsets are inline. Non-sticky mode emits no `data-sticky` and no inline offsets → byte-
+  identical to today (zero regression). Open/close stays browser-owned (D16); sticky is
+  purely visual — no ARIA change.
+- **Decision (scope / companion props)**: Adopt **`sticky?: boolean`** (default `false`) and
+  **`fallbackHeaderHeight?: number`** (default `46`) on `Accordion` only. Do **not** port
+  the reference's `multiple`, `controlled`/`openIds`/`onToggle`, `defaultOpenIds`, or
+  `flush`: native `<details>` already gives independent multi-open, controlled state is out
+  of scope per B10/D16, and `flush` (zero body padding) is not needed for `position: sticky`
+  to work. Only existing tokens are used (D62) — `--bg-sunken` and `--rule-strong` already
+  exist in `tokens.css`.
+- **Consequences**: `AccordionItem`'s public props are unchanged; it gains internal
+  context-consumption + an `$effect`. `Accordion` gains the registry/context. The sticky
+  stories must wrap the Accordion in a fixed-height `overflow:auto` scroll container (sticky
+  breaks under `overflow:hidden`). Offset assertions parse the inline `style` with ±1px
+  tolerance because live measurement may replace fallback heights (OQ-1). Dynamic
+  reordering of items after mount is not exercised (OQ-2).
+- **Supersedes**: none
+
+## D69: Sticky-offset tests assert the cumulative-sum relationship from live heights (OQ-1)
+- **Date**: 2026-06-14
+- **By**: test-writer (B59)
+- **Context**: B59 spec OQ-1 flags that in the Vitest/Playwright browser the
+  ResizeObserver measurement may settle before a play function asserts, replacing the
+  `fallbackHeaderHeight` (46/60) baseline with measured `<summary>` heights. Hard-coding
+  `0/46/92` would be brittle.
+- **Decision**: The `Accordion.sticky.stories.svelte` play functions read each summary's
+  live `offsetHeight` and assert the **contract relationship** — `top(i) = Σ height(k)` for
+  `k < i`, `bottom(i) = Σ height(k)` for `k > i` — with ±1px tolerance, regardless of whether
+  the height is the fallback or a measured value. They additionally assert measurement-
+  independent invariants: `top(0) === 0`, `bottom(n-1) === 0`, top offsets strictly
+  increasing, bottom offsets strictly decreasing, and exact `z-index = 10 + (n - i)`
+  (`13/12/11`). The "Custom Fallback Height" story asserts the per-header step equals `60`
+  when the rendered header height has not diverged from the fallback, else the measured
+  first-header height — proving `fallbackHeaderHeight` feeds the arithmetic.
+- **Consequences**: Tests are robust to measurement timing. The implementer must emit
+  numeric `top`/`bottom`/`z-index` in the inline `style` (parsed via `parseFloat(style.top)`)
+  and `data-sticky="true"` on each sticky `<summary>`; only the numeric offsets are inline,
+  the sticky surface/borders come from scoped CSS (D68).
+- **Supersedes**: none

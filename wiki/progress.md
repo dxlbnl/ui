@@ -539,4 +539,12 @@ it records the reason here AND states it in chat.
 - test-writer: wrote navigation/AppShell.stories.svelte (9 stories, storybook/test+fn, width-wrapped); red for right reason (missing component, 354 baseline green); D66 logged (data-part contract)
 - implementer: wrote AppShell.svelte + navigation/index.ts + lib/index.ts; 363/363 green, pnpm check 0 errors; Led/Nav unchanged; D67 logged (SSR-safe $effect mirrors layout→aria-hidden since CSS can't toggle attrs; ResizeObserver, no matchMedia/$app/environment — annotation only, doesn't drive layout)
 - reviewer: PASS — all 29 ACs met, 363/363 green, 0 check errors, no scope creep, token+import hygiene clean (--radius exists), D67 sound; non-blocking: rail badge radius --radius(2px) vs reference rounded pill (visual nit)
+- result: done → commit bf7d54e
+
+## 2026-06-14 — B59: Accordion sticky-header behaviour
+- manager: start, track: feature (enhancement to existing data/Accordion.svelte); mv inbox→doing. NOTE: design system replaced StickySections.jsx with ui_kits/components/Accordion.jsx (richer: sticky/multiple/controlled/flush). Vendored that as the reference. Scope per user card = opt-in sticky prop folding StickySections behaviour into the existing Accordion (NOT a standalone component).
+- spec-writer: wrote wiki/specs/B59-accordion-sticky-headers.md (21 ACs, 3 stories); D68 logged (opt-in sticky + fallbackHeaderHeight; context-backed offset registry; scope = sticky only, not porting multiple/controlled/flush; existing details/summary + snippet-children structure preserved)
+- test-writer: wrote NEW data/Accordion.sticky.stories.svelte (3 stories, separate file like Grid.collapse, storybook/test); 2 sticky stories red for right reason + non-sticky guard green; 363 baseline green; D69 logged (data-sticky + cumulative-offset contract, ±1px tolerance for measured-vs-fallback per OQ-1)
+- implementer: enhanced Accordion.svelte (sticky/fallbackHeaderHeight props + context registry) + AccordionItem.svelte (register, bind:this summary, browser-only $effect+ResizeObserver, data-sticky + inline top/bottom/z-index, scoped sticky CSS); 366/366 green, pnpm check 0 errors; no API change beyond 2 opt-in props; existing Accordion stories untouched
+- reviewer: PASS — all 21 ACs met, 366/366 green, 0 check errors, no regression, no scope creep, token+import hygiene clean; the new state_referenced_locally warning is the accepted Tabs.svelte pattern (sticky is static config); non-blocking: runtime-toggle of sticky would need a reactive registry (file separately if ever needed)
 - result: done

@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
+  import { getContext } from 'svelte'
+  import { STICKY_CONTEXT_KEY, type StickyRegistry } from './Accordion.svelte'
 
   interface AccordionItemProps {
     /** Summary / trigger text for the accordion row. */
@@ -10,13 +12,48 @@
   }
 
   let { label, open = false, children }: AccordionItemProps = $props()
+
+  const registry = getContext<StickyRegistry | null>(STICKY_CONTEXT_KEY)
+  const sticky = registry != null
+  const index = sticky ? registry!.register() : -1
+
+  let summaryEl = $state<HTMLElement | null>(null)
+
+  const top = $derived(sticky ? registry!.topOffset(index) : 0)
+  const bottom = $derived(sticky ? registry!.bottomOffset(index) : 0)
+  const zIndex = $derived(sticky ? registry!.zIndex(index) : 0)
+
+  $effect(() => {
+    if (!sticky || !summaryEl) return
+    const el = summaryEl
+    const measure = () => registry!.setHeight(index, el.offsetHeight)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    return () => {
+      observer.disconnect()
+      registry!.unregister(index)
+    }
+  })
 </script>
 
 <details class="acc-item" {open}>
-  <summary class="acc-trigger">
-    <span class="acc-title">{label}</span>
-    <span class="acc-icon" aria-hidden="true">›</span>
-  </summary>
+  {#if sticky}
+    <summary
+      class="acc-trigger"
+      bind:this={summaryEl}
+      data-sticky="true"
+      style="top:{top}px;bottom:{bottom}px;z-index:{zIndex};"
+    >
+      <span class="acc-title">{label}</span>
+      <span class="acc-icon" aria-hidden="true">›</span>
+    </summary>
+  {:else}
+    <summary class="acc-trigger">
+      <span class="acc-title">{label}</span>
+      <span class="acc-icon" aria-hidden="true">›</span>
+    </summary>
+  {/if}
   <div class="acc-body">
     {@render children()}
   </div>
@@ -43,6 +80,13 @@
     list-style: none;
   }
 
+  .acc-trigger[data-sticky="true"] {
+    position: sticky;
+    background-color: var(--bg-sunken);
+    border-top: 1px solid var(--rule-strong);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
   .acc-trigger::-webkit-details-marker {
     display: none;
   }
@@ -53,6 +97,10 @@
 
   details[open] .acc-trigger {
     background: var(--bg-elev);
+  }
+
+  details[open] .acc-trigger[data-sticky="true"] {
+    background-color: var(--bg-sunken);
   }
 
   .acc-title {
