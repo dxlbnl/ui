@@ -12,6 +12,8 @@
     label?: string
     /** Bar colour variant. @default 'ok' */
     color?: ProgressColor
+    /** Opt in to over-budget rendering when `value` exceeds 100. @default false */
+    overflow?: boolean
     [key: string]: unknown
   }
 
@@ -19,10 +21,13 @@
     value,
     label,
     color = 'ok',
+    overflow = false,
     ...rest
   }: Props = $props()
 
   const clampedValue = $derived(Math.min(100, Math.max(0, value)))
+  const over = $derived(overflow === true && value > 100)
+  const readout = $derived(over ? Math.round(value) : clampedValue)
 </script>
 
 <div class="progress-bar" {...rest}>
@@ -30,7 +35,7 @@
     {#if label}
       <Spread aria-hidden="true">
         <Text variant="mono" color="faint" size="xs">{label}</Text>
-        <Text variant="mono" color={color} size="xs">{clampedValue}%</Text>
+        <Text variant="mono" color={over ? 'danger' : color} size="xs">{readout}%</Text>
       </Spread>
     {/if}
     <div
@@ -42,9 +47,12 @@
       aria-label={label ?? 'Progress'}
     >
       <div
-        class="progress-fill progress-fill--{color}"
+        class="progress-fill progress-fill--{over ? 'danger' : color}"
         style="width: {clampedValue}%"
       ></div>
+      {#if over}
+        <div class="progress-notch" data-part="notch"></div>
+      {/if}
     </div>
   </Stack>
 </div>
@@ -55,9 +63,19 @@
   }
 
   .progress-track {
+    position: relative;
     height: 5px;
     background: var(--bg-sunken);
     border: 1px solid var(--rule);
+  }
+
+  .progress-notch {
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    right: 0;
+    width: 3px;
+    background: var(--danger);
   }
 
   .progress-fill {

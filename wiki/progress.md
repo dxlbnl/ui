@@ -547,4 +547,12 @@ it records the reason here AND states it in chat.
 - test-writer: wrote NEW data/Accordion.sticky.stories.svelte (3 stories, separate file like Grid.collapse, storybook/test); 2 sticky stories red for right reason + non-sticky guard green; 363 baseline green; D69 logged (data-sticky + cumulative-offset contract, ±1px tolerance for measured-vs-fallback per OQ-1)
 - implementer: enhanced Accordion.svelte (sticky/fallbackHeaderHeight props + context registry) + AccordionItem.svelte (register, bind:this summary, browser-only $effect+ResizeObserver, data-sticky + inline top/bottom/z-index, scoped sticky CSS); 366/366 green, pnpm check 0 errors; no API change beyond 2 opt-in props; existing Accordion stories untouched
 - reviewer: PASS — all 21 ACs met, 366/366 green, 0 check errors, no regression, no scope creep, token+import hygiene clean; the new state_referenced_locally warning is the accepted Tabs.svelte pattern (sticky is static config); non-blocking: runtime-toggle of sticky would need a reactive registry (file separately if ever needed)
+- result: done → commit 785b331
+
+## 2026-06-14 — B60: ProgressBar progress states
+- manager: start, track: feature (enhancement to existing patterns/ProgressBar.svelte); mv inbox→doing; vendored design refs (preview 32 + ProgressBar.jsx). Scope = over-budget state (pct>100 → danger fill + 3px right-edge notch + danger pct text).
+- spec-writer: wrote wiki/specs/B60-progressbar-states.md (16 ACs, 4 stories); D70 logged. Key reconciliation: existing ProgressBar already clamps value 0–100 (a story asserts value:150→100), so over-budget is gated behind a NEW opt-in `overflow` prop (default false) to avoid regression; aria-valuenow stays capped at 100 (matches Gauge/D58)
+- test-writer: wrote NEW patterns/ProgressBar.overflow.stories.svelte (4 stories, separate file, storybook/test); Over Budget red for right reason + 3 guard stories green; 366 baseline green; data-part=notch contract
+- implementer: added overflow prop + over-budget rendering (danger fill override, clamped width, data-part=notch, danger rounded readout, aria capped) to ProgressBar.svelte; 370/370 green, pnpm check 0 errors; existing 7 ProgressBar stories untouched/passing
+- reviewer: PASS — all 16 ACs met, 370/370 green, 0 check errors, no regression, no scope creep, token+import hygiene clean; readout-rounding edge on non-over path judged non-blocking (no fractional sub-100 value tested; preserves byte-identical default)
 - result: done

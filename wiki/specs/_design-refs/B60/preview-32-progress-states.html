@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Components" name="Components — Progress States" subtitle="ProgressBar: normal, warn, full, and over-budget (>100%)" viewport="700x260" -->
+<html lang="en" data-palette="phosphor">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<style>
+  body { padding: 26px; }
+  .label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 22px; }
+  .wrap { max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="../ui_kits/components/ProgressBar.jsx"></script>
+<script type="text/babel">
+function Demo() {
+  return (
+    <React.Fragment>
+      <div className="label">// progress bar — over-budget (&gt;100%) fills danger + right-edge notch</div>
+      <div className="wrap">
+        <ProgressBar pct={42} tone="ok" label="Groceries" />
+        <ProgressBar pct={78} tone="amber" label="Transport" />
+        <ProgressBar pct={100} tone="amber" label="Utilities" />
+        <ProgressBar pct={112} tone="ok" label="Dining — over budget" />
+      </div>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+</script>
+</body>
+</html>

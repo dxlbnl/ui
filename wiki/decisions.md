@@ -1535,3 +1535,39 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   and `data-sticky="true"` on each sticky `<summary>`; only the numeric offsets are inline,
   the sticky surface/borders come from scoped CSS (D68).
 - **Supersedes**: none
+
+## D70: B60 — ProgressBar over-budget is opt-in via `overflow`; aria-valuenow stays capped at 100
+- **Date**: 2026-06-14
+- **By**: spec-writer (B60)
+- **Context**: B60 ports the design-system "over-budget" progress state to the existing
+  linear `ProgressBar`. The design's React reference exposes `pct` (0–120) and derives
+  `over = pct > 100`, switching the fill to `--danger`, clamping width at 100%, adding a 3px
+  `--danger` right-edge notch, and showing the real rounded percent in `--danger`. The
+  existing Svelte `ProgressBar` uses a different, clamped `value` (0–100) API, and an
+  existing story (`Clamped at 100`, `value: 150`) asserts `aria-valuenow="100"` and readout
+  `"100%"` with no notch. Auto-triggering over-budget on `value > 100` would regress that
+  story and silently change every consumer passing values above 100.
+- **Decision**: (1) **Keep the `value` (0–100) API** — do NOT adopt `pct` or `value`/`max`.
+  Over-budget is opt-in behind a new **`overflow?: boolean`** prop (default `false`).
+  `overflow=false` is byte-for-byte the current behaviour. The "over" state is **derived**
+  (`overflow === true && value > 100`), not a second prop. When over: fill `background`
+  becomes `var(--danger)` overriding `color`; fill `width` clamps at `100%`; a notch
+  (`position:absolute; top:-1px; bottom:-1px; right:0; width:3px; background:var(--danger)`,
+  queryable via `data-part="notch"` per D59) is rendered; the readout shows
+  `Math.round(value)%` (may exceed 100) in `--danger`. At/below 100 with `overflow=true` the
+  bar is tone-styled with no notch. (2) **Aria stays capped**: `aria-valuemax=100` and
+  `aria-valuenow` is the 0–100-clamped value even when over-budget, consistent with the
+  Gauge sibling (D58) — ARIA forbids `aria-valuenow > aria-valuemax`. The over-budget
+  magnitude is conveyed visually (danger fill + notch) and by the **visible** readout text;
+  the label row stays `aria-hidden="true"` to avoid double announcement. (3) Only existing
+  tokens (`--danger`/`--ok`/`--amber`/`--bg-sunken`/`--rule`/`--ink-faint`); notch geometry
+  and `height:5px` are literal micro px (D62). Scoped CSS, native nesting (D45).
+- **Consequences**: The seven existing stories pass unchanged (no `overflow` ⇒ no behaviour
+  change). Four new stories cover normal/full/over-budget plus a default-unchanged
+  regression. Tests assert the fill clamp via the inline `style.width` string (`"100%"`),
+  not fractional px, and resolve colours via `resolveTokenColor` (fill/notch background) /
+  `resolveTokenFgColor` (readout text). The `No Inline Width Style` story requires the root
+  to keep no inline `style=` — new markup must stay on inner elements. `showPct` from the
+  React reference is NOT ported (readout shows when `label` is present, per existing
+  behaviour). Spec: `wiki/specs/B60-progressbar-states.md`.
+- **Supersedes**: none
