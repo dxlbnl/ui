@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Components" name="Components — Compare Bars" subtitle="Target-vs-actual rows; over-target turns danger" viewport="700x300" -->
+<html lang="en" data-palette="phosphor">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<style>
+  body { padding: 24px; }
+  .label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 20px; }
+  .wrap { max-width: 560px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="../ui_kits/components/CompareBars.jsx"></script>
+<script type="text/babel">
+function Demo() {
+  return (
+    <React.Fragment>
+      <div className="label">// compare bars — actual vs target (ghost outline = target)</div>
+      <div className="wrap">
+        <CompareBars rows={[
+          { label: "Groceries", value: 240, target: 320, valueLabel: "€240 / 320" },
+          { label: "Transport", value: 95, target: 120, valueLabel: "€95 / 120" },
+          { label: "Dining", value: 180, target: 140, valueLabel: "€180 / 140" },
+          { label: "Utilities", value: 88, target: 90, valueLabel: "€88 / 90" },
+        ]} />
+      </div>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+</script>
+</body>
+</html>

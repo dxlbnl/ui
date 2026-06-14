@@ -10,3 +10,5 @@ export { default as PageHero } from './PageHero.svelte'
 export { default as Gauge } from './Gauge.svelte'
 /** ProportionBar: horizontal stacked share bar (part-to-whole) with a legend, sibling of Gauge. */
 export { default as ProportionBar } from './ProportionBar.svelte'
+/** CompareBars: stacked target-vs-actual rows, danger/ok fill when value over/within target. */
+export { default as CompareBars } from './CompareBars.svelte'

@@ -10,5 +10,6 @@ export { Alert, Modal, Popover, StatusPill, Toast, ToastRegion } from './compone
 export { toast } from './stores/toast.js'
 export type { ToastItem, ToastVariant, ToastOptions } from './stores/toast.js'
 /** ProportionBar: horizontal stacked share bar (part-to-whole) with a legend, sibling of Gauge. */
-export { CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero, Gauge, ProportionBar } from './components/patterns/index.js'
+/** CompareBars: stacked target-vs-actual rows, danger/ok fill when value over/within target. */
+export { CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero, Gauge, ProportionBar, CompareBars } from './components/patterns/index.js'
 export { Accordion, AccordionItem, Tabs, Table } from './components/data/index.js'

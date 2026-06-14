@@ -1226,3 +1226,41 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   8-story plan is realised as **9** stories: the "Labelled" story is split into "Labelled"
   (custom `label`) and "Default Label" (asserts the `'Proportion'` default) to cover both
   branches of AC 17 with `getByRole('img', { name })`.
+
+## D61: B54 — CompareBars lives in `patterns/`; per-row `role="img"` + outer `role="group"`; over/under not colour-only
+- **Date**: 2026-06-14
+- **By**: spec-writer (B54)
+- **Context**: Porting the design-system `CompareBars` — a stack of target-vs-actual rows
+  (each row: an uppercase mono label, a track holding a ghost target fill under an actual
+  fill, and a value caption). Bar widths are computed from `value`/`target`/`max`. Two
+  decisions needed pinning before test-writer: (1) home category, and (2) the ARIA model
+  for a multi-row chart, given the over/under state is expressed visually as a
+  `--danger`/`--ok` (and `--danger`/`--ink-faint`) colour shift, which alone would
+  violate WCAG 1.4.1 (Use of Colour).
+- **Decision**: (1) **`patterns/`** — CompareBars files under
+  `src/lib/components/patterns/` beside `ProgressBar`/`Gauge`/`ProportionBar`, exported
+  from `patterns/index.ts` + `src/lib/index.ts`; story title `Patterns/CompareBars`.
+  (2) **Per-row `role="img"`** with a summarizing `aria-label`
+  (`` `${label}: ${value} of ${target}, ${over ? 'over target' : 'within target'}` ``) on
+  each `[data-part="row"]`, and an outer **`role="group"`** with
+  `aria-label={label ?? 'Comparison'}` on the root. A multi-row comparison chart is a set
+  of small pictorial summaries, not progress toward completion (so not `progressbar`,
+  unlike Gauge/ProgressBar) and not one composite share image (unlike ProportionBar's
+  single `role="img"`). Exposing each row's label/value/target/over-state as text in the
+  `aria-label` makes the over/under distinction available in a non-colour channel — and
+  the visible `valueLabel` caption (e.g. `€180 / 140`) carries both numbers as text too —
+  so the `--danger`/`--ok` colour shift is redundant reinforcement, satisfying WCAG 1.4.1.
+  (3) Unlike Gauge/ProportionBar (intrinsic `<svg>` roots), CompareBars' root is a block
+  element, so it **does** offer a polymorphic `as` prop (default `'div'`) with `...rest`
+  forwarding. Geometry is computed → **full pipeline** (test-writer → implementer →
+  reviewer) with play-function assertions, NOT the D42 visual-only track. The only dynamic
+  inline values are the two fills' `width: <n>%` strings; all other styling is scoped CSS
+  with tokens (D45). `max = Math.max(1, ...targets, ...values)` guards divide-by-zero;
+  `targetW = (target/max)*100`, `actualW = min(100, (value/max)*100)`.
+- **Consequences**: The implementer must render the `data-part` hooks (`root`, `row`,
+  `label`, `track`, `target-fill`, `actual-fill`, `value-label`), the per-row `role="img"`
+  aria-labels, and the outer `role="group"` exactly. If a future review prefers list
+  semantics (`role="list"`/`listitem`) it can change without an API break. Tooltips,
+  width animation, value-label formatting, and a compound `CompareBars.Row` API are out of
+  scope.
+- **Supersedes**: none

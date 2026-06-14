@@ -499,4 +499,13 @@ it records the reason here AND states it in chat.
 - test-writer: wrote patterns/ProportionBar.stories.svelte (9 stories, storybook/test imports); red for right reason (missing component, 326 baseline green)
 - implementer: wrote ProportionBar.svelte + patterns/index.ts + lib/index.ts (first attempt); 335/335 green, pnpm check 0 errors
 - reviewer: PASS — all 20 ACs met, 335/335 green, 0 check errors, no scope creep, storybook/test import hygiene clean; non-blocking: swatch size hardcoded 10px (no matching spacing token)
+- result: done → commit cce6992
+
+## 2026-06-14 — B54: CompareBars component
+- manager: start, track: feature; mv inbox→doing; vendored design refs (preview 27 + CompareBars.jsx)
+- spec-writer: wrote wiki/specs/B54-compare-bars.md (19 ACs, 6 stories); D61 logged (patterns/ home, root role=group + per-row role=img, over/under conveyed as text not colour-only per WCAG 1.4.1, data-part contract)
+- test-writer: wrote patterns/CompareBars.stories.svelte (6 stories, storybook/test imports); red for right reason (missing component, 335 baseline green)
+- implementer: wrote CompareBars.svelte + patterns/index.ts + lib/index.ts; 339/341 — flagged 2 test defects (fractional style.width asserted via raw JS toString; CSSOM/JS-FP reserializes 27.5→27.500000000000004, 77.777..→77.7778)
+- test-writer (fix): switched the 2 fractional-width assertions to parseFloat(style.width)+toBeCloseTo(...,4); 341/341 green, pnpm check 0 errors; non-vacuity reasoned (strict to 0.0001%)
+- reviewer: PASS — all 19 ACs met, 341/341 green, 0 check errors, no scope creep, storybook/test import hygiene clean
 - result: done
