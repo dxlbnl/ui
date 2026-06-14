@@ -555,4 +555,66 @@ it records the reason here AND states it in chat.
 - test-writer: wrote NEW patterns/ProgressBar.overflow.stories.svelte (4 stories, separate file, storybook/test); Over Budget red for right reason + 3 guard stories green; 366 baseline green; data-part=notch contract
 - implementer: added overflow prop + over-budget rendering (danger fill override, clamped width, data-part=notch, danger rounded readout, aria capped) to ProgressBar.svelte; 370/370 green, pnpm check 0 errors; existing 7 ProgressBar stories untouched/passing
 - reviewer: PASS — all 16 ACs met, 370/370 green, 0 check errors, no regression, no scope creep, token+import hygiene clean; readout-rounding edge on non-over path judged non-blocking (no fractional sub-100 value tested; preserves byte-identical default)
-- result: done
+- result: done → commit e229fb1
+
+## 2026-06-14 — Run complete + cleanup (B50–B62)
+- manager: all 11 planned items done (9 new components: Popover/StatusPill/SegmentedControl/Gauge/ProportionBar/CompareBars/Pager/Inbox/AppShell; 2 enhancements: Accordion sticky, ProgressBar over-budget) + 2 mid-run bugfixes (B61 Storybook vitest-import crash, B62 ProportionBar legend). Suite: 370/370 green, pnpm check 0 errors.
+- manager: cleanup per user — removed the vendored design-system reference scaffolding under wiki/specs/_design-refs/ (it served the spec-writers during the run; specs are now self-contained). Done.
+
+## 2026-06-14 — Story-lightening pass (top-level, user-directed, inline)
+- Goal (per user): consolidate Storybook stories component-by-component into a lean, demo-first
+  set — few stories that each look like the design sample and carry a full `play` folding the
+  rest of the contract. Added the *Consolidating stories* section to `wiki/stories-guide.md`.
+- Popover (B56): 9 → 2 stories (Align Right / Align Left), real trigger + rich panel; all 23 ACs folded. Green.
+- StatusPill (B50): 12 → 4 tone stories (OK hero / Amber / Danger / Cyan); shared `// rail detail` panel; stories-only, no component change. Green.
+- SegmentedControl (B51): 8 → 3 stories (Size md hero / Size sm bound / Edge states). Green.
+- Gauge (B52): 11 → 3 stories (Tones / Sizes & geometry / Accessibility); added the `{pct}%`
+  caption as demo scaffolding in the story `.cell` composition (NOT in the component — B52
+  out-of-scope holds). **Moved Gauge `patterns/` → `feedback/`** per user ("feedback is more
+  aligned"): `git mv` both files, `title` → `Feedback/Gauge`, export moved patterns→feedback
+  index + lib barrel; D71 logged (amends D58 home-category half; role decision stands);
+  B52 spec + B53/B54 sibling pointers updated. Suite 342/342 green, pnpm check 0 errors.
+- ProportionBar (B53): 9 → 3 stories (Four Segments / Geometry & edges / Accessibility);
+  geometry edge cases folded into one demo column, label/decorative into Accessibility.
+  **Moved `patterns/` → `feedback/`** per user; `title` → `Feedback/ProportionBar`.
+- CompareBars (B54): 6 → 3 stories (Budget / Edges & clamping / Labelled section).
+  **Moved `patterns/` → `feedback/`** per user; `title` → `Feedback/CompareBars`.
+- D72 logged for both moves (amends D60/D61 home-category halves; roles/geometry stand);
+  B53/B54 specs amended. `feedback/` now holds the full Gauge/ProportionBar/CompareBars trio;
+  ProgressBar stays in `patterns/`.
+- Inbox (B57): 9 → 5 stories (Unread / Open / All Read / Dismissal / Polymorphic & Forwarding);
+  fixed panel visibility — every story now renders in a `.stage` that pushes the right-aligned
+  bell rightward and reserves height below it, so the leftward/downward Popover is on-screen;
+  the "Open" story opens and stays open. Stories-only, no component change.
+- AppShell (B58): design-system alignment pass per user ("check the appshell with the design").
+  Visual-only CSS tightening against the `_design-refs/B58/AppShell.jsx` reference — added
+  `0.08em` mono tracking to rail/tab labels; tab label 12 → 10px; rail count badge → rounded
+  pill (radius 8px, mono, 10px, shared language with the Inbox badge); tab active indicator
+  centred (`left:50% / translateX(-50%)`); tab badge → absolute 7px amber dot with amber glow;
+  rail-nav `padding-top`; roomier desktop top-bar gutter (`var(--u3)`). No AC/API change — all
+  29 B58 ACs + 9 stories green (329 tests), pnpm check 0 errors. D73 logged; B58 spec amended.
+- AppShell (B58) **layout bugfix** (user-reported — "the app shell is the whole page layout but
+  it's not there"): the desktop rail stacked *above* the content instead of beside it. Root
+  cause — `container-type` and the `flex-direction: column→row` switch were both on `.app-shell`,
+  and an element can't match an `@container` query against its own container-type, so the row
+  switch never fired. Verified live via chrome-devtools (computed `flex-direction:column` at
+  940px) and screenshots. Fix (test-first): added a regression assertion to the Desktop Layout
+  story (rail beside frame, not stacked) → confirmed red → moved the switch to a new inner
+  `.app-shell-layout` wrapper (descendant of the container; root keeps `container-type`) → green.
+  Added `data-part="frame"`. Bug had shipped in B58 because tests asserted the rail (a
+  descendant, which worked) but never the root's direction. 329 tests green, pnpm check 0
+  errors. D74 logged; B58 spec amended. General rule recorded: container-type element and the
+  `@container`-responding element must differ (parent vs descendant).
+- AppShell (B58) **stories rebuilt to the design** (user — "I'm missing the top bar, and in the
+  sidebar the elements at the bottom; really make the stories like they are in the design
+  system"): the demo stories used sparse placeholder slots (DXLB / Workspace / Account, no
+  footer) so the frame didn't read like `preview-31-app-shell`. Every demo story now renders the
+  reference content via shared snippets — brand = `Led` + `DEXTERLABS`, top bar `// Rails` +
+  `v3.0`, rail footer `Est. 2019 · Delft`, body `// Rails` eyebrow + "Resize me" + paragraph —
+  over the design nav `Home / Rails (3) / Orders / You`, `current="rails"`. Consolidated 9 → 6
+  lean stories (Desktop / Desktop—Navigate / Mobile / Mobile—Navigate / A11y—One Nav Exposed /
+  Slots—Strings & Snippets), each carrying a full play test; all 29 ACs + the D74 regression
+  still covered, play assertions updated to the new fixture text. Verified live via
+  chrome-devtools (desktop + mobile screenshots match the reference). Stories-only, no component
+  change. 326 tests green (57 files; 3 fewer = the merged stories), pnpm check 0 errors. B58 spec
+  Story-plan/amendments updated.

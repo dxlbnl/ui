@@ -1131,6 +1131,10 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
 ## D58: B52 — Gauge lives in `patterns/`, uses `role="progressbar"` as ProgressBar's radial sibling
 - **Date**: 2026-06-14
 - **By**: spec-writer (B52)
+- **⚠️ Amended 2026-06-14 (see D71)**: the **home-category** half of this decision is
+  superseded — `Gauge` now lives in `feedback/`, not `patterns/`. The `role="progressbar"`
+  half stands. Sibling-implementation pointers elsewhere should read
+  `src/lib/components/feedback/Gauge.svelte`.
 - **Context**: `Gauge` is a new SVG radial progress dial. Two decisions needed pinning
   before test-writer: (1) its home category, and (2) its ARIA role — `meter` vs
   `progressbar`. The existing linear `ProgressBar` lives in `patterns/` and uses
@@ -1183,6 +1187,10 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
 ## D60: B53 — ProportionBar lives in `patterns/`, uses `role="img"` + legend (not `progressbar`)
 - **Date**: 2026-06-14
 - **By**: spec-writer (B53)
+- **⚠️ Amended 2026-06-14 (see [D72](#d72-proportionbar--comparebars-move-to-feedback-story-lightening-pass-roles-unchanged))**: the **home-category** half is superseded —
+  `ProportionBar` now lives in `feedback/`, not `patterns/`; story title is
+  `Feedback/ProportionBar`. The `role="img"` + legend + `data-part` + geometry decisions all
+  stand.
 - **Context**: Porting the design-system `ProportionBar` — a horizontal stacked share bar
   (part-to-whole) whose segment widths are computed from values, plus a per-segment
   legend. Two decisions needed pinning before test-writer: (1) its home category, and (2)
@@ -1230,6 +1238,10 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
 ## D61: B54 — CompareBars lives in `patterns/`; per-row `role="img"` + outer `role="group"`; over/under not colour-only
 - **Date**: 2026-06-14
 - **By**: spec-writer (B54)
+- **⚠️ Amended 2026-06-14 (see [D72](#d72-proportionbar--comparebars-move-to-feedback-story-lightening-pass-roles-unchanged))**: the **home-category** half is superseded —
+  `CompareBars` now lives in `feedback/`, not `patterns/`; story title is
+  `Feedback/CompareBars`. The per-row `role="img"`, outer `role="group"`, colour-plus-text
+  over/under, and `data-part` decisions all stand.
 - **Context**: Porting the design-system `CompareBars` — a stack of target-vs-actual rows
   (each row: an uppercase mono label, a track holding a ghost target fill under an actual
   fill, and a value caption). Bar widths are computed from `value`/`target`/`max`. Two
@@ -1571,3 +1583,104 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   React reference is NOT ported (readout shows when `label` is present, per existing
   behaviour). Spec: `wiki/specs/B60-progressbar-states.md`.
 - **Supersedes**: none
+
+## D71: Gauge moves to `feedback/` (story-lightening pass); ProgressBar stays in `patterns/`
+- **Date**: 2026-06-14
+- **By**: top-level session (story-lightening pass, user-directed)
+- **Context**: While lightening Storybook stories component-by-component, the user judged
+  that `Gauge` "doesn't really belong in patterns, feedback is more aligned". D58 had filed
+  it under `patterns/` as `ProgressBar`'s radial sibling. A gauge surfaces live status to the
+  reader — the same job as `StatusPill`, `Alert`, and the toasts that already live in
+  `feedback/` — so category-by-role reads truer than category-by-shape-sibling.
+- **Decision**: Move `Gauge.svelte` + `Gauge.stories.svelte` (via `git mv`) from
+  `src/lib/components/patterns/` to `src/lib/components/feedback/`. Story `title` becomes
+  `Feedback/Gauge`. Export moves from `patterns/index.ts` to `feedback/index.ts`; the
+  `src/lib/index.ts` barrel moves `Gauge` from the patterns line to the feedback line.
+  `ProgressBar` stays in `patterns/` — the two siblings now intentionally live in different
+  categories (component identity follows what it communicates, not its rendering primitive).
+  No component-code change: the `{pct}%` caption the design shows below the dial stays
+  **demo scaffolding in the story** (`.cell` composition), never inside `Gauge` (B52
+  out-of-scope, unchanged). Stories consolidated 11 → 3 (Tones / Sizes & geometry /
+  Accessibility) per `stories-guide.md` → *Consolidating stories*; all 17 ACs still covered.
+- **Consequences**: Amends D58's home-category half (role decision stands). Sibling pointers
+  in B53/B54/D60/D61 that reference `patterns/Gauge.svelte` now point to the moved file —
+  paths corrected where load-bearing. Suite stays green (342 tests); the test count drops
+  because of the story consolidation, not lost coverage.
+- **Supersedes**: D58 (home-category half only)
+
+## D72: ProportionBar + CompareBars move to `feedback/` (story-lightening pass); roles unchanged
+- **Date**: 2026-06-14
+- **By**: top-level session (story-lightening pass, user-directed)
+- **Context**: Continuing the [D71](#d71-gauge-moves-to-feedback-story-lightening-pass-progressbar-stays-in-patterns) pass, the user judged the two remaining data-viz
+  siblings — `ProportionBar` (D60) and `CompareBars` (D61) — also belong in `feedback/`
+  rather than `patterns/`: like `Gauge`, they surface live status/figures to the reader, the
+  same job as the `StatusPill`/`Alert`/toasts already in `feedback/`. Category-by-role reads
+  truer than category-by-shape-sibling. `ProgressBar` stays in `patterns/` (it composes into
+  layouts more than it reports a live figure on its own).
+- **Decision**: `git mv` `ProportionBar.svelte` + `.stories.svelte` and `CompareBars.svelte`
+  + `.stories.svelte` from `src/lib/components/patterns/` to `src/lib/components/feedback/`.
+  Story titles become `Feedback/ProportionBar` and `Feedback/CompareBars`. Exports move from
+  `patterns/index.ts` to `feedback/index.ts`; the `src/lib/index.ts` barrel moves both names
+  onto the feedback line. **No component-code change** — only file location, story `title`,
+  and exports. Stories consolidated per `stories-guide.md` → *Consolidating stories*:
+  ProportionBar 9 → 3 (Four Segments / Geometry & edges / Accessibility), CompareBars 6 → 3
+  (Budget / Edges & clamping / Labelled section); all ACs still covered, AC-reference comments
+  dropped in favour of behaviour-describing prose.
+- **Consequences**: Amends the **home-category half** of D60 and D61 (their `role="img"`,
+  `data-part`, and geometry decisions all stand). `patterns/index.ts` no longer exports either
+  component; `feedback/` now holds the whole `Gauge`/`ProportionBar`/`CompareBars` data-viz
+  trio. Spec pages B53/B54 carry amendment notes. Suite stays green; story count drops from
+  consolidation, not lost coverage.
+- **Supersedes**: D60 and D61 (home-category half only)
+
+## D73: AppShell design-system alignment pass (visual-only)
+- **Date**: 2026-06-14
+- **By**: top-level session (design-alignment pass, user-directed — "check the appshell with the design")
+- **Context**: `AppShell.svelte` (B58) had drifted from its design reference
+  (`_design-refs/B58/AppShell.jsx`) in fine typography and chrome: rail/tab labels lacked the
+  `0.08em` mono tracking used elsewhere, the rail count badge rendered as a sharp `--radius`
+  square rather than a rounded count pill, the tab active indicator was top-left anchored
+  rather than centred, the tab badge was a flat in-flow dot with no glow, and the desktop top
+  bar gutter was tight. None of this is covered by the B58 ACs (which assert structure + token
+  colours, not letter-spacing, font-size, padding, indicator centring, or badge shape).
+- **Decision**: Tighten the CSS to match the reference, AC contract untouched:
+  - `letter-spacing: 0.08em` on `.rail-item` and `.tab-label`; `.tab-label` font-size 12 → 10px.
+  - `.rail-badge` → rounded count pill: `border-radius: 8px` (deliberately **not** `--radius`,
+    matching the Inbox count badge), `font-family: var(--mono)`, `font-size: 10px`, `padding: 0 4px`.
+  - `.tab-bar-indicator` centred: `left: 50%; transform: translateX(-50%)`.
+  - `.tab-badge` → absolute 7px amber dot with `box-shadow: 0 0 5px var(--amber)`, top-right of the item.
+  - `.rail-nav` `padding-top: var(--u)`; `.top-bar` desktop gutter `0 var(--u3)` (≥760px container query).
+  - Stays within D62/AC-27: the literal `8px` radius and 7px/glow dot are micro visual sizes;
+    every colour remains a token.
+- **Consequences**: Purely visual; all 29 B58 ACs and 9 stories still green (329 tests), `pnpm
+  check` 0 errors. The rounded-count-pill treatment (radius 8px, not `--radius`) is now shared
+  language between the AppShell rail badge and the Inbox count badge. B58 spec carries a
+  matching amendment note.
+- **Amends**: B58 implementation detail only (no AC, no API, no decision superseded)
+
+## D74: AppShell desktop layout fix — container query can't target its own container
+- **Date**: 2026-06-14
+- **By**: top-level session (user-reported — "the app shell is the whole page layout but it's not there")
+- **Context**: Reviewing the rendered Storybook story revealed the desktop layout was broken:
+  the rail stacked **above** the content instead of beside it. `AppShell.svelte` put
+  `container-type: inline-size` on `.app-shell` *and* used `@container (min-width:760px)` to
+  switch `.app-shell`'s own `flex-direction: column → row`. An element cannot match an
+  `@container` query against its **own** `container-type` — the query resolves against the
+  nearest *ancestor* container — so that rule silently never applied and the root stayed
+  `column`. The rail's descendant rules (`display:flex`, `width:212px`) *did* apply, so the
+  rail looked styled while the overall layout collapsed to a vertical stack. The B58 tests
+  asserted the rail (a descendant) but never the **root's** computed `flex-direction`, so the
+  bug shipped green in B58 (bf7d54e) and survived the later cosmetic D73 pass.
+- **Decision**: Keep `container-type` on the root `.app-shell` (AC-1 requires it) and move the
+  responsive column→row switch to a new inner `.app-shell-layout` wrapper that holds the rail +
+  frame. Because that wrapper is a *descendant* of the container, its `@container` query
+  resolves correctly. This is the same container-on-parent / switch-on-child shape that
+  `Container.svelte` + `Grid.collapse` already use. Added a regression assertion to the
+  **Desktop Layout** story (rail right edge ≤ frame left edge + shared top = side-by-side, not
+  stacked) and a stable `data-part="frame"` selector on the content column.
+- **Consequences**: Desktop renders correctly (rail beside content, full height); mobile
+  unchanged. All 29 ACs + 9 stories green (329 tests), `pnpm check` 0 errors. **General rule for
+  this codebase**: the element carrying `container-type` and the element whose styles respond to
+  that `@container` query must be **different** elements (parent vs descendant). B58 spec
+  carries a matching amendment note.
+- **Amends**: B58 (clarifies AC-1/AC-6/AC-7 structure; no API change, no decision superseded)

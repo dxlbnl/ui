@@ -14,7 +14,6 @@
   });
 
   // Canonical 3-item fixture: 2 unread (one amber, one danger), 1 read (ok).
-  // Stable ids so onOpen assertions can match by id/title.
   const items = [
     {
       id: "n1",
@@ -41,285 +40,165 @@
       unread: false,
     },
   ];
-
-  // All-read fixture (every item read) for AC 1/2/3/4/15 negative paths.
   const allRead = items.map((i) => ({ ...i, unread: false }));
 </script>
 
 <!--
-  Story 1 — Closed With Unread.
-  ACs: 1 (derived count 2), 2 (glyph --amber), 3 (badge present, text "2"),
-       5 (closed by default: no panel, aria-expanded="false"),
-       15 (aria-label "Notifications, 2 unread"), 16 (aria-haspopup="dialog"),
-       19 (bell chrome 34x34, border 1px solid --rule-strong, bg --bg-rail),
-       20 (badge geometry/colour).
+  The bell anchors a right-aligned Popover, so the panel opens downward and to the LEFT.
+  At the canvas origin that panel falls off-screen, so every story renders inside a stage
+  that pushes the bell to the right and reserves height below it — purely demo scaffolding.
+-->
+{#snippet stage(args: Record<string, unknown>)}
+  <div class="stage">
+    <Inbox {...args} />
+  </div>
+{/snippet}
+
+<!--
+  The resting state: a closed bell announcing its unread count. The play function checks the
+  trigger's disclosure semantics and accessible name (the derived count rides in the name),
+  that no panel exists yet, and the bell + badge chrome — the amber glyph and the "2" badge
+  that signal there's something waiting.
 -->
 <Story
-  name="Closed With Unread"
+  name="Unread"
   args={{ items }}
   play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // AC-15 / AC-1: bell accessible name carries the derived unread count (2)
-    const bell = canvas.getByRole("button", {
-      name: "Notifications, 2 unread",
-    }) as HTMLButtonElement;
+    // the derived unread count (2) rides in the accessible name; it's a disclosure trigger
+    const bell = canvas.getByRole("button", { name: "Notifications, 2 unread" });
     await expect(bell).toBeVisible();
-    await expect(bell.tagName.toLowerCase()).toBe("button");
-
-    // AC-16: disclosure semantics on the trigger
     await expect(bell.getAttribute("aria-haspopup")).toBe("dialog");
 
-    // AC-5: closed by default — no panel, aria-expanded="false"
+    // closed by default — no panel, collapsed
     await expect(canvasElement.querySelector(".popover")).toBeNull();
     await expect(bell.getAttribute("aria-expanded")).toBe("false");
 
-    // AC-19: bell chrome — 34x34, 1px solid --rule-strong border, --bg-rail bg
+    // bell chrome: 34×34, hairline --rule-strong border on the --bg-rail surface
     const bellStyle = getComputedStyle(bell);
     await expect(bellStyle.width).toBe("34px");
     await expect(bellStyle.height).toBe("34px");
     await expect(bellStyle.borderTopWidth).toBe("1px");
-    await expect(bellStyle.borderTopStyle).toBe("solid");
     await expect(bellStyle.borderTopColor).toBe(
       resolveTokenColor("--rule-strong"),
     );
     await expect(bellStyle.backgroundColor).toBe(resolveTokenColor("--bg-rail"));
 
-    // AC-2: glyph colour resolves to --amber when unread > 0
-    const glyph = canvasElement.querySelector(
-      '[data-part="glyph"]',
-    ) as HTMLElement;
-    await expect(glyph).not.toBeNull();
+    // unread > 0 tints the glyph --amber and shows the count badge
+    const glyph = canvasElement.querySelector('[data-part="glyph"]') as HTMLElement;
     await expect(getComputedStyle(glyph).color).toBe(
       resolveTokenFgColor("--amber"),
     );
-
-    // AC-3: badge present with text "2"
-    const badge = canvasElement.querySelector(
-      '[data-part="badge"]',
-    ) as HTMLElement;
-    await expect(badge).not.toBeNull();
-    await expect(badge.textContent!.trim()).toBe("2");
-
-    // AC-20: badge geometry/colour
+    const badge = canvasElement.querySelector('[data-part="badge"]') as HTMLElement;
+    await expect(badge.textContent?.trim()).toBe("2");
     const badgeStyle = getComputedStyle(badge);
     await expect(badgeStyle.backgroundColor).toBe(resolveTokenColor("--amber"));
     await expect(badgeStyle.color).toBe(resolveTokenFgColor("--bg"));
-    await expect(badgeStyle.minWidth).toBe("15px");
-    await expect(badgeStyle.height).toBe("15px");
-    await expect(badgeStyle.borderRadius).toBe("8px");
     await expect(badgeStyle.position).toBe("absolute");
+    await expect(badgeStyle.borderRadius).toBe("8px");
   }}
-/>
+>
+  {#snippet template(args)}
+    {@render stage(args)}
+  {/snippet}
+</Story>
 
 <!--
-  Story 2 — Opens On Click.
-  ACs: 6 (click opens: panel + "NOTIFICATIONS" header + N rows, aria-expanded="true"),
-       21 (header uppercase mono --ink-faint),
-       22 (list max-height 360 / overflow-y auto),
-       12 (each row a button reachable by /title/),
-       7 (second click toggles closed — D56 guard path).
+  The hero: the open notification panel. The play function clicks the bell open and leaves it
+  open so the panel is visible in the story. It walks the whole opened contract — the uppercase
+  mono header, the scroll-bound list, one button row per item carrying its body + time, and the
+  per-row rendering (the tone LED that blinks only on unread non-ok rows, the heavier title and
+  rail background on unread rows, and "unread" surfaced in the row's accessible name). It then
+  exercises the two callbacks: "Mark all read" fires onMarkAll, and a row click fires onOpen
+  with that item — neither closes the panel.
 -->
 <Story
-  name="Opens On Click"
-  args={{ items }}
-  play={async ({ canvasElement, userEvent }) => {
+  name="Open"
+  args={{ items, onOpen: fn(), onMarkAll: fn() }}
+  play={async ({ canvasElement, args, userEvent }) => {
     const canvas = within(canvasElement);
-    const bell = canvas.getByRole("button", {
-      name: "Notifications, 2 unread",
-    }) as HTMLButtonElement;
+    const bell = canvas.getByRole("button", { name: "Notifications, 2 unread" });
 
-    // closed to start
-    await expect(canvasElement.querySelector(".popover")).toBeNull();
-    await expect(bell.getAttribute("aria-expanded")).toBe("false");
-
-    // AC-6: click opens — panel rendered, aria-expanded="true"
+    // click opens the panel and flips the trigger to expanded
     await userEvent.click(bell);
     await waitFor(async () => {
       await expect(canvasElement.querySelector(".popover")).not.toBeNull();
     });
     await expect(bell.getAttribute("aria-expanded")).toBe("true");
 
-    // AC-6 / AC-21: header "NOTIFICATIONS" present
+    // header: uppercase mono --ink-faint label
     const header = canvasElement.querySelector(
       '[data-part="header-label"]',
     ) as HTMLElement;
-    await expect(header).not.toBeNull();
-    await expect(header.textContent!.trim().toUpperCase()).toBe(
-      "NOTIFICATIONS",
-    );
+    await expect(header.textContent?.trim().toUpperCase()).toBe("NOTIFICATIONS");
+    const hs = getComputedStyle(header);
+    await expect(hs.textTransform).toBe("uppercase");
+    await expect(hs.fontFamily.toLowerCase()).toContain("jetbrains mono");
+    await expect(hs.color).toBe(resolveTokenFgColor("--ink-faint"));
 
-    // AC-21: header is uppercase mono, colour --ink-faint
-    const headerStyle = getComputedStyle(header);
-    await expect(headerStyle.textTransform).toBe("uppercase");
-    await expect(headerStyle.fontFamily.toLowerCase()).toContain(
-      "jetbrains mono",
-    );
-    await expect(headerStyle.color).toBe(resolveTokenFgColor("--ink-faint"));
+    // the list scrolls within a bounded height
+    const list = canvasElement.querySelector('[data-part="list"]') as HTMLElement;
+    const ls = getComputedStyle(list);
+    await expect(ls.maxHeight).toBe("360px");
+    await expect(ls.overflowY).toBe("auto");
 
-    // AC-6 / AC-12: one button row per item, reachable by title
-    for (const item of items) {
-      const row = canvas.getByRole("button", {
-        name: new RegExp(item.title),
-      }) as HTMLButtonElement;
-      await expect(row).toBeVisible();
-      // row renders body + time visible text
-      await expect(row.textContent).toContain(item.body);
-      await expect(row.textContent).toContain(item.time);
-    }
-
-    // AC-22: list container scroll bound
-    const list = canvasElement.querySelector(
-      '[data-part="list"]',
-    ) as HTMLElement;
-    await expect(list).not.toBeNull();
-    const listStyle = getComputedStyle(list);
-    await expect(listStyle.maxHeight).toBe("360px");
-    await expect(listStyle.overflowY).toBe("auto");
-
-    // AC-7: second click toggles closed (D56 stopPropagation guard path)
-    await userEvent.click(bell);
-    await waitFor(async () => {
-      await expect(canvasElement.querySelector(".popover")).toBeNull();
-    });
-    await expect(bell.getAttribute("aria-expanded")).toBe("false");
-  }}
-/>
-
-<!--
-  Story 3 — Item Rendering.
-  ACs: 13 (per-row led-{tone} + blink on unread non-ok, no blink on read/ok),
-       14 (unread title weight 500 + --bg-rail bg; read title 400 + transparent bg),
-       17 (unread row accessible name includes "unread", read row does not).
--->
-<Story
-  name="Item Rendering"
-  args={{ items }}
-  play={async ({ canvasElement, userEvent }) => {
-    const canvas = within(canvasElement);
-    const bell = canvas.getByRole("button", {
-      name: "Notifications, 2 unread",
-    }) as HTMLButtonElement;
-
-    await userEvent.click(bell);
-    await waitFor(async () => {
-      await expect(canvasElement.querySelector(".popover")).not.toBeNull();
-    });
-
+    // one button row per item, reachable by title, showing body + time; plus per-row rendering
     const rows = Array.from(
       canvasElement.querySelectorAll('[data-part="row"]'),
     ) as HTMLElement[];
     await expect(rows.length).toBe(items.length);
+    rows.forEach((row, i) => {
+      const item = items[i];
+      const byTitle = canvas.getByRole("button", {
+        name: new RegExp(item.title),
+      });
+      expect(byTitle.textContent).toContain(item.body);
+      expect(byTitle.textContent).toContain(item.time);
 
-    // map rows to fixture by title (order preserved, but assert by matching)
-    for (let idx = 0; idx < items.length; idx++) {
-      const item = items[idx];
-      const row = rows[idx];
-
-      // AC-13: row LED carries led-{tone}
+      // LED carries the tone and blinks only when unread and not the calm "ok" tone
       const led = row.querySelector(".led") as HTMLElement;
-      await expect(led).not.toBeNull();
-      await expect(led.classList.contains(`led-${item.tone}`)).toBe(true);
-
-      // AC-13: blink iff unread and tone !== 'ok'
-      const shouldBlink = item.unread && item.tone !== "ok";
-      await expect(led.classList.contains("blink")).toBe(shouldBlink);
-
-      // AC-14: title weight 500 when unread else 400
-      const title = row.querySelector('[data-part="title"]') as HTMLElement;
-      await expect(title).not.toBeNull();
-      await expect(getComputedStyle(title).fontWeight).toBe(
-        item.unread ? "500" : "400",
+      expect(led.classList.contains(`led-${item.tone}`)).toBe(true);
+      expect(led.classList.contains("blink")).toBe(
+        item.unread && item.tone !== "ok",
       );
 
-      // AC-14: unread row bg --bg-rail; read row transparent
-      const rowBg = getComputedStyle(row).backgroundColor;
-      if (item.unread) {
-        await expect(rowBg).toBe(resolveTokenColor("--bg-rail"));
-      } else {
-        await expect(rowBg).toBe("rgba(0, 0, 0, 0)");
-      }
+      // unread rows read heavier and sit on the rail surface; read rows are plain
+      const title = row.querySelector('[data-part="title"]') as HTMLElement;
+      expect(getComputedStyle(title).fontWeight).toBe(item.unread ? "500" : "400");
+      expect(getComputedStyle(row).backgroundColor).toBe(
+        item.unread ? resolveTokenColor("--bg-rail") : "rgba(0, 0, 0, 0)",
+      );
 
-      // AC-17: unread surfaced as text in the accessible name
-      const accName = (
-        row.getAttribute("aria-label") ?? row.textContent ?? ""
-      ).toLowerCase();
-      if (item.unread) {
-        await expect(accName).toContain("unread");
-      } else {
-        await expect(accName).not.toContain("unread");
-      }
-    }
-  }}
-/>
-
-<!--
-  Story 4 — Click Item Fires onOpen.
-  ACs: 10 (clicking a row calls onOpen once with the matching item).
--->
-<Story
-  name="Click Item Fires onOpen"
-  args={{ items, onOpen: fn() }}
-  play={async ({ canvasElement, args, userEvent }) => {
-    const canvas = within(canvasElement);
-    const bell = canvas.getByRole("button", {
-      name: "Notifications, 2 unread",
-    }) as HTMLButtonElement;
-
-    await userEvent.click(bell);
-    await waitFor(async () => {
-      await expect(canvasElement.querySelector(".popover")).not.toBeNull();
+      // "unread" is surfaced as text for assistive tech
+      const accName = (row.getAttribute("aria-label") ?? row.textContent ?? "")
+        .toLowerCase();
+      expect(accName.includes("unread")).toBe(item.unread);
     });
 
-    // AC-10: click the first row -> onOpen once with that item
-    const target = items[0];
-    const row = canvas.getByRole("button", {
-      name: new RegExp(target.title),
-    }) as HTMLButtonElement;
-    await userEvent.click(row);
-
-    await expect(args.onOpen).toHaveBeenCalledTimes(1);
-    await expect(args.onOpen).toHaveBeenCalledWith(
-      expect.objectContaining({ id: target.id, title: target.title }),
-    );
-  }}
-/>
-
-<!--
-  Story 5 — Mark All Fires onMarkAll.
-  ACs: 4 (mark-all present when unread > 0), 11 (clicking it calls onMarkAll once),
-       18 (reachable by accessible name "Mark all read").
--->
-<Story
-  name="Mark All Fires onMarkAll"
-  args={{ items, onMarkAll: fn() }}
-  play={async ({ canvasElement, args, userEvent }) => {
-    const canvas = within(canvasElement);
-    const bell = canvas.getByRole("button", {
-      name: "Notifications, 2 unread",
-    }) as HTMLButtonElement;
-
-    await userEvent.click(bell);
-    await waitFor(async () => {
-      await expect(canvasElement.querySelector(".popover")).not.toBeNull();
-    });
-
-    // AC-4 / AC-18: mark-all button present, reachable by accessible name
-    const markAll = canvas.getByRole("button", {
-      name: "Mark all read",
-    }) as HTMLButtonElement;
-    await expect(markAll).toBeVisible();
-
-    // AC-11: clicking it fires onMarkAll exactly once
+    // "Mark all read" shows while unread > 0 and fires its callback without closing
+    const markAll = canvas.getByRole("button", { name: "Mark all read" });
     await userEvent.click(markAll);
     await expect(args.onMarkAll).toHaveBeenCalledTimes(1);
+
+    // clicking a row fires onOpen with that item, panel stays open
+    await userEvent.click(canvas.getByRole("button", { name: new RegExp(items[0].title) }));
+    await expect(args.onOpen).toHaveBeenCalledTimes(1);
+    await expect(args.onOpen).toHaveBeenCalledWith(
+      expect.objectContaining({ id: items[0].id, title: items[0].title }),
+    );
+    await expect(canvasElement.querySelector(".popover")).not.toBeNull();
   }}
-/>
+>
+  {#snippet template(args)}
+    {@render stage(args)}
+  {/snippet}
+</Story>
 
 <!--
-  Story 6 — All Read.
-  ACs: 1 (count 0), 2 (glyph --ink-dim), 3 (no badge),
-       15 (aria-label "Notifications"), 4 (no "Mark all read" when open).
+  Nothing waiting: with every item read the count is 0, so the name drops the suffix, the
+  glyph goes quiet (--ink-dim), and no badge renders. Opened, the panel omits "Mark all read"
+  since there's nothing to clear. Left open so the all-read rows are visible.
 -->
 <Story
   name="All Read"
@@ -327,26 +206,15 @@
   play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
 
-    // AC-15 / AC-1: count 0 -> aria-label is just "Notifications"
-    const bell = canvas.getByRole("button", {
-      name: "Notifications",
-    }) as HTMLButtonElement;
-    await expect(bell).toBeVisible();
+    const bell = canvas.getByRole("button", { name: "Notifications" });
     await expect(bell.getAttribute("aria-label")).toBe("Notifications");
 
-    // AC-2: glyph colour resolves to --ink-dim when unread === 0
-    const glyph = canvasElement.querySelector(
-      '[data-part="glyph"]',
-    ) as HTMLElement;
-    await expect(glyph).not.toBeNull();
+    const glyph = canvasElement.querySelector('[data-part="glyph"]') as HTMLElement;
     await expect(getComputedStyle(glyph).color).toBe(
       resolveTokenFgColor("--ink-dim"),
     );
-
-    // AC-3: no badge element exists
     await expect(canvasElement.querySelector('[data-part="badge"]')).toBeNull();
 
-    // AC-4: open -> no "Mark all read" button
     await userEvent.click(bell);
     await waitFor(async () => {
       await expect(canvasElement.querySelector(".popover")).not.toBeNull();
@@ -355,77 +223,70 @@
       canvas.queryByRole("button", { name: "Mark all read" }),
     ).toBeNull();
   }}
-/>
+>
+  {#snippet template(args)}
+    {@render stage(args)}
+  {/snippet}
+</Story>
 
 <!--
-  Story 7 — Dismiss On Outside Click.
-  ACs: 8 (outside mousedown closes the open panel: removed, aria-expanded="false").
-  Positive control: the panel actually opens first (B56 positive-control ADR).
+  The three ways the panel dismisses, run in sequence on one bell: a second click on the
+  trigger toggles it shut, an outside mousedown closes it, and Escape closes it. Each path
+  ends collapsed with the panel removed.
 -->
 <Story
-  name="Dismiss On Outside Click"
+  name="Dismissal"
   args={{ items }}
   play={async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
-    const bell = canvas.getByRole("button", {
-      name: "Notifications, 2 unread",
-    }) as HTMLButtonElement;
+    const bell = canvas.getByRole("button", { name: "Notifications, 2 unread" });
 
-    // open (positive control)
+    const open = async () => {
+      await userEvent.click(bell);
+      await waitFor(async () => {
+        await expect(canvasElement.querySelector(".popover")).not.toBeNull();
+      });
+      await expect(bell.getAttribute("aria-expanded")).toBe("true");
+    };
+    const expectClosed = async () => {
+      await waitFor(async () => {
+        await expect(canvasElement.querySelector(".popover")).toBeNull();
+      });
+      await expect(bell.getAttribute("aria-expanded")).toBe("false");
+    };
+
+    // second click on the trigger toggles closed
+    await open();
     await userEvent.click(bell);
-    await waitFor(async () => {
-      await expect(canvasElement.querySelector(".popover")).not.toBeNull();
-    });
-    await expect(bell.getAttribute("aria-expanded")).toBe("true");
+    await expectClosed();
 
-    // AC-8: outside mousedown dismisses
+    // outside mousedown dismisses
+    await open();
     document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
     await new Promise((r) => setTimeout(r, 0));
-    await waitFor(async () => {
-      await expect(canvasElement.querySelector(".popover")).toBeNull();
-    });
-    await expect(bell.getAttribute("aria-expanded")).toBe("false");
-  }}
-/>
+    await expectClosed();
 
-<!--
-  Story 8 — Dismiss On Escape.
-  ACs: 9 (Escape keydown closes the open panel: removed, aria-expanded="false").
--->
-<Story
-  name="Dismiss On Escape"
-  args={{ items }}
-  play={async ({ canvasElement, userEvent }) => {
-    const canvas = within(canvasElement);
-    const bell = canvas.getByRole("button", {
-      name: "Notifications, 2 unread",
-    }) as HTMLButtonElement;
-
-    await userEvent.click(bell);
-    await waitFor(async () => {
-      await expect(canvasElement.querySelector(".popover")).not.toBeNull();
-    });
-    await expect(bell.getAttribute("aria-expanded")).toBe("true");
-
-    // AC-9: Escape on document dismisses
+    // Escape dismisses
+    await open();
     document.dispatchEvent(
       new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
     );
     await new Promise((r) => setTimeout(r, 0));
-    await waitFor(async () => {
-      await expect(canvasElement.querySelector(".popover")).toBeNull();
-    });
-    await expect(bell.getAttribute("aria-expanded")).toBe("false");
+    await expectClosed();
   }}
-/>
+>
+  {#snippet template(args)}
+    {@render stage(args)}
+  {/snippet}
+</Story>
 
 <!--
-  Story 9 — Polymorphic As / Rest Forwarding.
-  ACs: 15 override path (consumer aria-label wins over the unread-count default),
-       ...rest forwarding onto the trigger (id, data-testid). StatusPill Story 12 idiom.
+  The trigger is polymorphic and transparent to attributes: `as` sets its element and `...rest`
+  (id, data-testid) forwards onto it, while a consumer-supplied aria-label overrides the
+  unread-count default — so the bell can be wired into an existing toolbar.
 -->
 <Story
-  name="Polymorphic As / Rest Forwarding"
+  name="Polymorphic / Forwarding"
   args={{
     items,
     as: "button",
@@ -434,22 +295,34 @@
     "aria-label": "Open notifications",
   }}
   play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const trigger = canvasElement.querySelector(
       '[data-testid="bell"]',
     ) as HTMLElement;
-    await expect(trigger).not.toBeNull();
     await expect(trigger.tagName.toLowerCase()).toBe("button");
-
-    // ...rest forwarded onto the trigger
     await expect(trigger.getAttribute("id")).toBe("notif-bell");
-    await expect(trigger.getAttribute("data-testid")).toBe("bell");
 
-    // AC-15 override: consumer aria-label wins (NOT "Notifications, 2 unread")
+    // consumer aria-label wins over the "Notifications, 2 unread" default
     await expect(trigger.getAttribute("aria-label")).toBe("Open notifications");
     await expect(
-      within(canvasElement).getByRole("button", {
-        name: "Open notifications",
-      }),
+      canvas.getByRole("button", { name: "Open notifications" }),
     ).toBeVisible();
   }}
-/>
+>
+  {#snippet template(args)}
+    {@render stage(args)}
+  {/snippet}
+</Story>
+
+<style>
+  .stage {
+    display: flex;
+    justify-content: flex-end;
+    /* keep the bell at its natural 34px height — without this the flex item stretches to
+       the stage height and the popover's top:100% anchor lands at the very bottom */
+    align-items: flex-start;
+    padding: 16px;
+    min-height: 480px;
+    max-width: 560px;
+  }
+</style>

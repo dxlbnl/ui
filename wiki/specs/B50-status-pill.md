@@ -221,49 +221,35 @@ per D42. Token colours use `resolveTokenColor` (backgrounds/borders) /
 File: `src/lib/components/feedback/StatusPill.stories.svelte`,
 `title: 'Feedback/StatusPill'`, `component: StatusPill`, `tags: ['autodocs']`.
 
-The detail content is a `{#snippet}` passed as `children`. Disclosure stories use
-`userEvent.click` on the trigger; dismissal stories dispatch `mousedown` / `keydown` and
-tick (`await new Promise(r => setTimeout(r, 0))`) before asserting, mirroring the Popover
-and Nav dismissal stories. Stories that show multiple tone instances side by side follow
-the composition-in-slot precedent (D21) and may omit assertions that need a single
-component instance.
+Stories are kept **lean and demo-first** (see [stories-guide.md](../stories-guide.md) →
+*Consolidating stories*): **one story per tone**, matching the design-system sample's row
+(OK · Amber blinking · Danger · Cyan badge), each carrying the shared `// rail detail`
+key/value popover content as `children`. All 25 ACs are folded into the four play
+functions. Disclosure stories use `userEvent.click` on the trigger; dismissal stories
+dispatch `mousedown` / `keydown` and tick (`await new Promise(r => setTimeout(r, 0))`)
+before asserting, mirroring the Popover and Nav dismissal stories.
 
-1. **OK** — `tone: 'ok'`, `label: 'All systems'`, `detail: 'nominal'`, with detail
-   snippet. Asserts AC-1 (button), AC-2 (`led-ok`), AC-3/AC-4 (label + `· nominal`),
-   AC-9 (neutral `--ink-dim` label + `--rule-strong` border), AC-10 (`--bg-rail` bg),
-   AC-11/AC-12 (mono uppercase), AC-13 (faint detail). Mirrors reference `tone="ok"`.
-2. **Amber** — `tone: 'amber'`, `label: 'Load high'`, `detail: '88%'`. Asserts AC-7
-   (`--amber` label), AC-8 (`--amber` border), AC-2 (`led-amber`). Mirrors reference.
-3. **Cyan** — `tone: 'cyan'`, `label: 'Sync'`, `detail: 't.04'`, **no** detail snippet.
-   Asserts AC-7/AC-8 (`--cyan` label + border) and AC-17 (clicking does not open a
-   Popover — no detail). Mirrors reference `tone="cyan"` (which had no children).
-4. **Danger** — `tone: 'danger'`, `label: 'Fault'`, `detail: 'rail −12V'`. Asserts AC-7
-   (`--danger` label), AC-8 (`--danger` border). Mirrors reference.
-5. **Blinking** — `tone: 'amber'`, `blink: true`. Asserts AC-5 (LED has `blink` class).
-6. **Without Detail Suffix** — `tone: 'ok'`, `label: 'Idle'`, no `detail`. Asserts AC-4
-   negative (no `·` separator in the button text).
-7. **Opens On Click** — with detail snippet. Starts closed: asserts AC-14 (no panel,
-   `aria-expanded="false"`), then `userEvent.click` the trigger → asserts AC-15 (panel +
-   detail visible, `aria-expanded="true"`), then click again → asserts AC-16 (panel gone,
-   `aria-expanded="false"`). Also asserts AC-21 (`aria-haspopup="dialog"`).
-8. **No Popover Without Detail** — no `children`. Click the trigger → asserts AC-17 (no
-   panel rendered) and the play does not throw. Positive-control note: this story should
-   also confirm a *with-detail* sibling DOES open, OR rely on Story 7 as the positive
-   control, so AC-17 is not vacuously passing (flag to test-writer).
-9. **Dismiss On Outside Click** — with detail. Open via click, then dispatch a `mousedown`
-   on `document.body`; asserts AC-18 (panel removed, `aria-expanded="false"`). Mirrors
-   Popover Story 5.
-10. **Dismiss On Escape** — with detail. Open via click, then dispatch `keydown` Escape on
-    `document`; asserts AC-19 (panel removed, `aria-expanded="false"`). Mirrors Popover
-    Story 7.
-11. **Align And Width Forwarded** — with detail, `align: 'left'`, `width: 220`. Open via
-    click; asserts AC-20 (panel `left: 0px` / `right: auto` fallback; computed `width`
-    `220px`).
-12. **Polymorphic As / Rest Forwarding** — `as: 'button'`, `'data-testid': 'pill'`,
-    `'aria-label': 'Power rail status'`. Asserts AC-6 (forwarded attrs present on the
-    trigger; queryable by `data-testid` / accessible name).
+1. **OK** (default, neutral chrome) — `tone: 'ok'`, `detail: 'nominal'`, with detail +
+   rest-forwarding args. Carries structure/typography/disclosure: AC-1 (button), AC-2
+   (`led-ok`), AC-3/AC-4 (label + `· nominal`), AC-6 (`...rest` forwarded: `id` /
+   `data-testid` / `aria-label`), AC-9 (neutral `--ink-dim` label + `--rule-strong`
+   border, NOT `--ok`), AC-10 (`--bg-rail` bg), AC-11/AC-12 (mono uppercase), AC-13
+   (faint detail), AC-21/AC-14 (`aria-haspopup="dialog"` + closed by default), AC-15
+   (click opens panel + content visible, `aria-expanded="true"`), AC-16 (second click
+   toggles closed).
+2. **Amber** (blinking) — `tone: 'amber'`, `detail: '88%'`, `blink: true`, `align: 'left'`,
+   `width: 220`. Carries AC-2 (`led-amber`), AC-5 (blink → `blink` class + active
+   animation), AC-7/AC-8 (`--amber` label + border), AC-20 (`align="left"` → `left:0` /
+   `right:auto`; `width=220` → `220px`), AC-19 (Escape dismisses).
+3. **Danger** — `tone: 'danger'`, `detail: 'rail −12V'`. Carries AC-2 (`led-danger`),
+   AC-7/AC-8 (`--danger` label + border), AC-18 (outside `mousedown` dismisses).
+4. **Cyan** (badge only) — `tone: 'cyan'`, `label: 'Sync'`, **no detail, no children**.
+   Carries AC-2 (`led-cyan`), AC-7/AC-8 (`--cyan` label + border) and every negative
+   branch: AC-4 neg (no `·` / no detail part), AC-5 neg (no `blink` class), AC-21 neg /
+   AC-14 / AC-17 (no `aria-haspopup`; clicking opens no panel).
 
-Story count: **12**. Acceptance criteria count: **25**.
+Story count: **4**. Acceptance criteria count: **25**, all folded into the four play
+functions above (AC-22 a11y, AC-23–25 authoring/export verified out of band).
 
 Test-writer guidance:
 

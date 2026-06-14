@@ -79,8 +79,14 @@
 </script>
 
 <svelte:element this={as} class="app-shell" {...rest}>
-  <!-- Desktop rail (visible ≥ 760px) -->
-  <aside class="rail">
+  <!--
+    Inner layout owns the rail↔content flex switch. It must be a *descendant* of
+    .app-shell because an element cannot match an @container query against its own
+    container-type — only the root carries container-type, this child consumes it.
+  -->
+  <div class="app-shell-layout">
+    <!-- Desktop rail (visible ≥ 760px) -->
+    <aside class="rail">
     <div class="brand" data-part="brand">
       {#if isSnippet(brand)}
         {@render brand()}
@@ -124,7 +130,7 @@
   </aside>
 
   <!-- Content column: top bar + main + (mobile) tab bar -->
-  <div class="frame">
+  <div class="frame" data-part="frame">
     <div class="top-bar" data-part="top-bar">
       <div class="top-left">
         {#if isSnippet(topLeft)}
@@ -180,6 +186,7 @@
       {/each}
     </nav>
   </div>
+  </div>
 </svelte:element>
 
 <style>
@@ -189,6 +196,15 @@
     flex-direction: column;
     height: 100%;
     overflow: hidden;
+  }
+
+  /* Carries the responsive flex switch; see the markup comment for why this can't
+     live on .app-shell itself. */
+  .app-shell-layout {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
   }
 
   .rail {
@@ -252,6 +268,8 @@
   .tab-bar-indicator {
     position: absolute;
     top: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 22px;
     height: 2px;
     background: transparent;
@@ -263,7 +281,8 @@
 
   .tab-label {
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-faint);
 
@@ -273,15 +292,24 @@
   }
 
   .tab-badge {
-    width: 6px;
-    height: 6px;
+    position: absolute;
+    top: 5px;
+    right: calc(50% - 22px);
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: var(--amber);
+    box-shadow: 0 0 5px var(--amber);
   }
 
   @container (min-width: 760px) {
-    .app-shell {
+    .app-shell-layout {
       flex-direction: row;
+    }
+
+    /* roomier desktop gutter, matching the design's wider top-bar inset */
+    .top-bar {
+      padding: 0 var(--u3);
     }
 
     .rail {
@@ -301,6 +329,7 @@
     .rail-nav {
       display: flex;
       flex-direction: column;
+      padding-top: var(--u);
     }
 
     .rail-item {
@@ -316,6 +345,7 @@
       cursor: pointer;
       font-family: var(--mono);
       font-size: 12px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       text-align: left;
       color: var(--ink-dim);
@@ -332,11 +362,13 @@
       justify-content: center;
       min-width: 16px;
       height: 16px;
-      padding: 0 6px;
-      border-radius: var(--radius);
+      padding: 0 4px;
+      /* rounded count pill (matches the Inbox count badge), not the sharp --radius */
+      border-radius: 8px;
       background: var(--amber);
       color: var(--bg);
-      font-size: 12px;
+      font-family: var(--mono);
+      font-size: 10px;
     }
 
     .rail-footer {

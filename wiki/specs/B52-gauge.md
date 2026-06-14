@@ -6,7 +6,9 @@
 [`ProgressBar`](../../src/lib/components/patterns/ProgressBar.svelte): an SVG dial that
 renders a single value (`pct`, 0–100) as an arc around a circular track. It satisfies the
 "Progress bar" family in [requirements.md](../requirements.md) R8 and lives in the
-`patterns/` category alongside `ProgressBar`.
+`feedback/` category — it surfaces live status to the reader (the same family as
+`StatusPill` and the toasts), so `feedback/` reads truer than `patterns/`. `ProgressBar`
+remains in `patterns/`; the two siblings now live in different categories by design.
 
 Source item card: [B52-gauge.md](../backlog/doing/B52-gauge.md).
 Design reference (React, reference only — the Svelte library is canonical):
@@ -156,39 +158,34 @@ API / defaults / forwarding:
 
 ## Storybook story plan
 
-File: `src/lib/components/patterns/Gauge.stories.svelte` (Svelte CSF; `component: Gauge`,
-`tags: ['autodocs']`, `title: 'Patterns/Gauge'`). Use `resolveTokenColor` /
-`resolveTokenFgColor` from `$lib/storybook-utils.js` for stroke-colour assertions
-(strokes resolve via the foreground channel — test-writer picks the resolver that matches
-how the browser computes `stroke`; verify empirically, default to `resolveTokenFgColor`).
-Each play function computes expected geometry from the formula, never hard-coded literals.
+File: `src/lib/components/feedback/Gauge.stories.svelte` (Svelte CSF; `component: Gauge`,
+`tags: ['autodocs']`, `title: 'Feedback/Gauge'`). Use `resolveTokenFgColor` from
+`$lib/storybook-utils.js` for stroke-colour assertions (strokes resolve via the foreground
+channel — verified empirically, OQ-1 resolved). Each play function computes expected
+geometry from the formula, never hard-coded literals.
 
-1. **Ok Low (24%)** — `pct=24, tone='ok', size=56`. Assert two circles, `aria-valuenow="24"`,
-   role+min+max, progress stroke = `--ok`, dasharray = `(24/100)*c  c`. (AC 1,2,4,5,12)
-2. **Cyan Mid (62%)** — `pct=62, tone='cyan', size=56`. Assert stroke = `--cyan`,
-   dasharray for 62%, `aria-valuenow="62"`. (AC 4,5)
-3. **Amber High (88%)** — `pct=88, tone='amber', size=56`. Assert stroke = `--amber`,
-   dasharray for 88%. (AC 4,5)
-4. **Danger Full (100%)** — `pct=100, tone='danger', size=56`. Assert stroke = `--danger`,
-   dasharray = `"{c} {c}"`, `aria-valuenow="100"`. (AC 4,7,12)
-5. **Zero (0%)** — `pct=0, tone='amber', size=56`. Assert dasharray starts with `0`,
-   `aria-valuenow="0"`. (AC 6)
-6. **Large Thick** — `pct=70, tone='amber', size=84, width=6`. Assert `width/height="84"`,
-   both `stroke-width="6"`, `r` and `c` from formula, dasharray for 70%. (AC 1,2,9)
-7. **Clamped Above** — `pct=150`. Assert `aria-valuenow="100"`, dasharray = `"{c} {c}"`.
-   (AC 11)
-8. **Clamped Below** — `pct=-10`. Assert `aria-valuenow="0"`, dasharray starts `0`. (AC 10)
-9. **Default Geometry** — `pct=50` only (no size/width/tone). Assert `width="42"`,
-   `viewBox="0 0 42 42"`, both `stroke-width="4"`, progress stroke = `--amber`, track stroke
-   = `--rule-strong`. (AC 1,3,4,16)
-10. **Labelled** — `pct=40, label='Disk usage'`. Assert `aria-label="Disk usage"`. (AC 13)
-11. **Decorative (aria-hidden)** — `pct=40` with `aria-hidden: true` in args. Assert the
-    gauge is removed from the a11y tree (`queryByRole('progressbar')` is null) and the SVG
-    has `aria-hidden="true"`. (AC 14)
+The set is **lean and demo-first** (per `stories-guide.md` → *Consolidating stories*): three
+stories, each a faithful render of the design sample with its `{pct}%` captions, carrying a
+full `play` function that distributes the ACs. The caption is rendered in the **story
+composition** (a `.cell` column matching the reference's `Cell` wrapper), never inside the
+component (see *Out of scope*).
 
-(11 stories; AC 8 and AC 17 are covered structurally within the above — AC 8 by asserting
-the `rotate(-90deg)` transform in story 1; AC 17 by the `data-testid`/args forwarding used
-to query elements.)
+1. **Tones** — the design sample's row of four tone dials, each with a `{pct}%` caption:
+   `24/ok`, `62/cyan`, `88/amber`, `100/danger`, all `size=56`. The hero; its play loops the
+   four gauges asserting two shared circles, role+range+`aria-valuenow`, per-tone arc stroke,
+   dasharray from the formula, and the caption text — then the `100%` full arc and the
+   `rotate(-90deg)` start rotation. (AC 1,2,4,5,7,8,12)
+2. **Sizes & geometry** — the props that reshape the dial, side by side: default geometry
+   (`pct=50`, no size/width/tone → `42`/width 4/track `--rule-strong`/amber arc), a large
+   thick dial (`70/amber/size=84/width=6`, the design's "size 84" cell), a zero arc (`0`),
+   clamp-above (`150` → valuenow 100, full arc), and clamp-below (`-10` → valuenow 0, zero
+   arc). (AC 1,3,6,9,10,11,16)
+3. **Accessibility** — a labelled gauge (`label='Disk usage'`) beside a decorative one
+   (`aria-hidden` + `data-testid` forwarded via `...rest`). Asserts the custom accessible
+   name, that the decorative gauge is removed from the a11y tree, and `...rest` forwarding.
+   (AC 13,14,17)
+
+(3 stories; AC 15 is enforced by the a11y addon on every story.)
 
 ## Out of scope
 
@@ -202,8 +199,8 @@ to query elements.)
   asserted.
 - Multi-segment / threshold-coloured gauges, min/max other than 0–100, start-angle
   configuration.
-- Adding the export to `patterns/index.ts` and `src/lib/index.ts` is the implementer's job
-  (home category confirmed: `patterns/`).
+- The export lives in `feedback/index.ts` and `src/lib/index.ts` (home category: `feedback/`,
+  moved from `patterns/` post-build).
 
 ## Open questions
 

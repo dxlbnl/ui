@@ -9,10 +9,11 @@ export { Nav, Breadcrumb, Pager, AppShell } from './components/navigation/index.
 export { Input, Textarea, Select, InputWrap, Field, Checkbox, Radio, RadioGroup, Switch, SegmentedControl } from './components/forms/index.js'
 /** StatusPill: coloured status pill that toggles a detail Popover on click. */
 /** Inbox: bell button with unread badge that toggles a Popover list of notifications. */
-export { Alert, Modal, Popover, StatusPill, Inbox, Toast, ToastRegion } from './components/feedback/index.js'
+/** Gauge: radial SVG dial rendering a single 0–100 value as an arc, radial sibling of ProgressBar. */
+/** ProportionBar: horizontal stacked share bar (part-to-whole) with a legend. */
+/** CompareBars: stacked target-vs-actual rows, danger/ok fill when value over/within target. */
+export { Alert, Modal, Popover, StatusPill, Inbox, Toast, ToastRegion, Gauge, ProportionBar, CompareBars } from './components/feedback/index.js'
 export { toast } from './stores/toast.js'
 export type { ToastItem, ToastVariant, ToastOptions } from './stores/toast.js'
-/** ProportionBar: horizontal stacked share bar (part-to-whole) with a legend, sibling of Gauge. */
-/** CompareBars: stacked target-vs-actual rows, danger/ok fill when value over/within target. */
-export { CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero, Gauge, ProportionBar, CompareBars } from './components/patterns/index.js'
+export { CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero } from './components/patterns/index.js'
 export { Accordion, AccordionItem, Tabs, Table } from './components/data/index.js'

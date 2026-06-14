@@ -9,12 +9,17 @@ under an actual fill; the actual fill (and its value caption) turn `--danger` wh
 value exceeds its target, else `--ok`.
 
 This is the third data-viz sibling after `Gauge` (D58) and `ProportionBar` (D60), and it
-follows their template: it lives in `patterns/`, its bar widths are **computed geometry**
+follows their template: its bar widths are **computed geometry**
 (percentages derived from `value`/`target`/`max`), so per the precedent it runs the
 **full pipeline** (test-writer → implementer → reviewer with play-function assertions),
 NOT the D42 visual-only track. It pins internal structure with `data-part` hooks
 (D55/D59/D60) and asserts computed widths as exact inline `style.width` percentage
 strings.
+
+> **Amended 2026-06-14 (D72):** `CompareBars` moved from `patterns/` to `feedback/`
+> alongside `Gauge` ([D71](../decisions.md#d71-gauge-moves-to-feedback-story-lightening-pass-progressbar-stays-in-patterns)) and `ProportionBar`; story `title` is now
+> `Feedback/CompareBars`. Stories were consolidated to **3** (Budget / Edges & clamping /
+> Labelled section); all ACs remain covered.
 
 - Item card: `wiki/backlog/doing/B54-compare-bars.md`
 - Vision / requirements / architecture: `wiki/vision.md`, `wiki/requirements.md` (R8
@@ -24,8 +29,9 @@ strings.
 - Design reference (read-only; the Svelte library is canonical):
   `wiki/specs/_design-refs/B54/preview-27-compare-bars.html`,
   `wiki/specs/_design-refs/B54/CompareBars.jsx`
-- Patterns mirrored: `src/lib/components/patterns/ProportionBar.svelte` (+ stories),
-  `src/lib/components/patterns/Gauge.svelte`
+- Siblings mirrored (all now under `feedback/`, see D71/D72):
+  `src/lib/components/feedback/ProportionBar.svelte` (+ stories),
+  `src/lib/components/feedback/Gauge.svelte`
 
 ## API
 
@@ -209,7 +215,8 @@ Authoring:
 
 ## Story plan (test-first, `storybook/test`)
 
-`CompareBars.stories.svelte`, title `Patterns/CompareBars`, `component: CompareBars`,
+`CompareBars.stories.svelte`, title `Feedback/CompareBars` (was `Patterns/…`, see D72),
+`component: CompareBars`,
 `tags: ['autodocs']`. Imports `expect`, `within` from `storybook/test` (NEVER `vitest` —
 bug B61) and `resolveTokenColor` / `resolveTokenFgColor` from `$lib/storybook-utils.js`.
 Width assertions compute the expected percentage from the geometry formula in a local

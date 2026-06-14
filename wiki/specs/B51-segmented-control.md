@@ -166,35 +166,31 @@ they are the observable contract of the component, not a CSS-value sweep).
 `Forms/SegmentedControl` — `SegmentedControl.stories.svelte`, `component: SegmentedControl`,
 `tags: ['autodocs']`. Token assertions use `resolveTokenColor` (background) and
 `resolveTokenFgColor` (foreground) from `$lib/storybook-utils.js`. Queries prefer
-`getByRole('radio', { name: /…/i })`. Eight stories:
+`getByRole('radio', { name: /…/i })`.
 
-1. **Default (md, string options)** — `options={['week','month','year']}`, `value="month"`,
-   `label="Period"`. Asserts AC-1, AC-2, AC-3, AC-4, AC-6 (month checked, others not),
-   AC-17 (mono uppercase), AC-18 (`fontSize` `11px`).
-2. **Small ({value,label} options)** — `size="sm"`,
-   `options={[{value:'list',label:'List'},{value:'grid',label:'Grid'},{value:'chart',label:'Chart'}]}`,
-   `value="list"`, `label="View"`. Asserts AC-4 (label/value split — `List` button selects
-   `list`), AC-18 (`fontSize` `10px`).
-3. **Selection interaction** — click an inactive segment; assert AC-7 (checked moves),
-   AC-8 (`onchange` called once with the right value — `onchange` passed via `args` as a
-   `fn()` spy or an inline closure mutating a local), and that the previously-active
-   segment is cleared.
-4. **Controlled (bind:value)** — composition-style story (own file or same file with a
-   local `$state`) using `bind:value`; click a segment, assert AC-10 (bound variable
-   updates) and the rendered checked state follows.
-5. **Unselected initial state** — no `value`; assert AC-9 (zero checked) and AC-11 (first
-   segment `tabindex="0"`, others `-1`); click a segment → exactly one checked.
-6. **Active / inactive colours** — assert AC-15: active background `var(--amber)`, active
-   color `var(--bg)`, inactive color `var(--ink-faint)`, inactive background transparent
-   (`rgba(0, 0, 0, 0)`).
-7. **Keyboard navigation** — mirrors Tabs' "Keyboard Navigation" story. Click first
-   segment, then drive `{ArrowRight}`, `{ArrowDown}`, `{ArrowLeft}`, `{ArrowUp}`,
-   `{Home}`, `{End}`, plus wrap-around at both ends. After each key assert the focused
-   segment is checked and exactly one segment has `aria-checked="true"` (AC-11, AC-12,
-   AC-13). Verify `onchange` fires on keyboard activation.
-8. **Single segment** — one option; Arrow/Home/End keep focus + selection on the only
-   segment without throwing (AC-14 edge), and `...rest` forwarding (`id`, `data-testid`)
-   is asserted here or in story 1 (AC-5).
+Stories are kept **lean and demo-first** (see [stories-guide.md](../stories-guide.md) →
+*Consolidating stories*): the design sample shows two size variants (md / sm), so those
+are the two demo stories, plus one grouped **Edge states** story for the configurations
+that need distinct render-time props. **Three stories**, all 20 ACs folded into their play
+functions:
+
+1. **Size md (string options)** — the hero. `options={['week','month','year']}`,
+   `value="month"`, `label="Period"`, `id` + `data-testid`, `onchange: fn()`. Carries
+   structure (AC-1/2/3), string label (AC-4), `...rest` forwarding (AC-5), selection +
+   `onchange` incl. idempotent re-select (AC-6/7/8), active/inactive colours (AC-15),
+   typography (AC-17), md size (AC-18 → `11px`), and the full roving-tabindex keyboard
+   model — ArrowRight/Down/Left/Up with wrap-around + Home/End (AC-11/12/13).
+2. **Size sm ({value,label}, bound)** — `{#snippet template()}` with `bind:value` on a
+   `size="sm"` control over `viewOptions`. Carries the label/value split (AC-4 — clicking
+   `Grid` sets value `grid`), bindable value (AC-10), and sm size (AC-18 → `10px`).
+3. **Edge states** — `{#snippet template()}` rendering two controls: an **unselected**
+   string control (no `value`) for AC-9 (zero checked; exactly one after first click) and
+   AC-11 (first segment is the `tabindex="0"` entry point), and a **single-segment**
+   control with an `aria-label` override for AC-14 (override wins; Arrow/Home/End keep
+   focus + selection on the only segment without throwing).
+
+AC-16 (joined borders) and AC-19/20 (scoped CSS, SSR safety) are visual/authoring, verified
+by the reviewer (D42), not via play assertions.
 
 Notes for test-writer:
 - `onchange` spying: pass a `fn()` from `storybook/test` in `args`, or an inline

@@ -104,6 +104,30 @@ or create a separate `*.composition.stories.svelte` file without `component:`:
 
 ---
 
+## Consolidating stories
+
+Keep the story set **lean and demo-first**. A story should be a faithful, self-contained
+render of the component as the design system presents it — a real trigger, realistic
+content, the right tokens — not a one-assertion fixture. Prefer **few stories that each
+carry a full `play` function** over many near-identical stories that each lock a single
+fact.
+
+- **One story per meaningfully distinct variant** the reader needs to *see* (e.g. a
+  Popover's `align="left"` vs `align="right"`, a Button's `primary` vs `ghost`). Drive the
+  visual difference from props, and make the story look like the design-system sample.
+- **Fold the rest of the contract into those stories' play functions.** Behavioural ACs
+  (dismissal, toggling, no-op-when-closed), structural ACs (`as`, `...rest` forwarding),
+  and load-bearing positioning/surface assertions belong *inside* an existing variant's
+  play function — not in their own dedicated story. Distribute ACs across the variants so
+  each play function stays readable.
+- **Don't create a story whose only job is to assert one value.** If a fact can ride along
+  in a variant you're already rendering, put it there. (See `Popover.stories.svelte`: two
+  alignment stories carry all 23 ACs between them.)
+- Still honour *When NOT to assert* below — consolidating tests does not mean adding
+  visual-only CSS locks.
+
+---
+
 ## Play functions
 
 Write play functions **inline** in the `play={...}` attribute on each `<Story>` tag.

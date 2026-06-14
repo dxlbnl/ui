@@ -193,37 +193,30 @@ assert interaction and lifecycle.
 File: `src/lib/components/feedback/Popover.stories.svelte`, `title: 'Feedback/Popover'`,
 `component: Popover`, `tags: ['autodocs']`.
 
-Because Popover must sit inside a `position:relative` wrapper and is controlled, most
-stories use a `{#snippet template(args)}` that renders a relative wrapper + trigger +
-`<Popover bind:open … onclose=…>`, with a local `$state` for `open`. Stories that only
-assert structure/positioning may render the panel `open` directly.
+Stories are kept **lean and demo-first**: each story is a faithful render of the
+design-system sample (a real mono/amber trigger button anchored to a `position:relative`
+wrapper + a styled panel with the `// panel` label), with the behavioural and structural
+ACs folded into that story's `play` function rather than split across many single-assert
+stories. Both stories use a `{#snippet template()}` with a local `$state` `open` (starting
+`true` so the panel renders in autodocs) and an `onclose` spy that sets `open = false`.
 
-1. **Align Right** (default) — `open: true`, `align: 'right'`. Asserts AC-2, AC-5,
-   AC-6 (right=0/left=auto), AC-9 (surface tokens), AC-10 (z-index). Mirrors the
-   reference `align="right"` variant.
-2. **Align Left** — `open: true`, `align: 'left'`. Asserts AC-6 (left=0/right=auto).
-   Mirrors the reference `align="left"` variant.
-3. **Closed** — `open: false`. Asserts AC-1 (panel absent) and AC-14 (outside mousedown
-   + Escape are no-ops; `onclose` spy never called).
-4. **Width And Top** — `open: true`, `width: 220`, `top: 12`. Asserts AC-7 (top px) and
-   AC-8 (width px). A second instance or assertion covers a string `width="20rem"`.
-5. **Dismiss On Outside Click** — controlled via template + `vi.fn()` `onclose`. Opens
-   the popover, dispatches a `mousedown` on `document.body` (outside the panel), asserts
-   the spy is called once (AC-11) and — with `bind:open` — the panel disappears (AC-16
-   single-call after the lifecycle).
-6. **Keep Open On Inside Click** — dispatches a `mousedown` on an element inside the panel,
-   asserts `onclose` is **not** called (AC-12).
-7. **Dismiss On Escape** — dispatches `keydown` Escape on `document`, asserts `onclose`
-   called once (AC-13); also asserts a no-op Escape while closed (AC-14).
-8. **No Duplicate Listeners** — toggles `open` true→false→true (via the template's local
-   state and a re-render), then a single outside `mousedown` calls `onclose` exactly once
-   (AC-16). *(If reliably toggling within one play fn proves awkward, the test-writer may
-   split this into a focused interaction; flagged as OQ-1.)*
-9. **Polymorphic As / Rest Forwarding** — `as: 'section'`, `'data-testid': 'pop'`,
-   `role: 'dialog'`, `'aria-label': 'Details'`. Asserts AC-3 and AC-4 (section tag,
-   forwarded attrs present).
+1. **Align Right** (default) — the hero demo, `align="right"`, `width="18rem"`. Its play
+   function covers the bulk of the contract: rendering (AC-2, AC-3 data-testid forwarded),
+   positioning & surface (AC-5, AC-6 right=0/left=auto, AC-7 top=100%, AC-8 string width
+   → 288px, AC-9 surface tokens, AC-10 z-index), non-modal semantics (AC-18 no aria-modal,
+   AC-19 no implicit role on the default `<div>`), and dismissal (AC-15 outside click is a
+   no-op, AC-12 inside mousedown keeps open, AC-11 outside mousedown dismisses, AC-13
+   Escape dismisses, AC-16 re-open via the trigger does not duplicate listeners).
+2. **Align Left** — mirrors the right variant to the opposite edge using `align="left"`,
+   `as="section"`, and a numeric `width={220}`. Its play function covers the remaining
+   contract: left anchoring (AC-6 left=0/right=auto), numeric width (AC-8 → 220px),
+   polymorphic root (AC-4 `<section>`), and the closed-state no-ops (AC-13 Escape dismiss,
+   then AC-1 panel absent + AC-14 outside mousedown / Escape are no-ops while closed).
 
-Story count: **9**. Acceptance criteria count: **23**.
+Story count: **2** (lightened — see [stories-guide.md](../stories-guide.md) →
+*Consolidating stories*). Acceptance criteria count: **23**, all folded into the two play
+functions above (AC-17 SSR/`pnpm check`, AC-20 a11y, AC-21–23 authoring are verified out
+of band, not as play assertions).
 
 Test-writer guidance (mirrors `Nav.stories.svelte` dismissal stories):
 

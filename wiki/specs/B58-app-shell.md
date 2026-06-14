@@ -309,3 +309,53 @@ handle (justified per the stories guide).
   nav not receiving focus, or simply assert `aria-hidden="true"` (AC-23).
 
 No blocking open questions — the spec is implementable as written.
+
+## Notes / amendments
+
+- **2026-06-14 — design-system alignment pass (D73).** Visual-only tightening of
+  `AppShell.svelte` against `_design-refs/B58/AppShell.jsx`; no AC changed, all 29 ACs and
+  the 9 stories still green.
+  - Rail + tab labels: added `letter-spacing: 0.08em` (the mono/uppercase tracking the rest
+    of the system uses); tab label `font-size` 12px → 10px.
+  - Rail count badge: rounded count **pill** — `border-radius: 8px` (deliberately not the
+    sharp `--radius`, matching the Inbox count badge), `font-family: var(--mono)`,
+    `font-size: 10px`, `padding: 0 4px`. AC-18 only asserts amber bg / `--bg` text, unchanged.
+  - Tab active indicator: horizontally centred over the item (`left: 50%;
+    transform: translateX(-50%)`) — was top-left anchored. AC-21c (colour) unchanged.
+  - Tab badge dot: now an absolute 7px amber dot with an `0 0 5px var(--amber)` glow,
+    positioned top-right of the item, instead of an in-flow 6px dot. AC-21f (amber bg /
+    presence) unchanged.
+  - Rail nav: `padding-top: var(--u)` for a small gap below the brand block.
+  - Top bar: roomier desktop gutter — `padding: 0 var(--u3)` (24px) inside the ≥760px
+    container query (mobile stays `0 var(--u2)`). AC-4 asserts position/sticky/tokens, not
+    padding, so unchanged.
+  - Within D62/AC-27: the literal `8px` radius and `7px`/glow dot are micro visual sizes;
+    all colours remain tokens.
+- **2026-06-14 — desktop layout bug fix (D74).** Found while reviewing the rendered story:
+  on desktop the rail stacked *above* the content instead of sitting *beside* it. Root cause:
+  `container-type: inline-size` lived on `.app-shell` **and** the `@container (min-width:760px)`
+  rule tried to switch `.app-shell`'s own `flex-direction: column → row`. An element cannot
+  match an `@container` query against its **own** `container-type` (the query resolves against
+  an *ancestor* container), so that rule never fired and the root stayed `column`. The rail's
+  own rules (display/width) *did* apply because the rail is a descendant — which is why the
+  original tests (asserting the rail, never the root's direction) stayed green and the bug
+  shipped in B58. Fix: the column→row switch moved to a new inner `.app-shell-layout` wrapper
+  (a descendant of the container); the root keeps `container-type` (AC-1 intact). Added a
+  regression assertion to the **Desktop Layout** story — the rail's right edge must be ≤ the
+  frame's left edge and the two share a top (side-by-side, not stacked) — and gave the content
+  column a stable `data-part="frame"` selector. This refines AC-1/AC-6/AC-7: the container
+  context (AC-1) and the responsive switch must live on **different** elements.
+- **2026-06-14 — stories rebuilt to the design reference + consolidated 9 → 6.** The stories
+  used sparse placeholder slots (`DXLB` / `Workspace` / `Account`, no footer) so the rendered
+  frame didn't look like the design and read as "missing the top bar / rail footer". Every demo
+  story now renders the `preview-31-app-shell` content via shared top-level snippets: brand =
+  `Led` + `DEXTERLABS`, `topLeft` = `// Rails`, `topRight` = `v3.0`, `footer` =
+  `Est. 2019 · Delft`, body = the `// Rails` eyebrow + "Resize me" `h1` + paragraph, over the
+  design's nav fixture `Home / Rails (badge 3) / Orders / You` with `current="rails"`. No AC
+  changed; the 29 ACs are now covered by **6** lean stories (each carrying a full play test) —
+  *Desktop* (folds AC-1/3/4/6/7/8/9/10/11/16/17/18/20/24 + the D74 rail-beside-frame
+  regression), *Desktop — Navigate* (AC-19), *Mobile* (AC-3/12/13/14/21b-f), *Mobile —
+  Navigate* (AC-21g), *A11y — One Nav Exposed* (AC-5/23), *Slots — Strings & Snippets*
+  (AC-10 absent/AC-22a/b/c) — superseding the "~9 stories" suggestion in the Story plan above
+  (that list remains the AC-coverage contract, not a story count). Play assertions track the
+  new fixture text (`DEXTERLABS`, `Home/Rails/Orders/You`, `// Rails`, `v3.0`, `Delft`).

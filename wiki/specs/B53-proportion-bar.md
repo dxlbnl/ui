@@ -9,16 +9,22 @@ geometry is testable — this runs the **full** pipeline (test-writer → implem
 reviewer), not the D42 visual-only track.
 
 It is the data-viz sibling of `Gauge` (B52, [D58](../decisions.md#d58-b52--gauge-lives-in-patterns-uses-roleprogressbar-as-progressbars-radial-sibling)/[D59](../decisions.md#d59-b52--gauge-tests-pin-the-two-circles-via-data-parttrackdata-partarc)) and the linear
-`ProgressBar` — both live in `patterns/`. This spec mirrors Gauge's geometry-testing
+`ProgressBar`. This spec mirrors Gauge's geometry-testing
 approach: a numeric example whose exact computed values are asserted, plus `data-part`
 structural hooks for elements that have no accessible role.
+
+> **Amended 2026-06-14 (D72):** `ProportionBar` moved from `patterns/` to `feedback/`
+> alongside `Gauge` (which moved under [D71](../decisions.md#d71-gauge-moves-to-feedback-story-lightening-pass-progressbar-stays-in-patterns)); story `title` is now `Feedback/ProportionBar`. The
+> stories were consolidated to **3** (Four Segments / Geometry & edges / Accessibility) per
+> [stories-guide.md](../stories-guide.md) → *Consolidating stories*; all 20 ACs remain covered. `ProgressBar`
+> stays in `patterns/`.
 
 References:
 - Item card: [`wiki/backlog/doing/B53-proportion-bar.md`](../backlog/doing/B53-proportion-bar.md)
 - Design refs (downstream React, reference ONLY — the Svelte library is canonical):
   `_design-refs/B53/ProportionBar.jsx`, `_design-refs/B53/preview-26-proportion-bar.html`
-- Sibling implementations: `src/lib/components/patterns/Gauge.svelte`,
-  `src/lib/components/patterns/ProgressBar.svelte`
+- Sibling implementations: `src/lib/components/feedback/Gauge.svelte` (moved from
+  `patterns/`, see D71), `src/lib/components/patterns/ProgressBar.svelte`
 - Constraints: [requirements.md](../requirements.md) (SSR-safe, WCAG 2.1 AA, strict TS),
   [architecture.md](../architecture.md) (authoring conventions), Standing Rules
   [D45](../decisions.md#d45-native-css-nesting-required----global-blocks-and-all-component-style-blocks) (native CSS nesting),
@@ -160,7 +166,8 @@ pins the exact results so the implementer and reviewer can verify by hand:
 
 ## Story plan
 
-`ProportionBar.stories.svelte`, `title: 'Patterns/ProportionBar'`, `component: ProportionBar`,
+`ProportionBar.stories.svelte`, `title: 'Feedback/ProportionBar'` (was `Patterns/…`, see D72),
+`component: ProportionBar`,
 `tags: ['autodocs']`. Imports `expect`, `within` from `storybook/test`. Geometry helpers
 mirror the formula (computed, never hard-coded), e.g.:
 
@@ -207,7 +214,10 @@ background resolves to a token, use `resolveTokenColor` from `$lib/storybook-uti
    `queryByRole('img')` is null; the `<svg>` carries `aria-hidden="true"` and the
    forwarded `data-testid`. (Mirrors Gauge Story 11.)
 
-Story count: **8**. AC count: **20**.
+Story count: originally **8**; **consolidated to 3 under D72** (Four Segments / Geometry &
+edges / Accessibility) — the geometry edge cases (two-segment, custom height, zero total,
+negative clamp, no-value-labels) fold into one *Geometry & edges* story, and the label /
+decorative cases into *Accessibility*. AC count: **20** (all still covered).
 
 ## Out of scope
 
