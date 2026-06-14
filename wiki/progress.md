@@ -491,4 +491,12 @@ it records the reason here AND states it in chat.
 - manager: B52 committed ca4e0ac. Filed B61 (bug, high) directly into doing/; delegating the import swap to a test-writer (stories are test artifacts).
 - test-writer: swapped `import {vi} from "vitest"` → `fn` from `storybook/test` in Nav/Popover/SegmentedControl stories (13 vi.fn→fn); 326/326 green, pnpm check 0 errors
 - manager: verified directly (grep: zero `from "vitest"` in src/lib stories; all 3 use storybook/test). Mechanical, low-risk, well-verified swap matching the architecture.md-mandated house pattern — accepted without a separate reviewer agent (manager-level verification). Live Storybook UI re-check offered to user.
+- result: done → commit 10003f4
+
+## 2026-06-14 — B53: ProportionBar component
+- manager: resume build run; start, track: feature; mv inbox→doing; vendored design refs (preview 26 + ProportionBar.jsx)
+- spec-writer: wrote wiki/specs/B53-proportion-bar.md (20 ACs, 8 stories); D60 logged (patterns/ home, role=img, data-part contract); geometry pinned (42/28/18/12 → widths [418,278,178,120])
+- test-writer: wrote patterns/ProportionBar.stories.svelte (9 stories, storybook/test imports); red for right reason (missing component, 326 baseline green)
+- implementer: wrote ProportionBar.svelte + patterns/index.ts + lib/index.ts (first attempt); 335/335 green, pnpm check 0 errors
+- reviewer: PASS — all 20 ACs met, 335/335 green, 0 check errors, no scope creep, storybook/test import hygiene clean; non-blocking: swatch size hardcoded 10px (no matching spacing token)
 - result: done

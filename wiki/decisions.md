@@ -1179,3 +1179,50 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   `c = 2π·((size-width-3)/2)` — the implementer must build the attribute with the identical
   template so the rendered string matches byte-for-byte.
 - **Supersedes**: none
+
+## D60: B53 — ProportionBar lives in `patterns/`, uses `role="img"` + legend (not `progressbar`)
+- **Date**: 2026-06-14
+- **By**: spec-writer (B53)
+- **Context**: Porting the design-system `ProportionBar` — a horizontal stacked share bar
+  (part-to-whole) whose segment widths are computed from values, plus a per-segment
+  legend. Two decisions needed pinning before test-writer: (1) its home category, and (2)
+  its ARIA role. Its data-viz siblings are `Gauge` (radial, `role="progressbar"`, D58) and
+  the linear `ProgressBar` (`role="progressbar"`), both in `patterns/`.
+- **Decision**: (1) **`patterns/`** — ProportionBar files under
+  `src/lib/components/patterns/` beside `ProgressBar`/`Gauge`, exported from
+  `patterns/index.ts` + `src/lib/index.ts`; story title `Patterns/ProportionBar`.
+  (2) **`role="img"` + `aria-label={label ?? 'Proportion'}`** on the root `<svg>` — NOT
+  `progressbar`/`meter`. A stacked share bar is a *pictorial summary* of a composition,
+  not progress toward completion (ProgressBar/Gauge) nor a single measurement (meter), so
+  there is no single `aria-valuenow`. The bar is announced as one named image; the
+  per-segment breakdown is exposed as real text via a sibling `<ul>` legend (label +
+  optional valueLabel), which is the accessible complement to the image summary and is
+  never `aria-hidden`. (3) **No polymorphic `as`** (root is intrinsically an `<svg>`);
+  `...rest` (incl. `SVGAttributes`) forwards onto the root `<svg>`, enabling a decorative
+  fallback (`aria-hidden="true"`). Stateless and SSR-safe (no `$effect`, no browser
+  globals). The component is geometry-computing → **full pipeline** (test-writer →
+  implementer → reviewer), NOT the D42 visual-only track.
+- **Decision (test contract)**: rects/legend parts carry stable `data-part` hooks
+  (`segment`, `swatch`, `legend-label`, `value-label`, `root`) since `<rect>`/`<span>`
+  have no accessible role — mirrors the `data-part` convention from D55/D59. The 2px
+  inter-segment gap is carved from each rect's right edge (`width = w − gap`, last segment
+  no gap) while the running `x` offset accumulates the **un-gapped** `w(i)`; `total = sum
+  of clamped(value) || 1` (zero-total → fallback 1, no division-by-zero); negative values
+  clamp to 0. Canonical numeric example 42/28/18/12 → widths `[418,278,178,120]`, x
+  `[0,420,700,880]`.
+- **Consequences**: The implementer must render `role="img"`, the legend `<ul>`, and the
+  `data-part` hooks exactly. The only inline styling is the caller-supplied per-segment
+  `color` (rect `fill` + swatch `background`); all other styling is scoped CSS with tokens
+  (D45). Tooltips/interactivity, animation, auto-formatted value labels, and vertical
+  orientation are out of scope (future items).
+- **Supersedes**: none
+- **Test-writer note (2026-06-14)**: `ProportionBar.stories.svelte` adopts the D60
+  `data-part` contract verbatim — no new hooks introduced. The implementer MUST render:
+  `[data-part="root"]` wrapper (`<svg>` then `<ul>` as children), `<rect data-part="segment">`
+  per segment in source order, and per legend `<li>` a `[data-part="swatch"]`,
+  `[data-part="legend-label"]`, and (only when `valueLabel` set) `[data-part="value-label"]`,
+  in that order. Label is uppercase mono `--ink-faint`; the `<svg>` carries scoped
+  `border 1px var(--rule)` + `background var(--bg-sunken)` + `display:block`. The spec's
+  8-story plan is realised as **9** stories: the "Labelled" story is split into "Labelled"
+  (custom `label`) and "Default Label" (asserts the `'Proportion'` default) to cover both
+  branches of AC 17 with `getByRole('img', { name })`.
