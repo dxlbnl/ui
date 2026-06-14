@@ -508,4 +508,10 @@ it records the reason here AND states it in chat.
 - implementer: wrote CompareBars.svelte + patterns/index.ts + lib/index.ts; 339/341 — flagged 2 test defects (fractional style.width asserted via raw JS toString; CSSOM/JS-FP reserializes 27.5→27.500000000000004, 77.777..→77.7778)
 - test-writer (fix): switched the 2 fractional-width assertions to parseFloat(style.width)+toBeCloseTo(...,4); 341/341 green, pnpm check 0 errors; non-vacuity reasoned (strict to 0.0001%)
 - reviewer: PASS — all 19 ACs met, 341/341 green, 0 check errors, no scope creep, storybook/test import hygiene clean
+- result: done → commit 9adab3e
+
+## 2026-06-14 — B62: ProportionBar legend style fix (visual-only)
+- manager: user reported (live Storybook) the ProportionBar legend "doesn't look like the design" + "no space between label, percentage and color box". Root cause found: `.legend li { gap: var(--u1) }` — `--u1` is undefined (scale is --u/--u2/…) so gap=0; legend text also lacks font-size/letter-spacing so it renders at ~16px not the design's 11px mono. Filed B62 (bug, high, visual-only D42); ACs in card. Delegating to implementer (test-writer skipped per D42).
+- implementer: gap var(--u1)→var(--u); added font-size:11px to .legend-label + .value-label and letter-spacing:0.08em to .legend-label (matches StatusPill house convention); 341/341 green, pnpm check 0 errors
+- manager: verified directly (no --u1 remains; only ProportionBar.svelte changed; CSS matches the 4 ACs). Trivial well-specified visual fix — accepted via manager verification (no separate reviewer agent).
 - result: done

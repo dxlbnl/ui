@@ -98,7 +98,7 @@
     & li {
       display: flex;
       align-items: center;
-      gap: var(--u1);
+      gap: var(--u);
     }
   }
 
@@ -112,11 +112,14 @@
   .legend-label {
     text-transform: uppercase;
     font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
     color: var(--ink-faint);
   }
 
   .value-label {
     font-family: var(--mono);
+    font-size: 11px;
     color: var(--ink-dim);
   }
 </style>
