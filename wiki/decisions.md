@@ -1068,3 +1068,62 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   Any future component that owns a Popover toggled from its own anchor will need the same
   guard; if this recurs, consider promoting it into Popover (an `anchorEl` it ignores).
 - **Supersedes**: none
+
+## D57: B51 — SegmentedControl lives in `forms/`, uses `radiogroup`/`radio` semantics with roving tabindex
+- **Date**: 2026-06-14
+- **By**: spec-writer (B51)
+- **Context**: Porting the design-system `SegmentedControl` (`SegmentedControl.jsx`) — a
+  horizontal row of joined buttons, exactly one active, selecting a value from a fixed
+  set. The reference omits a11y entirely (bare `<button>`s with `onClick`). Two questions
+  arose: (1) which category does it belong to? (2) what ARIA pattern — tablist (mirroring
+  the library's `Tabs`) or radiogroup (mirroring the library's `RadioGroup`)?
+- **Decision**: (1) **`forms/`** — SegmentedControl commits a *value* from a small fixed
+  set, exactly like `RadioGroup` and `Select` (both in `forms/`); it does not own view
+  panels. Story title `Forms/SegmentedControl`; exports added to `forms/index.ts` and
+  `src/lib/index.ts`. (2) **`role="radiogroup"`** on the container + **`role="radio"` +
+  `aria-checked`** on each segment, with **roving tabindex** (checked segment `tabindex=0`,
+  others `-1`; first segment is the entry point when nothing is selected). Tablist
+  semantics were rejected because they imply switching between visible panels, which this
+  control does not do, and `radio` matches the same-category `RadioGroup` precedent. The
+  container is named via a required `label` prop applied as `aria-label` (no visible
+  `<legend>`). Keyboard model is **automatic activation** (Arrow/Home/End move focus AND
+  select + fire `onchange`, with wrap-around) per D23. `value` is **bindable** with an
+  internal committed copy, per the `Select` idiom, so the active state reflects the user's
+  choice even when the caller does not feed `value` back.
+- **Consequences**: The component re-uses the established RadioGroup keyboard idiom rather
+  than the Tabs idiom. No visible label is rendered (out of scope; `Field` integration is
+  a possible follow-up). Disabled segments, multi-select/toggle-off, manual activation,
+  vertical orientation, and a compound `SegmentedControl.Item` API are out of scope.
+- **Supersedes**: none
+
+### ADR: B51 SegmentedControl — test contract hooks the implementer must honour
+- **Date**: 2026-06-14
+- **By**: test-writer (B51)
+- **Context**: `SegmentedControl.stories.svelte` was written test-first. Most assertions
+  use role-based queries (`getByRole('radiogroup' | 'radio', { name })`), which need no
+  internal-structure coupling. But two facts the spec calls load-bearing are pinned by a
+  stable hook rather than by role, so the implementer must render them exactly:
+  (1) AC-2 queries the root via the `.segmented` class and asserts `display: inline-flex`;
+  (2) the keyboard/roving-tabindex and active-colour assertions read `aria-checked` and
+  `tabindex` directly off each `role="radio"` button.
+- **Decision**: The stories file is the contract. To make the new tests green the
+  implementer's `SegmentedControl.svelte` must render: a root carrying class **`segmented`**
+  with **`role="radiogroup"`** and an `aria-label` defaulting to the `label` prop (an
+  explicit `aria-label` via `...rest` must override it — assert in Story 8); one
+  **`<button type="button" role="radio">`** per option with **`aria-checked`** reflecting
+  selection and **roving `tabindex`** (`0` on the checked segment, or the first segment when
+  unselected; `-1` elsewhere); the option's **value** (not its label) passed to `onchange`
+  and to the bindable `value`; `display: inline-flex` on the root; `font-size` `11px` (md) /
+  `10px` (sm); `text-transform: uppercase` + mono font on segments; active segment
+  `background: var(--amber)` / `color: var(--bg)`, inactive `color: var(--ink-faint)` /
+  transparent background. Keyboard model: ArrowRight/Down → next, ArrowLeft/Up → previous
+  (both wrap), Home → first, End → last, each move focusing AND selecting (automatic
+  activation), firing `onchange`.
+- **Verification**: Confirmed red-for-the-right-reason — without the component the stories
+  file fails to import (`Failed to resolve import "./SegmentedControl.svelte"`), 0 tests
+  collected from it, the other 307 tests stay green. A throwaway contract-faithful stub was
+  then dropped in temporarily: all 49 files / 315 tests passed (307 + 8), proving the eight
+  play functions are well-formed and fail only because the component is missing. The stub
+  was removed; `pnpm check` reported 0 errors with the stub present (no new type errors from
+  the stories file).
+- **Supersedes**: none

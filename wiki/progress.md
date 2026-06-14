@@ -467,4 +467,13 @@ it records the reason here AND states it in chat.
 - test-writer (fix): added args to OK story (tone/label/detail); 307/307 green, pnpm check 0 errors
 - manager: logged D56 (stopPropagation interaction fix) per reviewer recommendation
 - reviewer: PASS — all 25 ACs met, 307/307 green, 0 check errors, Led/Popover unchanged, no scope creep
+- result: done → commit 84bef31
+
+## 2026-06-14 — B51: SegmentedControl component
+- manager: start, track: feature; mv inbox→doing; vendored design refs (preview 24 + SegmentedControl.jsx)
+- spec-writer: wrote wiki/specs/B51-segmented-control.md (20 ACs, 8 stories); D57 logged (forms/ home, radiogroup role + roving tabindex, automatic activation); no blocking OQs
+- test-writer: wrote forms/SegmentedControl.stories.svelte (8 stories); red for right reason (missing component, 307 baseline green); test-contract ADR logged (.segmented/role=radiogroup, button role=radio, data hooks)
+- manager: user check-in mid-pipeline — confirmed the failing SegmentedControl suite was the expected TDD red (import fails, no component yet); 307 others green; not a regression
+- implementer: wrote SegmentedControl.svelte + forms/index.ts + lib/index.ts (first attempt); 315/315 green, pnpm check 0 errors
+- reviewer: PASS — all 20 ACs met, 315/315 green, 0 check errors, no scope creep; 2 non-blocking style notes (size rules un-nested; keyboard focus via DOM query)
 - result: done

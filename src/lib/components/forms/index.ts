@@ -7,3 +7,5 @@ export { default as Checkbox } from './Checkbox.svelte'
 export { default as Radio } from './Radio.svelte'
 export { default as RadioGroup } from './RadioGroup.svelte'
 export { default as Switch } from './Switch.svelte'
+/** SegmentedControl: joined radiogroup of mutually-exclusive options with roving tabindex. */
+export { default as SegmentedControl } from './SegmentedControl.svelte'
