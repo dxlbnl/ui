@@ -3,7 +3,8 @@ export { Button, Led, TagPill, Text, Heading } from './components/primitives/ind
 export { Stack, Inline, Spread, Grid, Container, Rule, Prose } from './components/layout/index.js'
 export { Card, ProductCard, ProjectCard, NoteCard } from './components/cards/index.js'
 /** Pager: controlled prev / label / next stepper for paging through result windows. */
-export { Nav, Breadcrumb, Pager } from './components/navigation/index.js'
+/** AppShell: responsive application frame — desktop rail (≥760px) vs mobile bottom tab bar, controlled nav via current/onNavigate. */
+export { Nav, Breadcrumb, Pager, AppShell } from './components/navigation/index.js'
 /** SegmentedControl: joined radiogroup of mutually-exclusive options with roving tabindex. */
 export { Input, Textarea, Select, InputWrap, Field, Checkbox, Radio, RadioGroup, Switch, SegmentedControl } from './components/forms/index.js'
 /** StatusPill: coloured status pill that toggles a detail Popover on click. */

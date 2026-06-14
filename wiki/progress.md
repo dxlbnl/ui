@@ -531,4 +531,12 @@ it records the reason here AND states it in chat.
 - test-writer: wrote feedback/Inbox.stories.svelte (9 stories, storybook/test+fn); red for right reason (missing component, 345 baseline green)
 - implementer: wrote Inbox.svelte + feedback/index.ts + lib/index.ts; 354/354 green, pnpm check 0 errors; Popover/Led/StatusPill unchanged; two sound deviations (tone→LedColor narrowing cast; dropped size={7} as Led has no size prop)
 - reviewer: PASS — all 22 ACs met, 354/354 green, 0 check errors, no scope creep, token+import hygiene clean, both deviations sound; non-blocking: optionally note the LedColor cast on D64
+- result: done → commit 7fee045
+
+## 2026-06-14 — B58: AppShell component
+- manager: start, track: feature; mv inbox→doing; vendored design refs (preview RENUMBERED to 31-app-shell + AppShell.jsx + base.jsx). NOTE: design system renumbered — app-shell now preview/31, progress-states preview/32; old sticky-sections preview removed, new ui_kits/components/Accordion.jsx added (use for B59).
+- spec-writer: wrote wiki/specs/B58-app-shell.md (29 ACs, ~9 stories); D65 logged (navigation/ home; responsive via CSS container queries @ 760px — SSR-safe + deterministically testable at fixed widths like Grid.collapse)
+- test-writer: wrote navigation/AppShell.stories.svelte (9 stories, storybook/test+fn, width-wrapped); red for right reason (missing component, 354 baseline green); D66 logged (data-part contract)
+- implementer: wrote AppShell.svelte + navigation/index.ts + lib/index.ts; 363/363 green, pnpm check 0 errors; Led/Nav unchanged; D67 logged (SSR-safe $effect mirrors layout→aria-hidden since CSS can't toggle attrs; ResizeObserver, no matchMedia/$app/environment — annotation only, doesn't drive layout)
+- reviewer: PASS — all 29 ACs met, 363/363 green, 0 check errors, no scope creep, token+import hygiene clean (--radius exists), D67 sound; non-blocking: rail badge radius --radius(2px) vs reference rounded pill (visual nit)
 - result: done

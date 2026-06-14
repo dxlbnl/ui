@@ -1358,3 +1358,116 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   `open`, a compound `Inbox.Item`/`Inbox.Header` API, grouping/pagination, empty-state
   messaging, list keyboard navigation, and animation are out of scope (future items).
 - **Supersedes**: none
+
+## D65: B58 — AppShell responsive switch via CSS container queries; lives in `navigation/`
+- **Date**: 2026-06-14
+- **By**: spec-writer (B58)
+- **Context**: Porting the design-system `AppShell` (`AppShell.jsx`) — a full-height
+  responsive frame that shows a 212px desktop sidebar **rail** at ≥760px and a bottom
+  **tab bar** below 760px, with rail/tab NavItems, a sticky top bar, and a scrollable
+  `<main>`. Two decisions needed pinning before test-writer: (1) how to implement the
+  rail↔tab-bar responsive switch SSR-safely AND testably, and (2) the home category.
+- **Decision (responsive strategy)**: **CSS-only container queries**, not the reference's
+  `matchMedia` JS hook and not viewport `@media`. The AppShell root carries
+  `container-type: inline-size`; both navs render in the DOM and a
+  `@container (min-width: 760px)` rule toggles which layout is visible (desktop rail vs
+  mobile tab bar), with the hidden nav set `display:none` **and** `aria-hidden="true"`
+  (and removed from tab order) so exactly one nav is exposed to AT at a time.
+  - *Why not matchMedia (option B):* it SSR-renders a default layout then re-structures on
+    hydration (flash risk), and forces the test to drive `matchMedia` — fragile.
+  - *Why container queries over viewport `@media` (plain option A):* a Storybook play
+    function cannot reliably change the browser **viewport**, so viewport `@media` can't be
+    asserted at two widths in one run. A **container** query responds to a wrapper width the
+    play function sets directly — the exact already-proven pattern in `Container.svelte` +
+    `Grid.collapse.stories.svelte`. This makes BOTH layouts deterministically testable
+    (`getComputedStyle(aside).display` / `tabNav.display` at a fixed wrapper width) and keeps
+    the frame SSR-safe with no hydration flash and no JS.
+  - Breakpoint: **760px** (matches the reference `(min-width: 760px)`).
+- **Decision (home category)**: **`navigation/`** (beside `Nav`/`Breadcrumb`/`Pager`).
+  Though it is a layout frame, its public API (`nav`, `current`, `onNavigate`, rail/tab
+  NavItems, `aria-current`) and behaviour are navigation concerns, it composes the
+  nav-centric `Led` primitive (D38), and it shares the responsive-nav precedent with
+  `Nav.svelte`. Exports added to `navigation/index.ts` + `src/lib/index.ts`.
+- **Decision (a11y + API)**: `<main>` landmark for content; two `<nav>` landmarks (one
+  hidden per width via `aria-hidden`); rail/tab items are real `<button>`s with their
+  `label` as accessible name; active item carries `aria-current="page"`. Slots
+  `brand`/`topLeft`/`topRight`/`footer` are single `string | Snippet` props (D43); the tab
+  NavItem reuses `Led` (`color="amber"` active / `"off"` inactive) rather than re-implementing
+  the dot (D38). AppShell is **controlled/stateless** for navigation (consumer owns
+  `current`/`onNavigate`). Geometry/behaviour-computing → **full pipeline** (test-writer →
+  implementer → reviewer), NOT the D42 visual-only track.
+- **Tokens**: only existing tokens (`--bg`, `--bg-rail`, `--ink-dim`, `--ink-faint`,
+  `--amber`, `--rule`, `--mono`, plus the `Led` tones); literal px for structural micro
+  sizes (`212`/`22`/`16`/`7`/`2px`, the `760px` breakpoint, paddings). Do NOT invent tokens
+  (D62). All CSS scoped, native nesting (D45), `@container` not `@media`.
+- **Consequences**: The frame works identically on SSR-rendered HTML (no hydration
+  restructure). The implementer must set `container-type: inline-size` on the root and use
+  `@container (min-width: 760px)` for the switch; the test-writer wraps `<AppShell>` in a
+  width-controlled element to assert each layout. Collapsible/resizable rail, drawer
+  overlays, arrow-key roving between nav items, route integration, and animated
+  rail↔tab transitions are out of scope (future items).
+- **Supersedes**: none
+
+## D66: B58 — AppShell tests pin non-role internals via `data-part` hooks
+- **Date**: 2026-06-14
+- **By**: test-writer (B58)
+- **Context**: Many AppShell internals have no accessible role/name handle, so the
+  stories cannot select them by role. Consistent with the house `data-part` convention
+  (D55/D59/D63), the test-writer pins them with inert `data-part` hooks. This locks the
+  test/implementer contract before `AppShell.svelte` exists.
+- **Decision (test contract)**: `AppShell.svelte` MUST render these `data-part` hooks so
+  `AppShell.stories.svelte` resolves; they are data attributes only (no styling/ARIA
+  meaning implied):
+  - **`[data-part="tab-nav"]`** on the mobile bottom tab `<nav>` (the rail `<aside>` is
+    selected via `aside`; the rail `<nav>` via `aside nav`).
+  - **`[data-part="brand"]`** on the rail brand block (first rail region, bottom rule).
+  - **`[data-part="top-bar"]`** on the sticky top bar (shared by both layouts).
+  - **`[data-part="footer"]`** on the rail footer region — rendered **only** when the
+    `footer` prop is provided (absence asserted in the Footer story).
+  - **`[data-part="rail-badge"]`** on the desktop rail NavItem badge pill — present only
+    when that item has a `badge`.
+  - **`[data-part="tab-bar"]`** on each mobile tab NavItem's top active-indicator bar
+    (amber when active, transparent when inactive — present on every tab item).
+  - **`[data-part="tab-label"]`** on each mobile tab NavItem's label span.
+  - **`[data-part="tab-badge"]`** on the mobile tab NavItem badge dot — present only when
+    that item has a `badge`.
+- **Other contract points the implementer must honour for the stories to pass**: rail and
+  tab NavItems are real `<button>`s with `label` as accessible name; the active item
+  carries `aria-current="page"` (inactive items omit the attribute); the tab NavItem's
+  status dot is a `Led` (class `led-amber` when active / `led-off` when inactive);
+  badge pills/dots are decorative (do not contribute to the button's accessible name);
+  the hidden nav at a given width is `display:none` **and** `aria-hidden="true"` (AC-23);
+  each `<nav>` has a non-empty `aria-label`; `<main>` is a landmark with
+  `overflow-y: auto`; the root carries `container-type: inline-size`; the desktop frame
+  resolves to `height: 100%` (the wrapper sets the fixed height) — tests accept `100%`,
+  `100vh`, or the resolved wrapper height.
+- **Consequences**: `AppShell.svelte` must render all hooks above or the stories fail at
+  query time. No `data-part` is invented for elements that already have a role/name.
+- **Supersedes**: none
+
+## D67: B58 — AppShell mirrors CSS layout state onto `aria-hidden` via a small `$effect`
+- **Date**: 2026-06-14
+- **By**: implementer (B58)
+- **Context**: D65 mandates a CSS-only container-query switch (rail ≥760px / tab bar
+  <760px). AC-23 additionally requires the *currently hidden* nav to carry a literal
+  `aria-hidden="true"` attribute, while the *visible* nav must NOT be `aria-hidden` (else
+  Testing Library `getByRole('button')` excludes its buttons and AC-9/AC-14/navigate ACs
+  fail). CSS cannot toggle an HTML attribute, and a single static `aria-hidden` cannot be
+  per-width-correct for both navs.
+- **Decision**: Keep CSS as the sole owner of *visibility* (`display`), and add a minimal
+  SSR-safe `$effect` that mirrors the CSS-decided layout onto `aria-hidden`. The effect
+  reads the root's `clientWidth` against the 760px breakpoint (exact complement of the
+  `@container` rule) and sets `aria-hidden` on the rail `<nav>` (`false` ≥760px) and the
+  tab `<nav data-part="tab-nav">` (`true` ≥760px), re-running via a `ResizeObserver` on the
+  root. No `matchMedia`, no `$app/environment` (D52), no layout restructuring — the effect
+  only annotates a11y state. Navs render statically `aria-hidden="true"` so SSR/no-JS
+  output still exposes at most one nav; the effect corrects to the live width on mount.
+- **Why width-derived, not `getComputedStyle(display)`**: reading each nav's computed
+  `display` at mount raced the container-query resolution (transiently wrote
+  `aria-hidden="false"` on the desktop tab nav). Deriving both navs from the single root
+  width guarantees they are exact complements (never both/neither hidden) and is stable at
+  first paint.
+- **Consequences**: D65 stays accurate — CSS still owns the visible/hidden switch; the JS
+  is a thin a11y mirror, not a responsiveness mechanism. If the breakpoint changes, update
+  both the `@container (min-width: 760px)` rule and the `BREAKPOINT` constant together.
+- **Supersedes**: none
