@@ -7,7 +7,8 @@ export { Nav, Breadcrumb, Pager } from './components/navigation/index.js'
 /** SegmentedControl: joined radiogroup of mutually-exclusive options with roving tabindex. */
 export { Input, Textarea, Select, InputWrap, Field, Checkbox, Radio, RadioGroup, Switch, SegmentedControl } from './components/forms/index.js'
 /** StatusPill: coloured status pill that toggles a detail Popover on click. */
-export { Alert, Modal, Popover, StatusPill, Toast, ToastRegion } from './components/feedback/index.js'
+/** Inbox: bell button with unread badge that toggles a Popover list of notifications. */
+export { Alert, Modal, Popover, StatusPill, Inbox, Toast, ToastRegion } from './components/feedback/index.js'
 export { toast } from './stores/toast.js'
 export type { ToastItem, ToastVariant, ToastOptions } from './stores/toast.js'
 /** ProportionBar: horizontal stacked share bar (part-to-whole) with a legend, sibling of Gauge. */

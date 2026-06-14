@@ -523,4 +523,12 @@ it records the reason here AND states it in chat.
 - implementer: wrote Pager.svelte + navigation/index.ts + lib/index.ts; 344/345 — flagged 1 test defect (letterSpacing asserted as "0.08em" but browsers serialize computed letter-spacing in px → 0.96px)
 - test-writer (fix): corrected the assertion to "0.96px" (12px × 0.08); 345/345 green, pnpm check 0 errors
 - reviewer: PASS — all 19 ACs met, 345/345 green, 0 check errors, no scope creep, token hygiene clean (5 tokens all exist, no --u1), storybook/test import hygiene clean
+- result: done → commit fed5c6b
+
+## 2026-06-14 — B57: Inbox component
+- manager: start, track: feature; mv inbox→doing; vendored design refs (preview 30 + Inbox.jsx + base.jsx)
+- spec-writer: wrote wiki/specs/B57-inbox.md (22 ACs, 9 stories); D64 logged (feedback/ home, composes Popover+Led, owns open + D56 guard, unread conveyed in text per WCAG 1.4.1, data-part contract)
+- test-writer: wrote feedback/Inbox.stories.svelte (9 stories, storybook/test+fn); red for right reason (missing component, 345 baseline green)
+- implementer: wrote Inbox.svelte + feedback/index.ts + lib/index.ts; 354/354 green, pnpm check 0 errors; Popover/Led/StatusPill unchanged; two sound deviations (tone→LedColor narrowing cast; dropped size={7} as Led has no size prop)
+- reviewer: PASS — all 22 ACs met, 354/354 green, 0 check errors, no scope creep, token+import hygiene clean, both deviations sound; non-blocking: optionally note the LedColor cast on D64
 - result: done

@@ -1318,3 +1318,43 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   or ARIA semantics are implied by `data-part` (it is a data attribute only). If the
   implementer later gives the label a role/name, the hook can be revisited.
 - **Supersedes**: none
+
+## D64: B57 — Inbox lives in `feedback/`, composes Led + Popover (StatusPill shape), owns open state; unread surfaced as text
+- **Date**: 2026-06-14
+- **By**: spec-writer (B57)
+- **Context**: Porting the design-system `Inbox` (`Inbox.jsx`) — a 34×34 bell button with
+  an unread-count badge that toggles a right-aligned `Popover` containing a header
+  ("NOTIFICATIONS" + a conditional "Mark all read") and a scrollable list of notification
+  rows (each: `Led` + title + time + body). It is the most composite component in this
+  batch but is structurally the **same shape as `StatusPill`** (D54/D56). Decisions needed
+  before test-writer: (1) home category, (2) reuse vs re-implement Led/Popover, (3) open-
+  state ownership, (4) how to keep the unread distinction accessible given it is otherwise
+  conveyed by glyph colour, badge, LED colour, font-weight, and row background — all of
+  which would violate WCAG 1.4.1 if used alone.
+- **Decision**: (1) **`feedback/`** beside `StatusPill`/`Popover`; story title
+  `Feedback/Inbox`; exports added to `feedback/index.ts` + `src/lib/index.ts`.
+  (2) **Reuse `Led` + `Popover`** (D38) — rows render `<Led color={item.tone} blink={...} />`
+  (1:1 `tone`→`color`); the panel is a `<Popover align="right" width={320}>`; no bespoke
+  LED markup or floating layer. The bell trigger and the row/mark-all buttons are bespoke
+  native `<button>`s (none of `Button`'s six variants match) — a narrow D38 exception on
+  the same footing as D54/D63. (3) **Inbox owns `open`** in local `$state`: the bell toggles
+  it, `Popover`'s `onclose` clears it; the trigger carries the **D56 `onmousedown`
+  stopPropagation guard** so its own mousedown is not seen by Popover's document dismissal
+  listener (without it toggle-closed breaks). (4) **Unread is surfaced as text**, not by
+  colour/weight/badge alone: the bell `aria-label` is `` `${label}, ${unread} unread` ``
+  (e.g. `"Notifications, 2 unread"`) when `unread > 0`, just `label` otherwise; each unread
+  row's button accessible name includes the word `"unread"` (implementer's choice: a
+  visually-hidden span via the D29 clip pattern, or an `aria-label` on the row button).
+  This satisfies WCAG 1.4.1. Geometry-/state-computing → **full pipeline** (test-writer →
+  implementer → reviewer) with play-function assertions, NOT the D42 visual-only track.
+- **Decision (test contract)**: non-role-bearing internals carry `data-part` hooks
+  (D55/D59/D60/D63): `glyph`, `badge` (absent when `unread === 0`), `list`, `row`, `title`,
+  `header-label`. The bell/rows/mark-all are reached by `getByRole('button', { name })`;
+  the panel by `.popover`; the LED by `.led`/`led-{tone}`/`.blink`. All styling uses only
+  existing tokens (`--rule-strong`, `--bg-rail`, `--amber`, `--ink-dim`, `--bg`, `--rule`,
+  `--ink-faint`, `--ink`, `--mono`); the micro font-sizes (9/10/11/12/13/15px) and badge
+  geometry (15/15/8/−5px) are literal px — do NOT invent tokens (D62).
+- **Consequences**: No change to `Led` or `Popover` is required. An externally bindable
+  `open`, a compound `Inbox.Item`/`Inbox.Header` API, grouping/pagination, empty-state
+  messaging, list keyboard navigation, and animation are out of scope (future items).
+- **Supersedes**: none
