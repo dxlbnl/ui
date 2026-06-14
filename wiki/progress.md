@@ -457,4 +457,14 @@ it records the reason here AND states it in chat.
 - implementer: wrote Popover.svelte + feedback/index.ts + lib/index.ts exports; 293/295 — flagged 2 test defects (AC-6 `=="auto"` computed-style impossible; 9 strict-TS null-narrowing errors in stories)
 - test-writer (fix): corrected AlignRight/AlignLeft assertions (active edge 0px + inactive ≠0px + inline-style `auto` fallback) and added `as HTMLElement` casts; 295/295 green, pnpm check 0 errors; non-vacuity verified
 - reviewer: PASS — all 23 ACs met, 295/295 green, 0 check errors, no scope creep; non-blocking follow-up: tighten AC-6 prose ("computed active edge = 0px; inactive edge = auto in inline style")
+- result: done → commit fc84384
+
+## 2026-06-14 — B50: StatusPill component
+- manager: start, track: feature; mv inbox→doing; refs already vendored (preview 29 + StatusPill.jsx + base.jsx). Composes B56 Popover + existing Led primitive.
+- spec-writer: wrote wiki/specs/B50-status-pill.md (25 ACs, 12 stories); D54 logged (feedback/ home, reuse Led via color + Popover, owns open state); no blocking OQs
+- test-writer: wrote feedback/StatusPill.stories.svelte (12 stories); red for right reason (missing component); D55 logged (data-part hooks, .led/.popover selectors)
+- implementer: wrote StatusPill.svelte + feedback/index.ts + lib/index.ts; .popover/.led matched cleanly (no Led/Popover edits); added trigger onmousedown stopPropagation to fix toggle-vs-dismiss; 306/307 — flagged 1 test defect (OK story missing args)
+- test-writer (fix): added args to OK story (tone/label/detail); 307/307 green, pnpm check 0 errors
+- manager: logged D56 (stopPropagation interaction fix) per reviewer recommendation
+- reviewer: PASS — all 25 ACs met, 307/307 green, 0 check errors, Led/Popover unchanged, no scope creep
 - result: done

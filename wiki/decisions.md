@@ -1002,3 +1002,69 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   in one play function. The implementer must wire the document `mousedown` listener (not
   just avoid calling `onclose`) to make it green.
 - **Supersedes**: none
+
+## D54: B50 — StatusPill lives in `feedback/`, composes Led + Popover, owns its open state
+- **Date**: 2026-06-14
+- **By**: spec-writer (B50)
+- **Context**: Porting the design-system `StatusPill` (`StatusPill.jsx`) — a clickable
+  pill (status LED + uppercase mono label + optional `· detail` suffix) that toggles a
+  detail Popover. Three questions: (1) which category does it belong to? (2) does it
+  re-implement the LED/floating-panel or reuse the existing primitives? (3) who owns the
+  open state? The reference `Led` and the library `Led` already cover all tones (incl.
+  `cyan`) and `blink`; the reference `Popover` matches the library's controlled Popover.
+- **Decision**: (1) **`feedback/`** — StatusPill is a composite that owns disclosure state
+  and depends on `Popover` (which lives in `feedback/`); it sits beside Popover rather than
+  in `primitives/`. Story title `Feedback/StatusPill`. (2) **Reuse `Led` + `Popover`**
+  (D38) — StatusPill renders `<Led color={tone} {blink} />` (Led's prop is `color`, so
+  `tone` → `color` is a 1:1 forward) and a `<Popover>` for the detail panel; no bespoke
+  LED markup or floating layer. (3) **StatusPill owns `open`** in local `$state`: the
+  trigger `<button>` toggles it and `Popover`'s `onclose` clears it. The Popover is gated
+  on `open && children`, so a pill with no detail snippet never opens an empty panel
+  (mirrors the reference `open && children`). The `ok` tone uses neutral chrome
+  (`--rule-strong` border, `--ink-dim` label); non-`ok` tones colour label + border with
+  `var(--<tone>)`; the LED is always tone-coloured.
+- **Consequences**: No change to `Led` or `Popover` is required (the only nuance is the
+  `tone`→`color` prop-name mapping, handled inside StatusPill). Disclosure dismissal
+  (outside-click / Escape) is inherited from Popover and asserted at the StatusPill level.
+  A bindable external `open`, a compound `StatusPill.Trigger`, and `tone="off"` in the
+  variant matrix are out of scope (future items). StatusPill exports from
+  `feedback/index.ts` + `src/lib/index.ts`.
+- **Supersedes**: none
+
+## D55: StatusPill tests pin label/detail via `data-part` structural hooks
+- **Date**: 2026-06-14
+- **By**: test-writer (B50)
+- **Context**: B50's tone→colour and typography ACs (7, 9, 11, 12, 13) need to assert
+  computed `color`/`font-family`/`text-transform` on the *label* span and the faint
+  *detail* suffix span specifically — distinct from the trigger `<button>` and the
+  composed `Led`. The reference markup nests an inner detail `<span>` inside the label
+  `<span>`; a brittle `querySelector('span span')` would couple tests to nesting depth.
+- **Decision**: The StatusPill stories query the label via `[data-part="label"]` and the
+  detail suffix via `[data-part="detail"]`. The implementer must mark the label span with
+  `data-part="label"` and the (conditional) detail suffix span with `data-part="detail"`.
+  When `detail` is absent, no `[data-part="detail"]` element is rendered (asserted in the
+  "Without Detail Suffix" story). The LED is still queried by its stable `.led` class
+  (Led owns that), and the Popover panel by its `.popover` class (Popover owns that).
+- **Consequences**: Adds two non-visual `data-part` attributes to StatusPill's internal
+  markup — a documented test contract, not a styling hook. Mirrors the Modal idiom of
+  querying internal parts by a stable handle. The `Cannot find module './StatusPill.svelte'`
+  and downstream `implicitly has 'any'` svelte-check errors are expected red state until
+  the implementer creates the component; verified they all clear once the module exists.
+- **Supersedes**: none
+
+## D56: B50 — StatusPill stops trigger `mousedown` propagation to avoid Popover self-dismiss
+- **Date**: 2026-06-14
+- **By**: implementer (B50), confirmed by reviewer
+- **Context**: StatusPill owns its `open` state and toggles it on the trigger's `click`.
+  The composed Popover dismisses on a document-level `mousedown` outside its panel (D53).
+  A pointer interaction on the trigger fires `mousedown` (which Popover's document listener
+  sees as "outside the panel" → `onclose` → `open=false`) *then* `click` (StatusPill toggles
+  `open=true`), leaving the panel stuck open and breaking the toggle-closed behaviour (AC-16).
+- **Decision**: StatusPill adds `onmousedown={(e) => e.stopPropagation()}` on the trigger so
+  the trigger's own `mousedown` never reaches Popover's document dismissal listener. The
+  `click` handler then cleanly toggles. Popover is NOT modified.
+- **Consequences**: Genuine outside-click dismissal (mousedown on `document.body`, Story 9)
+  and Escape dismissal (Story 10) still pass — only the trigger's own mousedown is shielded.
+  Any future component that owns a Popover toggled from its own anchor will need the same
+  guard; if this recurs, consider promoting it into Popover (an `anchorEl` it ignores).
+- **Supersedes**: none
