@@ -1,7 +1,6 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import { expect, within, waitFor } from "storybook/test";
-  import { vi } from "vitest";
+  import { expect, within, waitFor, fn } from "storybook/test";
   import Popover from "./Popover.svelte";
   import { resolveTokenColor } from "$lib/storybook-utils.js";
 
@@ -17,22 +16,22 @@
   // Spies live in script scope so the inline play functions (no TS annotations allowed)
   // can read them, and the template can wire them to onclose.
   let openOutside = $state(true);
-  const outsideSpy = vi.fn(() => {
+  const outsideSpy = fn(() => {
     openOutside = false;
   });
 
   let openInside = $state(true);
-  const insideSpy = vi.fn(() => {
+  const insideSpy = fn(() => {
     openInside = false;
   });
 
   let openEscape = $state(true);
-  const escapeSpy = vi.fn(() => {
+  const escapeSpy = fn(() => {
     openEscape = false;
   });
 
   let openToggle = $state(true);
-  const toggleSpy = vi.fn(() => {
+  const toggleSpy = fn(() => {
     openToggle = false;
   });
 </script>
@@ -127,7 +126,7 @@
     // AC-1 still holds — nothing got rendered
     await expect(canvasElement.querySelector('[data-testid="pop-panel"]')).toBeNull();
   }}
-  args={{ open: false, onclose: vi.fn(), "data-testid": "pop-panel" }}>
+  args={{ open: false, onclose: fn(), "data-testid": "pop-panel" }}>
   <p class="pin">Panel contents</p>
 </Story>
 

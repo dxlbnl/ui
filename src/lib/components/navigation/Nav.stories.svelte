@@ -1,7 +1,6 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import { expect, within } from "storybook/test";
-  import { vi } from "vitest";
+  import { expect, within, fn } from "storybook/test";
   import Nav from "./Nav.svelte";
   import { resolveTokenColor, resolveTokenFgColor } from "$lib/storybook-utils.js";
 
@@ -329,7 +328,7 @@
 <!-- AC-20: Controlled mode — palette="phosphor" -->
 <Story name="Controlled Palette Phosphor" args={{
   palette: 'phosphor',
-  onPaletteToggle: vi.fn(),
+  onPaletteToggle: fn(),
 }}
   play={async ({ canvasElement, args, userEvent }) => {
     const canvas = within(canvasElement);
@@ -356,7 +355,7 @@
 <!-- AC-21: Controlled mode — palette="paper" -->
 <Story name="Controlled Palette Paper" args={{
   palette: 'paper',
-  onPaletteToggle: vi.fn(),
+  onPaletteToggle: fn(),
 }}
   play={async ({ canvasElement, args, userEvent }) => {
     const canvas = within(canvasElement);
@@ -410,8 +409,8 @@
   }}>
   {#snippet template(args)}
     <div>
-      <Nav palette="phosphor" onPaletteToggle={vi.fn()} />
-      <Nav palette="paper" onPaletteToggle={vi.fn()} />
+      <Nav palette="phosphor" onPaletteToggle={fn()} />
+      <Nav palette="paper" onPaletteToggle={fn()} />
     </div>
   {/snippet}
 </Story>
@@ -573,7 +572,7 @@
 
 <!-- AC-11: Mixed mode — only onPaletteToggle provided (no palette) -->
 <Story name="Mixed Mode Callback Only" args={{
-  onPaletteToggle: vi.fn(),
+  onPaletteToggle: fn(),
 }}
   play={async ({ canvasElement, args, userEvent }) => {
     const canvas = within(canvasElement);

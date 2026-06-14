@@ -1,7 +1,6 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import { expect, within } from "storybook/test";
-  import { vi } from "vitest";
+  import { expect, within, fn } from "storybook/test";
   import { resolveTokenColor, resolveTokenFgColor } from "$lib/storybook-utils.js";
   import SegmentedControl from "./SegmentedControl.svelte";
 
@@ -102,7 +101,7 @@
     value: "list",
     label: "View",
     size: "sm",
-    onchange: vi.fn(),
+    onchange: fn(),
   }}
   play={async ({ canvasElement, args, userEvent }) => {
     const canvas = within(canvasElement);
@@ -132,7 +131,7 @@
     options: stringOptions,
     value: "month",
     label: "Period",
-    onchange: vi.fn(),
+    onchange: fn(),
   }}
   play={async ({ canvasElement, args, userEvent }) => {
     const canvas = within(canvasElement);
@@ -279,7 +278,7 @@
     options: stringOptions,
     value: "week",
     label: "Period",
-    onchange: vi.fn(),
+    onchange: fn(),
   }}
   play={async ({ canvasElement, args, userEvent }) => {
     const canvas = within(canvasElement);

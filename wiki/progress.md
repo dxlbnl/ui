@@ -488,3 +488,7 @@ it records the reason here AND states it in chat.
 
 ## 2026-06-14 — Storybook UI crash (vitest import) → filing B61
 - manager: user reported `customEqualityTesters` TypeError in Storybook dev UI (port 6006). Root cause: 3 story files `import { vi } from "vitest"` (Nav [pre-existing B49], Popover [B56], SegmentedControl [B51]) — pulls vitest chai/expect setup into the bare Storybook browser where vitest global state is absent. pnpm test stays green (vitest runner inits state) but the UI crashes. House pattern is `fn` from `storybook/test`. Parking after B52 commit to file + fix B61.
+- manager: B52 committed ca4e0ac. Filed B61 (bug, high) directly into doing/; delegating the import swap to a test-writer (stories are test artifacts).
+- test-writer: swapped `import {vi} from "vitest"` → `fn` from `storybook/test` in Nav/Popover/SegmentedControl stories (13 vi.fn→fn); 326/326 green, pnpm check 0 errors
+- manager: verified directly (grep: zero `from "vitest"` in src/lib stories; all 3 use storybook/test). Mechanical, low-risk, well-verified swap matching the architecture.md-mandated house pattern — accepted without a separate reviewer agent (manager-level verification). Live Storybook UI re-check offered to user.
+- result: done
