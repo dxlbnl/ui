@@ -1127,3 +1127,55 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   was removed; `pnpm check` reported 0 errors with the stub present (no new type errors from
   the stories file).
 - **Supersedes**: none
+
+## D58: B52 — Gauge lives in `patterns/`, uses `role="progressbar"` as ProgressBar's radial sibling
+- **Date**: 2026-06-14
+- **By**: spec-writer (B52)
+- **Context**: `Gauge` is a new SVG radial progress dial. Two decisions needed pinning
+  before test-writer: (1) its home category, and (2) its ARIA role — `meter` vs
+  `progressbar`. The existing linear `ProgressBar` lives in `patterns/` and uses
+  `role="progressbar"` + `aria-valuenow/min/max` + `aria-label`.
+- **Decision**: `Gauge` is filed under `src/lib/components/patterns/` as the radial sibling
+  of `ProgressBar`, and exported from `patterns/index.ts` + `src/lib/index.ts`. It uses
+  **`role="progressbar"`** (not `meter`): the ARIA `meter` role is for a static measurement
+  within a known range, whereas `progressbar` represents progress toward completion — which
+  is `ProgressBar`'s established semantics. Reusing `progressbar` keeps the two siblings
+  consistent for AT users and matches the existing implementation; `progressbar` also has
+  broader AT support than `meter`. The root `<svg>` carries `aria-valuenow={clampedPct}`,
+  `aria-valuemin=0`, `aria-valuemax=100`, and `aria-label={label ?? 'Progress'}` (the same
+  default name as `ProgressBar`). Decorative usage is opt-in by the consumer passing
+  `aria-hidden="true"` via `...rest` (forwarded onto the SVG), not a component-level prop.
+  The root is a fixed `<svg>` — no polymorphic `as` prop (polymorphism N/A for an SVG).
+  `tone` is an open `string` token name rendered as `stroke="var(--{tone})"`; `track` is a
+  full colour string defaulting to `var(--rule-strong)`.
+- **Consequences**: Gauge geometry (`r`, `c`, `stroke-dasharray`) is computed and therefore
+  testable, so B52 runs the full test-writer → implementer → reviewer pipeline with
+  play-function assertions (NOT the D42 visual-only track). The `--{tone}` progress stroke
+  is applied as a computed inline attribute (the one unavoidable computed-value attribute);
+  all other styling is scoped CSS with tokens only.
+- **Supersedes**: none
+
+## D59: B52 — Gauge tests pin the two circles via `data-part="track"`/`data-part="arc"`
+- **Date**: 2026-06-14
+- **By**: test-writer (B52)
+- **Context**: The Gauge stories must distinguish the two `<circle>` elements — the
+  background track (asserted against the `track` prop / `--rule-strong`) and the progress
+  arc (asserted against `var(--{tone})` and the computed `stroke-dasharray`). Relying on
+  DOM order (`querySelectorAll('circle')[0]` vs `[1]`) is brittle and couples tests to
+  render order. A stable structural hook is needed so colour/dasharray assertions target
+  the right circle.
+- **Decision**: The implementer MUST render `data-part="track"` on the **first** (background)
+  circle and `data-part="arc"` on the **second** (progress) circle of `Gauge.svelte`. The
+  stories query `[data-part="track"]` / `[data-part="arc"]` for per-circle assertions, and
+  also assert order (`circles[0] === track`, `circles[1] === arc`) in the Default Geometry
+  story so the order contract stays pinned too. These `data-part` attributes are inert
+  structural hooks (no styling/behaviour), consistent with the `data-part` convention from
+  D55 (StatusPill). OQ-1 resolved empirically: SVG `stroke` resolves via the **foreground**
+  paint channel, so stories use `resolveTokenFgColor` (not `resolveTokenColor`) for all
+  stroke-colour assertions.
+- **Consequences**: `Gauge.svelte` must carry `data-part="track"`/`data-part="arc"` or the
+  per-circle colour/dasharray assertions fail. The exact `stroke-dasharray` string is
+  asserted from the spec formula `` `${(clamp(pct,0,100)/100)*c} ${c}` `` with
+  `c = 2π·((size-width-3)/2)` — the implementer must build the attribute with the identical
+  template so the rendered string matches byte-for-byte.
+- **Supersedes**: none

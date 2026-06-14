@@ -476,4 +476,15 @@ it records the reason here AND states it in chat.
 - manager: user check-in mid-pipeline — confirmed the failing SegmentedControl suite was the expected TDD red (import fails, no component yet); 307 others green; not a regression
 - implementer: wrote SegmentedControl.svelte + forms/index.ts + lib/index.ts (first attempt); 315/315 green, pnpm check 0 errors
 - reviewer: PASS — all 20 ACs met, 315/315 green, 0 check errors, no scope creep; 2 non-blocking style notes (size rules un-nested; keyboard focus via DOM query)
-- result: done
+- result: done → commit cb34487
+
+## 2026-06-14 — B52: Gauge component
+- manager: start, track: feature; mv inbox→doing; vendored design refs (preview 25 + Gauge.jsx)
+- spec-writer: wrote wiki/specs/B52-gauge.md (17 ACs, 11 stories); D58 logged (patterns/ home, role=progressbar); not visual-only (geometry testable)
+- test-writer: wrote patterns/Gauge.stories.svelte (11 stories); red for right reason (missing component, 315 baseline green); D59 logged (data-part track/arc, exact dasharray template)
+- implementer: wrote Gauge.svelte + patterns/index.ts + lib/index.ts; 326/326 green, pnpm check 0 errors
+- reviewer: PASS — all 17 ACs met, 326/326 green, 0 check errors, no scope creep, import hygiene clean (uses storybook/test); non-blocking: default aria-label="Progress" not asserted
+- result: done → (commit below)
+
+## 2026-06-14 — Storybook UI crash (vitest import) → filing B61
+- manager: user reported `customEqualityTesters` TypeError in Storybook dev UI (port 6006). Root cause: 3 story files `import { vi } from "vitest"` (Nav [pre-existing B49], Popover [B56], SegmentedControl [B51]) — pulls vitest chai/expect setup into the bare Storybook browser where vitest global state is absent. pnpm test stays green (vitest runner inits state) but the UI crashes. House pattern is `fn` from `storybook/test`. Parking after B52 commit to file + fix B61.

@@ -9,5 +9,6 @@ export { Input, Textarea, Select, InputWrap, Field, Checkbox, Radio, RadioGroup,
 export { Alert, Modal, Popover, StatusPill, Toast, ToastRegion } from './components/feedback/index.js'
 export { toast } from './stores/toast.js'
 export type { ToastItem, ToastVariant, ToastOptions } from './stores/toast.js'
-export { CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero } from './components/patterns/index.js'
+/** Gauge: radial SVG dial rendering a single 0–100 value as an arc, sibling of ProgressBar. */
+export { CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero, Gauge } from './components/patterns/index.js'
 export { Accordion, AccordionItem, Tabs, Table } from './components/data/index.js'

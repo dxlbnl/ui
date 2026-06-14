@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Components" name="Components — Gauge" subtitle="Radial progress; pct 0–100, tone = token name" viewport="700x220" -->
+<html lang="en" data-palette="phosphor">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<style>
+  body { padding: 24px; }
+  .label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 22px; }
+  .row { display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
+  .cell { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .cap { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-dim); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="../ui_kits/components/Gauge.jsx"></script>
+<script type="text/babel">
+function Cell({ pct, tone, size }) {
+  return (
+    <div className="cell">
+      <Gauge pct={pct} tone={tone} size={size} />
+      <span className="cap" style={{ color: `var(--${tone})` }}>{pct}%</span>
+    </div>
+  );
+}
+function Demo() {
+  return (
+    <React.Fragment>
+      <div className="label">// gauge — radial sibling of ProgressBar</div>
+      <div className="row">
+        <Cell pct={24} tone="ok" size={56} />
+        <Cell pct={62} tone="cyan" size={56} />
+        <Cell pct={88} tone="amber" size={56} />
+        <Cell pct={100} tone="danger" size={56} />
+        <div className="cell"><Gauge pct={70} tone="amber" size={84} width={6} /><span className="cap">size 84</span></div>
+      </div>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+</script>
+</body>
+</html>
