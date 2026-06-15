@@ -629,3 +629,35 @@ it records the reason here AND states it in chat.
   button, AC-5/6/7). Result: `pnpm check` 0 errors / **0 warnings**, `pnpm test` one-shot **326
   passed**. Toolchain note: multi-code `svelte-ignore` only honoured the first code — use one
   code per stacked comment. D75 logged; architecture.md test-command updated.
+
+## 2026-06-15 09:40 — B64: Enhanced Grid API — template, stackBelow, align
+- top-level: captured B64 (user proposed a downstream "enhanced Grid API" to promote upstream;
+  asked for a critical analysis). Critique rejected the proposal's `stackBelow` via
+  `useMediaQuery` (viewport-coupling regresses B42's container-query model + adds an SSR layout
+  flash) and reframed `template` as a labelled escape hatch. Direction #1 chosen (constrained
+  Grid + escape hatch); intent primitives (Split/Sidebar) parked. Card → `wiki/backlog/ready/`,
+  `flags: [review]`.
+- spec-writer: wrote `wiki/specs/B64-enhanced-grid-api.md` — backward-compatible superset adding
+  `template` (raw track-list, overrides `cols`, collapses only via `stackBelow`), `stackBelow`
+  (tokenized sm=480/md=720/lg=900, pure CSS `@container`, zero JS) and `align` (`align-items`,
+  default `stretch`), plus the latent `gapMap.md` 16→24px fix (B25 never reached Grid). ACs in
+  groups T/S/A/G/C/X; all B42 ACs + 13 existing stories preserved. ADR D76 appended.
+- approved as-specced at the 2026-06-15 review checkpoint. User confirmed the `gap="md"`
+  16→24px fix stands and finalised the `stackBelow` `sm` breakpoint at **480px** (down from
+  the drafted 520px). Spec + D76 updated.
+- test-writer: extended `Grid.stories.svelte` (4 prop stories) + `Grid.collapse.stories.svelte`
+  (9 collapse stories) → **red confirmed**, 12 new failing for feature-missing reasons, 12 B42
+  stories untouched and green.
+- implementer: added `template`/`stackBelow`/`align` + `gapMap.md` 16→24px to `Grid.svelte`,
+  pure declarative (data-attrs + `--grid-cols` + scoped `@container`/attribute CSS, zero JS).
+  Diagnosed the lone remaining failure as a test bug — the `sm` boundary story used the
+  Container's *outer* width (520px), but `@container` measures the content box and `Container`
+  has 64px horizontal padding (520−64=456 ≤ 480 → correctly collapses). Implementation correct;
+  did not edit tests.
+- test-writer (fix): corrected that one story's no-collapse width 520→600px (content box ≈536 >
+  480) — boundary arithmetic fix, no assertion weakened, sm=480 contract intact.
+- reviewer: **PASS** — full suite 339 passed / 57 files / 0 failed; `pnpm check` 0 warnings;
+  every AC (T/S/A/G/C/X) mapped to a genuinely-asserting test; X1 no-JS source check holds
+  (no `$effect`/`matchMedia`/`useMediaQuery`/`@media`); B42 contract preserved (12 stories
+  extended-not-rewritten); no scope creep (only `Grid.svelte` + 2 story files changed).
+- result: **done** — reviewer PASS + suite green. Committing as one item commit.

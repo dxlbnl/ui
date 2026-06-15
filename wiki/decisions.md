@@ -1719,3 +1719,33 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   intentional reads. These gates are now usable for the proposed `prepublishOnly` (see the
   release-scripts discussion; not yet wired).
 - **Amends**: none (tooling + cross-cutting code-quality convention; supersedes nothing)
+
+## D76: B64 Enhanced Grid — `stackBelow` is container-query-native + tokenized, not viewport JS
+- **Date**: 2026-06-15
+- **By**: spec-writer (B64)
+- **Context**: B64 adds three props to `Grid` — `template` (raw `grid-template-columns`
+  escape hatch), `stackBelow` (collapse any grid to one column at a breakpoint), and
+  `align` (`align-items`). The contested design choice is how `stackBelow` detects "below
+  the breakpoint": a viewport `useMediaQuery`/`matchMedia` (JS), or a CSS `@container`
+  rule keyed on a `data-stack` attribute (the B42 mechanism).
+- **Decision**: `stackBelow` is a pure CSS `@container (max-width: <token-px>)` rule keyed
+  on `data-stack`, with **zero new JS** — no `$effect`, no `matchMedia`, no `useMediaQuery`,
+  no viewport `@media`. Tokenized union `'sm' | 'md' | 'lg'` maps to container max-widths
+  **sm=480px / md=720px / lg=900px** (md and lg reuse B42's existing 720/900 breakpoints;
+  sm=480px finalised by the user at the review checkpoint).
+  Rationale: (1) viewport-coupling regresses B42's container-tracking model and would make
+  `stackBelow` collapse inconsistently with the `cols` collapse; (2) JS collapse cannot run
+  during SSR, producing a first-paint→hydrate layout flash that violates SSR-safe-by-default;
+  (3) raw px props fragment the breakpoint scale (design-system anti-pattern). Also decided:
+  `template` **owns** the columns (overrides `cols`) and **omits `data-cols`** so the B42
+  cols-collapse rules cannot match it — a `template` grid collapses only via `stackBelow`.
+  When both could apply, single-column (stack) wins below its threshold. `align` follows the
+  `Inline.svelte` `data-align` + scoped-attribute-selector pattern, default `stretch`. Plus
+  a latent gap-scale fix: `gapMap.md` `var(--u2)` → `var(--u3)` (16px → 24px), aligning Grid
+  with the B25/`Inline` scale (D32).
+- **Consequences**: Backward-compatible superset — every B42 AC and all 13 existing Grid
+  stories stay green. One intentional behaviour change: existing `gap="md"` grids render at
+  24px instead of 16px (no current test asserts the old value). Full testable contract in
+  `wiki/specs/B64-enhanced-grid-api.md`. Spec approved as-specced at the 2026-06-15 review
+  checkpoint; `sm` finalised at 480px (the only change from the drafted scale).
+- **Amends**: extends B42 (D5 mechanism reuse); no decision superseded
