@@ -290,7 +290,7 @@ through automated assertions.
    least the "Default", "Root Only", and "Two Crumbs" stories.
 3. `src/lib/components/navigation/index.ts` exports `Breadcrumb` as a named export.
 4. `src/lib/index.ts` re-exports `Breadcrumb` so that
-   `import { Breadcrumb } from 'dxlb-design'` resolves without error.
+   `import { Breadcrumb } from '@dxlbnl/ui'` resolves without error.
 
 ### Breadcrumb — HTML structure (AC 5–12)
 

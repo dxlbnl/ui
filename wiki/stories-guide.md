@@ -1,4 +1,4 @@
-# Writing Stories — dxlb-design
+# Writing Stories — @dxlbnl/ui
 
 Stories are the **only test artefact** in this project. No `.test.ts` files exist.
 Every `<Story>` with a `play` prop is a test executed by `@storybook/addon-vitest`

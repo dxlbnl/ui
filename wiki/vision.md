@@ -2,7 +2,7 @@
 
 ## What is this project?
 
-**dxlb-design** is the design system and Svelte component library for Dexterlabs —
+**@dxlbnl/ui** is the design system and Svelte component library for Dexterlabs —
 Alexander "Dexter" Esselink's one-person engineering lab in Delft, Netherlands. It
 implements the Dexterlabs visual identity (Phosphor dark + Paper light palettes,
 JetBrains Mono + Inter Tight, terminal-aesthetic, amber accent) as reusable Svelte 5

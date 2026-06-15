@@ -168,7 +168,7 @@ Each item has a **status** and an optional **`review`** flag:
 
 - [x] **B19: Package documentation** — status: `done` — commit: `9f82900`
       Minimum viable documentation for the library. `README.md`: installation (`pnpm add
-      dxlb-design`), peer deps, global CSS import, usage example, Storybook link. `CHANGELOG.md`:
+      @dxlbnl/ui`), peer deps, global CSS import, usage example, Storybook link. `CHANGELOG.md`:
       starting from v0.1.0, covering B1–B14. JSDoc `@param` / `@default` annotations on
       exported component props (feeds Storybook autodocs). Version bump from 0.0.1 → 0.1.0
       in `package.json` once B13 is confirmed stable.

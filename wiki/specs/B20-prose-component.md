@@ -206,7 +206,7 @@ Each criterion is labelled:
    DOM as descendants of `.prose`.
 
 7. **(DOM)** `Prose` is exported from `src/lib/components/layout/index.ts` and from
-   `src/lib/index.ts`. Importing `{ Prose }` from `'dxlb-design'` (or from
+   `src/lib/index.ts`. Importing `{ Prose }` from `'@dxlbnl/ui'` (or from
    `'$lib/index.ts'`) must resolve without a TypeScript error (`pnpm check` passes).
 
 ### Block spacing — adjacent-sibling gap

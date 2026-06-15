@@ -674,3 +674,16 @@ it records the reason here AND states it in chat.
 - out of scope (left as-is): wiki history refs, the B33 filesystem path, and README's stale
   component table (component-list drift — candidate for a future card, not name alignment).
 - result: **done** — committing as one item commit.
+
+## 2026-06-15 18:55 — Follow-ups: B64 docs gap + B63 rename leak (user-flagged)
+- B64 docs gap: the enhanced Grid API shipped without consumer docs. Updated `docs/layout.md`
+  Grid section to document `template`, `stackBelow` (sm=480 / md=720 / lg=900), `align`, the
+  gap scale (md now 24px), and the previously-undocumented B42 container-query collapse.
+- B63 rename leak: the rename had left `dxlb-design` in living wiki pages. Cleaned
+  `wiki/vision.md`, `wiki/stories-guide.md`, the prescriptive refs in done specs
+  (B6/B17/B19/B20/B21), and the stale `wiki/backlog.md`. Deliberately preserved (they
+  correctly reference the OLD name): B33's filesystem path to the OG
+  `~/Projects/Web/dxlb-design/` reference repo, and the B63 card + this journal, which
+  document the rename itself.
+- open: whether to ship `docs/` in the published package (the docs are AI-readable by design)
+  — awaiting user decision; not yet wired into `package.json` `files`.

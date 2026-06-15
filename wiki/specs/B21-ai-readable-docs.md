@@ -2,7 +2,7 @@
 
 ## Context
 
-`dxlb-design` is consumed by dexterlabs.nl and by AI coding assistants (e.g. Claude,
+`@dxlbnl/ui` is consumed by dexterlabs.nl and by AI coding assistants (e.g. Claude,
 Copilot) that generate Svelte code against the design system. Without structured
 plain-text documentation, those assistants must infer prop names and default values by
 reading source files directly — a fragile, context-hungry process. The `docs/` directory
@@ -98,7 +98,7 @@ One-sentence purpose statement: what the component renders and when to use it.
 
 \`\`\`svelte
 <script>
-  import { ComponentName } from 'dxlb-design'
+  import { ComponentName } from '@dxlbnl/ui'
 </script>
 
 <ComponentName prop="value">children</ComponentName>
@@ -137,11 +137,11 @@ Overview, install, palette setup, import paths.
 
 Required sections (in order):
 
-1. `# dxlb-design` — H1 title
+1. `# @dxlbnl/ui` — H1 title
 2. `## Overview` — one paragraph: what the library is, who it is for, what design
    identity it implements (Phosphor dark + Paper light palettes, JetBrains Mono + Inter
    Tight, amber accent, terminal aesthetic)
-3. `## Install` — one fenced `sh` block: `pnpm add dxlb-design`; note the peer deps
+3. `## Install` — one fenced `sh` block: `pnpm add @dxlbnl/ui`; note the peer deps
    (SvelteKit / Svelte 5, no external UI primitives); note the library is not currently
    published to npm (personal use)
 4. `## Global CSS` — how to import the design tokens and typography into the app:
@@ -153,7 +153,7 @@ Required sections (in order):
    attribute; explain the SSR caveat (initial render is always Phosphor; Paper preference
    is applied after hydration)
 6. `## Import paths` — table or list of every exported name grouped by category, showing
-   the import statement (`import { Button, Led, TagPill } from 'dxlb-design'`); list all
+   the import statement (`import { Button, Led, TagPill } from '@dxlbnl/ui'`); list all
    categories: primitives, layout, cards, navigation, forms, feedback, patterns, data
 
 ### `docs/design-tokens.md`
@@ -418,7 +418,7 @@ Source files to cross-check:
 - `src/lib/components/feedback/ToastRegion.svelte` (B18 — only if implemented)
 - `src/lib/stores/toast.ts` (B18 — only if implemented)
 
-Note: `Alert` is imported from `'dxlb-design'` directly (exported from the patterns
+Note: `Alert` is imported from `'@dxlbnl/ui'` directly (exported from the patterns
 layer); document the import path correctly.
 
 Known props at time of writing:
@@ -573,8 +573,8 @@ Verification: `ls docs/` returns all ten files.
 
 ### `docs/index.md` structure
 
-11. Contains an H1 heading `# dxlb-design`.
-12. Contains an `## Install` section with a fenced `sh` block showing `pnpm add dxlb-design`.
+11. Contains an H1 heading `# @dxlbnl/ui`.
+12. Contains an `## Install` section with a fenced `sh` block showing `pnpm add @dxlbnl/ui`.
 13. Contains a `## Global CSS` section explaining which files to import and from where.
 14. Contains a `## Palette setup` section that mentions `data-palette="paper"`, the
     `localStorage` key `'dxlb-palette'`, and the SSR hydration caveat.
@@ -621,7 +621,7 @@ For each of `docs/layout.md`, `docs/primitives.md`, `docs/cards.md`,
 
 ### Usage example correctness
 
-30. Every usage example imports from `'dxlb-design'` (not from relative paths).
+30. Every usage example imports from `'@dxlbnl/ui'` (not from relative paths).
 31. Every usage example uses prop names that match the source component exactly.
 32. Every usage example is syntactically valid Svelte 5 (fenced with the `svelte` tag).
 33. No usage example imports a component that is not yet exported from `src/lib/index.ts`
@@ -709,7 +709,7 @@ land. This is a scheduling decision for the manager, not an implementation quest
 **OQ-2 (non-blocking): toast store — import path in docs.**
 The `toast` store is exported from `src/lib/index.ts` as a value, not a component.
 In `docs/feedback.md`, the usage example should show
-`import { toast } from 'dxlb-design'`. Confirm this import resolves correctly once B18
+`import { toast } from '@dxlbnl/ui'`. Confirm this import resolves correctly once B18
 is implemented (the store must be exported from `src/lib/index.ts`).
 
 **OQ-3 (non-blocking): `docs/index.md` install section.**

@@ -340,7 +340,7 @@ at the default test viewport, making `userEvent.click` unavailable):
 1. `src/lib/components/navigation/Nav.svelte` exists.
 2. `src/lib/components/navigation/Nav.stories.svelte` exists.
 3. `src/lib/components/navigation/index.ts` exists and exports `Nav` as a named export.
-4. `src/lib/index.ts` re-exports `Nav` (i.e. `import { Nav } from 'dxlb-design'` or
+4. `src/lib/index.ts` re-exports `Nav` (i.e. `import { Nav } from '@dxlbnl/ui'` or
    `from '$lib'` resolves without error).
 5. `pnpm check` (SvelteKit type-check) passes with zero errors after B6 is merged.
 6. `pnpm test` passes all story play functions (no failures, no a11y violations).

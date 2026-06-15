@@ -2,7 +2,7 @@
 
 ## Context
 
-B19 is the publish-gate item for dxlb-design. Once the component layer (B1–B14) is
+B19 is the publish-gate item for @dxlbnl/ui. Once the component layer (B1–B14) is
 confirmed stable, B19 formalises the library surface with three artefacts:
 
 1. A consumer-facing `README.md` covering installation, peer deps, global CSS, palette
@@ -35,11 +35,11 @@ declares version `0.0.1`.
 
 ### README.md — required sections and content
 
-3. `README.md` contains an H1 heading of `dxlb-design` (exact text; the seed repo
+3. `README.md` contains an H1 heading of `@dxlbnl/ui` (exact text; the seed repo
    heading `# Vibin` must be gone).
 
 4. `README.md` contains an installation code block with exactly the command
-   `pnpm add dxlb-design`. An npm/yarn equivalent may follow but the pnpm line must
+   `pnpm add @dxlbnl/ui`. An npm/yarn equivalent may follow but the pnpm line must
    be present and correct.
 
 5. `README.md` lists the peer dependencies. At minimum these two must appear, with their
@@ -51,8 +51,8 @@ declares version `0.0.1`.
 
 6. `README.md` contains the global CSS import instruction. The import path must be one
    of the following (either is acceptable; the spec does not mandate one over the other):
-   - `import 'dxlb-design/dist/index.css'`
-   - `import 'dxlb-design/styles.css'`
+   - `import '@dxlbnl/ui/dist/index.css'`
+   - `import '@dxlbnl/ui/styles.css'`
 
    The import must appear in a code block (fenced with triple backticks). It must be
    accompanied by prose explaining where to put it (e.g. `src/app.css` or
@@ -66,7 +66,7 @@ declares version `0.0.1`.
    must explain both palette names.
 
 8. `README.md` contains a basic usage example as a fenced code block. The example must:
-   - Import at least one component from `dxlb-design` (e.g. `Button`).
+   - Import at least one component from `@dxlbnl/ui` (e.g. `Button`).
    - Use that component in Svelte template syntax.
    - Be syntactically valid Svelte 5.
 
