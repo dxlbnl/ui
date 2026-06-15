@@ -22,7 +22,7 @@ A native `<dialog>`-based modal with header, body, and optional footer snippet. 
 
 ```svelte
 <script>
-  import { Modal, Button } from 'dxlb-design'
+  import { Modal, Button } from '@dxlbnl/ui'
 
   let open = $state(false)
 </script>
@@ -74,7 +74,7 @@ Static inline status banner with a left accent border and variant icon glyph. Us
 
 ```svelte
 <script>
-  import { Alert } from 'dxlb-design'
+  import { Alert } from '@dxlbnl/ui'
 </script>
 
 <Alert variant="ok" title="Build succeeded" message="All 42 tests passed." />
@@ -90,7 +90,7 @@ Static inline status banner with a left accent border and variant icon glyph. Us
 - Icon glyphs: `ok` → `ok`; `amber` → `!!`; `danger` → `err`; `info` → `inf`. These are mono text labels, not SVG icons.
 - Background tint uses `color-mix(in srgb, var(--variantToken) 8%, transparent)`.
 - The left border is 2px solid in the variant colour; padding is 12px 16px.
-- `Alert` lives in `src/lib/components/feedback/` and is exported from `'dxlb-design'`.
+- `Alert` lives in `src/lib/components/feedback/` and is exported from `'@dxlbnl/ui'`.
 
 ---
 
@@ -112,7 +112,7 @@ Individual toast notification. Internal component — in normal usage, push toas
 
 ```svelte
 <script>
-  import { toast } from 'dxlb-design'
+  import { toast } from '@dxlbnl/ui'
 </script>
 
 <!-- Preferred: use the store -->
@@ -147,7 +147,7 @@ Viewport-fixed portal that renders the active toast stack. Mount once at the app
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script>
-  import { ToastRegion } from 'dxlb-design'
+  import { ToastRegion } from '@dxlbnl/ui'
 </script>
 
 <slot />
@@ -172,7 +172,7 @@ The `toast` store is a plain Svelte store (not a component) that manages the act
 ### API
 
 ```ts
-import { toast } from 'dxlb-design'
+import { toast } from '@dxlbnl/ui'
 
 // Push a toast and get back its id
 const id = toast.push('Operation complete')
@@ -200,7 +200,7 @@ const unsubscribe = toast.subscribe((toasts) => {
 - `toast.push` returns a `string` id (`toast-1`, `toast-2`, …) that can be passed to `toast.dismiss`.
 - `duration` defaults to `5000`ms. Pass `0` to create a persistent toast that only dismisses on user action or an explicit `toast.dismiss(id)` call.
 - The store is a standard Svelte writable store. It can be used with `$toast` in Svelte components or `.subscribe()` in plain TypeScript.
-- Exported types: `ToastItem`, `ToastVariant`, `ToastOptions` from `'dxlb-design'`.
+- Exported types: `ToastItem`, `ToastVariant`, `ToastOptions` from `'@dxlbnl/ui'`.
 
 ---
 
@@ -225,7 +225,7 @@ Anchored floating-panel primitive. Controlled via `open`; dismisses itself on ou
 
 ```svelte
 <script>
-  import { Popover } from 'dxlb-design'
+  import { Popover } from '@dxlbnl/ui'
 
   let open = $state(false)
 </script>
@@ -270,7 +270,7 @@ Compact status indicator: a coloured `Led` plus an uppercase mono label, optiona
 
 ```svelte
 <script>
-  import { StatusPill } from 'dxlb-design'
+  import { StatusPill } from '@dxlbnl/ui'
 </script>
 
 <!-- Static pill -->
@@ -316,7 +316,7 @@ Notification centre: a bell button with an unread-count badge that toggles a `Po
 
 ```svelte
 <script>
-  import { Inbox } from 'dxlb-design'
+  import { Inbox } from '@dxlbnl/ui'
 
   let items = $state([
     { id: 1, tone: 'danger', title: 'Build failed', body: 'main @ a1b2c3', time: '2m', unread: true },
@@ -361,7 +361,7 @@ Radial SVG dial that renders a single 0–100 value as an arc — the radial sib
 
 ```svelte
 <script>
-  import { Gauge } from 'dxlb-design'
+  import { Gauge } from '@dxlbnl/ui'
 </script>
 
 <Gauge pct={72} label="CPU" />
@@ -395,7 +395,7 @@ A single horizontal stacked bar showing part-to-whole segments, with a legend be
 
 ```svelte
 <script>
-  import { ProportionBar } from 'dxlb-design'
+  import { ProportionBar } from '@dxlbnl/ui'
 </script>
 
 <ProportionBar
@@ -435,7 +435,7 @@ Stacked rows comparing an actual `value` against a `target`, with a ghost target
 
 ```svelte
 <script>
-  import { CompareBars } from 'dxlb-design'
+  import { CompareBars } from '@dxlbnl/ui'
 </script>
 
 <CompareBars

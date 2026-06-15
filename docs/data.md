@@ -19,7 +19,7 @@ Thin wrapper that adds a shared border around a group of `AccordionItem` childre
 
 ```svelte
 <script>
-  import { Accordion, AccordionItem } from 'dxlb-design'
+  import { Accordion, AccordionItem } from '@dxlbnl/ui'
 </script>
 
 <!-- Default -->
@@ -63,7 +63,7 @@ A single collapsible section using native `<details>`/`<summary>`. No JavaScript
 
 ```svelte
 <script>
-  import { AccordionItem } from 'dxlb-design'
+  import { AccordionItem } from '@dxlbnl/ui'
 </script>
 
 <AccordionItem label="Technical details" open>
@@ -98,7 +98,7 @@ Tabbed panel interface with full ARIA tab pattern and keyboard navigation. Suppo
 
 ```svelte
 <script>
-  import { Tabs } from 'dxlb-design'
+  import { Tabs } from '@dxlbnl/ui'
 </script>
 
 <Tabs
@@ -154,7 +154,7 @@ Semantic HTML table with mono uppercase headers, dashed row rules, and hover row
 
 ```svelte
 <script>
-  import { Table } from 'dxlb-design'
+  import { Table } from '@dxlbnl/ui'
 
   const headers = ['Module', 'HP', 'Current +12V', 'Status']
   const rows = [

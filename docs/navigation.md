@@ -18,7 +18,7 @@ Fixed top navigation bar with site branding, link list, palette toggle, and a mo
 
 ```svelte
 <script>
-  import { Nav } from 'dxlb-design'
+  import { Nav } from '@dxlbnl/ui'
 
   const links = [
     { href: '/', label: 'Home', active: true },
@@ -58,7 +58,7 @@ Renders a `<nav aria-label="breadcrumb">` with an ordered list of links. The las
 
 ```svelte
 <script>
-  import { Breadcrumb } from 'dxlb-design'
+  import { Breadcrumb } from '@dxlbnl/ui'
 
   const crumbs = [
     { label: 'Home', href: '/' },
@@ -103,7 +103,7 @@ A compact previous / label / next stepper rendered as a `<nav>` landmark. The tw
 
 ```svelte
 <script>
-  import { Pager } from 'dxlb-design'
+  import { Pager } from '@dxlbnl/ui'
 
   let page = $state(1)
   const total = 8
@@ -151,7 +151,7 @@ A responsive application frame. Above 760px it shows a desktop sidebar **rail**;
 
 ```svelte
 <script>
-  import { AppShell, Led } from 'dxlb-design'
+  import { AppShell, Led } from '@dxlbnl/ui'
 
   const nav = [
     { id: 'home', label: 'Home' },

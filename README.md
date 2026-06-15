@@ -1,11 +1,11 @@
-# dxlb-design
+# @dxlbnl/ui
 
 Design system for [dexterlabs.nl](https://dexterlabs.nl). SvelteKit component library with Phosphor (dark) and Paper (light) palettes, built with Svelte 5 and documented in Storybook.
 
 ## Install
 
 ```bash
-pnpm add dxlb-design
+pnpm add @dxlbnl/ui
 ```
 
 ## Peer dependencies
@@ -23,8 +23,8 @@ Import the design token CSS in your global stylesheet or root layout:
 
 ```js
 // src/app.css  or  src/routes/+layout.svelte
-import 'dxlb-design/tokens/tokens.css';
-import 'dxlb-design/tokens/typography.css';
+import '@dxlbnl/ui/tokens/tokens.css';
+import '@dxlbnl/ui/tokens/typography.css';
 ```
 
 `tokens.css` defines all CSS custom properties (colours, spacing, typography scale, transitions).
@@ -48,7 +48,7 @@ Both palettes use the same CSS custom property names (`--ink`, `--bg`, `--amber`
 
 ```svelte
 <script>
-  import { Button, Stack, Heading } from 'dxlb-design';
+  import { Button, Stack, Heading } from '@dxlbnl/ui';
 </script>
 
 <Stack gap="md">
@@ -75,7 +75,7 @@ Both palettes use the same CSS custom property names (`--ink`, `--bg`, `--amber`
 
 ```svelte
 <script>
-  import { toast, ToastRegion } from 'dxlb-design';
+  import { toast, ToastRegion } from '@dxlbnl/ui';
 </script>
 
 <!-- Mount once in your root layout -->

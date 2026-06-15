@@ -661,3 +661,16 @@ it records the reason here AND states it in chat.
   (no `$effect`/`matchMedia`/`useMediaQuery`/`@media`); B42 contract preserved (12 stories
   extended-not-rewritten); no scope creep (only `Grid.svelte` + 2 story files changed).
 - result: **done** — reviewer PASS + suite green. Committing as one item commit.
+
+## 2026-06-15 18:48 — B63: Align human-facing docs to the @dxlbnl/ui package name
+- top-level (chore track, docs-only): swapped `dxlb-design` → `@dxlbnl/ui` across `README.md`
+  + all 10 `docs/*.md` (H1s, install/workspace snippets, every import, entry-point + prose
+  mentions). Confirmed the real CSS subpaths from `package.json` `exports` before swapping —
+  they are `@dxlbnl/ui/tokens/tokens.css` and `@dxlbnl/ui/tokens/typography.css`. `README.md`
+  already had the `/tokens/` subpath (scope swap only); `docs/index.md` had the wrong flat
+  paths (`dxlb-design/tokens.css`) and was corrected to the subpathed form — the exact trap
+  the card warned about. Local-path example → `../path/to/dxlb-ui`. Verified zero `dxlb-design`
+  left in scope (`grep`). No code/test impact; suite untouched.
+- out of scope (left as-is): wiki history refs, the B33 filesystem path, and README's stale
+  component table (component-list drift — candidate for a future card, not name alignment).
+- result: **done** — committing as one item commit.

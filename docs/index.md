@@ -1,13 +1,13 @@
-# dxlb-design
+# @dxlbnl/ui
 
 ## Overview
 
-`dxlb-design` is a Svelte 5 component library for [dexterlabs.nl](https://dexterlabs.nl), implementing the Dexterlabs design identity: Phosphor (dark, default) and Paper (light) palettes, JetBrains Mono + Inter Tight typefaces, an amber primary accent, and an overall terminal/hardware aesthetic. It is consumed by SvelteKit applications and by AI coding assistants generating Svelte code against the Dexterlabs design system.
+`@dxlbnl/ui` is a Svelte 5 component library for [dexterlabs.nl](https://dexterlabs.nl), implementing the Dexterlabs design identity: Phosphor (dark, default) and Paper (light) palettes, JetBrains Mono + Inter Tight typefaces, an amber primary accent, and an overall terminal/hardware aesthetic. It is consumed by SvelteKit applications and by AI coding assistants generating Svelte code against the Dexterlabs design system.
 
 ## Install
 
 ```sh
-pnpm add dxlb-design
+pnpm add @dxlbnl/ui
 ```
 
 Peer dependencies: Svelte 5 / SvelteKit. No external UI primitive libraries are required.
@@ -16,10 +16,10 @@ Peer dependencies: Svelte 5 / SvelteKit. No external UI primitive libraries are 
 
 ```sh
 # workspace reference (recommended for monorepo setups)
-pnpm add dxlb-design --workspace
+pnpm add @dxlbnl/ui --workspace
 
 # local path reference
-pnpm add ../path/to/dxlb-design
+pnpm add ../path/to/dxlb-ui
 ```
 
 ## Global CSS
@@ -28,16 +28,16 @@ Import the design tokens and typography classes once at the app root, before any
 
 ```svelte
 <script>
-  import 'dxlb-design/tokens.css'
-  import 'dxlb-design/typography.css'
+  import '@dxlbnl/ui/tokens/tokens.css'
+  import '@dxlbnl/ui/tokens/typography.css'
 </script>
 ```
 
 Alternatively, import from within `src/app.css`:
 
 ```css
-@import 'dxlb-design/tokens.css';
-@import 'dxlb-design/typography.css';
+@import '@dxlbnl/ui/tokens/tokens.css';
+@import '@dxlbnl/ui/tokens/typography.css';
 ```
 
 Without these imports, all design tokens (`var(--amber)`, `var(--mono)`, etc.) and global typography classes (`body-text`, `h1`, `eyebrow`, etc.) will be undefined and components will render unstyled.
@@ -62,53 +62,53 @@ The `Nav` component includes a built-in palette toggle button. It reads and writ
 
 ## Import paths
 
-All components and the `toast` store are exported from the single entry point `'dxlb-design'`.
+All components and the `toast` store are exported from the single entry point `'@dxlbnl/ui'`.
 
 ### Primitives
 
 ```ts
-import { Button, Led, TagPill, Text, Heading } from 'dxlb-design'
+import { Button, Led, TagPill, Text, Heading } from '@dxlbnl/ui'
 ```
 
 ### Layout
 
 ```ts
-import { Stack, Inline, Spread, Grid, Container, Rule, Prose } from 'dxlb-design'
+import { Stack, Inline, Spread, Grid, Container, Rule, Prose } from '@dxlbnl/ui'
 ```
 
 ### Cards
 
 ```ts
-import { Card, ProductCard, ProjectCard, NoteCard } from 'dxlb-design'
+import { Card, ProductCard, ProjectCard, NoteCard } from '@dxlbnl/ui'
 ```
 
 ### Navigation
 
 ```ts
-import { Nav, Breadcrumb, Pager, AppShell } from 'dxlb-design'
+import { Nav, Breadcrumb, Pager, AppShell } from '@dxlbnl/ui'
 ```
 
 ### Forms
 
 ```ts
-import { Input, Textarea, Select, InputWrap, Field, Checkbox, Radio, RadioGroup, Switch, SegmentedControl } from 'dxlb-design'
+import { Input, Textarea, Select, InputWrap, Field, Checkbox, Radio, RadioGroup, Switch, SegmentedControl } from '@dxlbnl/ui'
 ```
 
 ### Feedback
 
 ```ts
-import { Alert, Modal, Toast, ToastRegion, Popover, StatusPill, Inbox, Gauge, ProportionBar, CompareBars } from 'dxlb-design'
-import { toast } from 'dxlb-design'
+import { Alert, Modal, Toast, ToastRegion, Popover, StatusPill, Inbox, Gauge, ProportionBar, CompareBars } from '@dxlbnl/ui'
+import { toast } from '@dxlbnl/ui'
 ```
 
 ### Patterns
 
 ```ts
-import { CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero } from 'dxlb-design'
+import { CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero } from '@dxlbnl/ui'
 ```
 
 ### Data
 
 ```ts
-import { Accordion, AccordionItem, Tabs, Table } from 'dxlb-design'
+import { Accordion, AccordionItem, Tabs, Table } from '@dxlbnl/ui'
 ```

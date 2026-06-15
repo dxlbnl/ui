@@ -21,7 +21,7 @@ Renders a vertical flex column with configurable gap. Use it anywhere children s
 
 ```svelte
 <script>
-  import { Stack } from 'dxlb-design'
+  import { Stack } from '@dxlbnl/ui'
 </script>
 
 <Stack gap="md">
@@ -57,7 +57,7 @@ Renders a wrapping flex row with vertically centred children. Use it for icon + 
 
 ```svelte
 <script>
-  import { Inline, Led, TagPill } from 'dxlb-design'
+  import { Inline, Led, TagPill } from '@dxlbnl/ui'
 </script>
 
 <Inline gap="xs">
@@ -92,7 +92,7 @@ Renders a flex row with `justify-content: space-between`, pushing children to op
 
 ```svelte
 <script>
-  import { Spread, Button } from 'dxlb-design'
+  import { Spread, Button } from '@dxlbnl/ui'
 </script>
 
 <Spread>
@@ -128,7 +128,7 @@ Renders a CSS grid container. Supports fixed column counts or an auto-fill respo
 
 ```svelte
 <script>
-  import { Grid, Card } from 'dxlb-design'
+  import { Grid, Card } from '@dxlbnl/ui'
 </script>
 
 <Grid cols={3} gap="md">
@@ -169,7 +169,7 @@ Centres content horizontally with a configurable max-width and responsive horizo
 
 ```svelte
 <script>
-  import { Container } from 'dxlb-design'
+  import { Container } from '@dxlbnl/ui'
 </script>
 
 <Container size="md">
@@ -201,7 +201,7 @@ Renders a `<hr>` element styled as a horizontal divider. Three visual variants u
 
 ```svelte
 <script>
-  import { Rule } from 'dxlb-design'
+  import { Rule } from '@dxlbnl/ui'
 </script>
 
 <Rule />
@@ -236,7 +236,7 @@ Styles dynamically-inserted markdown HTML (e.g. mdsvex output) via `.prose :glob
 
 ```svelte
 <script>
-  import { Prose } from 'dxlb-design'
+  import { Prose } from '@dxlbnl/ui'
 </script>
 
 <Prose>

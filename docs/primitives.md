@@ -21,7 +21,7 @@ Renders a styled button or anchor with five visual variants. All variants use th
 
 ```svelte
 <script>
-  import { Button } from 'dxlb-design'
+  import { Button } from '@dxlbnl/ui'
 </script>
 
 <!-- Filled amber CTA -->
@@ -71,7 +71,7 @@ Renders a 7×7 px circular status indicator with a colour glow. Carries `role="s
 
 ```svelte
 <script>
-  import { Led } from 'dxlb-design'
+  import { Led } from '@dxlbnl/ui'
 </script>
 
 <Led color="ok" />
@@ -105,7 +105,7 @@ Renders a small uppercase mono bordered pill. Used for tags, labels, and status 
 
 ```svelte
 <script>
-  import { TagPill } from 'dxlb-design'
+  import { TagPill } from '@dxlbnl/ui'
 </script>
 
 <TagPill>SvelteKit</TagPill>
@@ -142,7 +142,7 @@ Zero-CSS wrapper that applies a global typography class to the rendered element.
 
 ```svelte
 <script>
-  import { Text } from 'dxlb-design'
+  import { Text } from '@dxlbnl/ui'
 </script>
 
 <Text>Body paragraph text.</Text>
@@ -181,7 +181,7 @@ Renders `<h1>`–`<h6>` with a named typography variant class. Zero CSS of its o
 
 ```svelte
 <script>
-  import { Heading } from 'dxlb-design'
+  import { Heading } from '@dxlbnl/ui'
 </script>
 
 <!-- Default h2 with h2 class -->

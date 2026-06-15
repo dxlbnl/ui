@@ -17,7 +17,7 @@ Single-line text input. Monospace font, full width, amber focus border, danger e
 
 ```svelte
 <script>
-  import { Input } from 'dxlb-design'
+  import { Input } from '@dxlbnl/ui'
 
   let username = $state('')
 </script>
@@ -50,7 +50,7 @@ Multi-line text input. Same visual treatment as `Input` with `resize: vertical` 
 
 ```svelte
 <script>
-  import { Textarea } from 'dxlb-design'
+  import { Textarea } from '@dxlbnl/ui'
 
   let notes = $state('')
 </script>
@@ -86,7 +86,7 @@ Fully custom select control. No native `<select>` element — renders a trigger 
 
 ```svelte
 <script>
-  import { Select } from 'dxlb-design'
+  import { Select } from '@dxlbnl/ui'
 
   let selected = $state('')
 
@@ -133,7 +133,7 @@ Wraps a form control with optional icon prefix, text addons (prefix/suffix), and
 
 ```svelte
 <script>
-  import { InputWrap, Input } from 'dxlb-design'
+  import { InputWrap, Input } from '@dxlbnl/ui'
 
   let search = $state('')
 </script>
@@ -152,7 +152,7 @@ Wraps a form control with optional icon prefix, text addons (prefix/suffix), and
 
 ```svelte
 <script>
-  import { InputWrap, Input } from 'dxlb-design'
+  import { InputWrap, Input } from '@dxlbnl/ui'
 </script>
 
 <InputWrap>
@@ -191,7 +191,7 @@ Labelled form field group. Provides a label, optional hint/error text, and Svelt
 
 ```svelte
 <script>
-  import { Field, Input } from 'dxlb-design'
+  import { Field, Input } from '@dxlbnl/ui'
 </script>
 
 <Field label="Username" inputId="username" hint="Letters and numbers only.">
@@ -231,7 +231,7 @@ Accessible checkbox with an amber fill when checked and support for the indeterm
 
 ```svelte
 <script>
-  import { Checkbox } from 'dxlb-design'
+  import { Checkbox } from '@dxlbnl/ui'
 
   let accepted = $state(false)
 </script>
@@ -269,7 +269,7 @@ Single radio button atom. Use inside `RadioGroup` for exclusive selection with k
 
 ```svelte
 <script>
-  import { Radio } from 'dxlb-design'
+  import { Radio } from '@dxlbnl/ui'
 </script>
 
 <!-- Standalone use (uncommon) -->
@@ -306,7 +306,7 @@ Renders a `<fieldset>` + `<legend>` containing a set of mutually exclusive `Radi
 
 ```svelte
 <script>
-  import { RadioGroup } from 'dxlb-design'
+  import { RadioGroup } from '@dxlbnl/ui'
 
   let palette = $state('phosphor')
 
@@ -351,7 +351,7 @@ Toggle switch rendered as a `role="switch"` button. Amber track when on. SSR-saf
 
 ```svelte
 <script>
-  import { Switch } from 'dxlb-design'
+  import { Switch } from '@dxlbnl/ui'
 
   let enabled = $state(false)
 </script>
@@ -390,7 +390,7 @@ A joined group of mutually-exclusive options, rendered as a `role="radiogroup"` 
 
 ```svelte
 <script>
-  import { SegmentedControl } from 'dxlb-design'
+  import { SegmentedControl } from '@dxlbnl/ui'
 
   let view = $state('grid')
 </script>

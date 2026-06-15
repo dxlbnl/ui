@@ -19,7 +19,7 @@ Base container component: `--bg-rail` background, `--rule` border, flex column, 
 
 ```svelte
 <script>
-  import { Card } from 'dxlb-design'
+  import { Card } from '@dxlbnl/ui'
 </script>
 
 <Card>
@@ -56,7 +56,7 @@ A full product listing card with a diagonal-hatch image placeholder, SKU label, 
 
 ```svelte
 <script>
-  import { ProductCard } from 'dxlb-design'
+  import { ProductCard } from '@dxlbnl/ui'
 </script>
 
 <ProductCard
@@ -99,7 +99,7 @@ A project showcase card with a diagonal-hatch placeholder, optional `TagPill` ta
 
 ```svelte
 <script>
-  import { ProjectCard } from 'dxlb-design'
+  import { ProjectCard } from '@dxlbnl/ui'
 </script>
 
 <ProjectCard
@@ -140,7 +140,7 @@ A log/note entry card displaying a zero-padded hexadecimal ID, kind label, title
 
 ```svelte
 <script>
-  import { NoteCard } from 'dxlb-design'
+  import { NoteCard } from '@dxlbnl/ui'
 </script>
 
 <NoteCard

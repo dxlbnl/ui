@@ -21,7 +21,7 @@ A prominent call-to-action block with an amber border, optional eyebrow label, h
 
 ```svelte
 <script>
-  import { CtaBlock, Button } from 'dxlb-design'
+  import { CtaBlock, Button } from '@dxlbnl/ui'
 </script>
 
 <CtaBlock
@@ -60,7 +60,7 @@ A compact metric display card showing a label, a large mono value, and an option
 
 ```svelte
 <script>
-  import { StatCard } from 'dxlb-design'
+  import { StatCard } from '@dxlbnl/ui'
 </script>
 
 <StatCard label="Units sold" value="142" sublabel="last 30 days" />
@@ -91,7 +91,7 @@ Renders a list of key–value pairs separated by dashed rules. Keys are muted up
 
 ```svelte
 <script>
-  import { KvList } from 'dxlb-design'
+  import { KvList } from '@dxlbnl/ui'
 
   const items = [
     { key: 'Status', value: 'Online', color: 'ok' },
@@ -131,7 +131,7 @@ A horizontal progress bar with ARIA progressbar role, optional label row, and co
 
 ```svelte
 <script>
-  import { ProgressBar } from 'dxlb-design'
+  import { ProgressBar } from '@dxlbnl/ui'
 </script>
 
 <ProgressBar value={72} label="Storage" color="amber" />
@@ -171,7 +171,7 @@ A single log entry row with a timestamp, LED status indicator, optional actor na
 
 ```svelte
 <script>
-  import { ActivityRow } from 'dxlb-design'
+  import { ActivityRow } from '@dxlbnl/ui'
 </script>
 
 <ActivityRow
@@ -215,7 +215,7 @@ Section header with optional eyebrow label, a heading, optional inline sublabel,
 
 ```svelte
 <script>
-  import { SectionHead, Button } from 'dxlb-design'
+  import { SectionHead, Button } from '@dxlbnl/ui'
 </script>
 
 <SectionHead eyebrow="Catalogue" heading="Modules" sublabel="12 items">
@@ -250,7 +250,7 @@ Section footer with an amber link, optional item count, and optional meta text. 
 
 ```svelte
 <script>
-  import { SectionFoot } from 'dxlb-design'
+  import { SectionFoot } from '@dxlbnl/ui'
 </script>
 
 <SectionFoot href="/shop" label="View all modules" count={12} meta="in stock" />
@@ -286,7 +286,7 @@ Full-width page header with eyebrow, large fluid heading, optional lede paragrap
 
 ```svelte
 <script>
-  import { PageHero, Button, Inline, Led, Text } from 'dxlb-design'
+  import { PageHero, Button, Inline, Led, Text } from '@dxlbnl/ui'
 </script>
 
 <!-- String forms — both eyebrow and heading as plain strings -->
