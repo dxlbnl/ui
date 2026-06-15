@@ -10,10 +10,12 @@
       "svelte": "./dist/index.js"
     },
     "./tokens/tokens.css": "./dist/tokens/tokens.css",
-    "./tokens/typography.css": "./dist/tokens/typography.css"
+    "./tokens/typography.css": "./dist/tokens/typography.css",
+    "./docs/*": "./docs/*"
   },
   "files": [
     "dist",
+    "docs",
     "!dist/**/*.test.*",
     "!dist/**/*.spec.*"
   ],

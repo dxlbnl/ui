@@ -1749,3 +1749,21 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   `wiki/specs/B64-enhanced-grid-api.md`. Spec approved as-specced at the 2026-06-15 review
   checkpoint; `sm` finalised at 480px (the only change from the drafted scale).
 - **Amends**: extends B42 (D5 mechanism reuse); no decision superseded
+
+## D77: Ship the AI-readable `docs/` in the published package
+- **Date**: 2026-06-15
+- **By**: top-level (user-approved)
+- **Context**: The library's stated purpose (`vision.md`, `docs/index.md`) includes being
+  consumed by AI coding assistants generating Svelte code against the design system. The
+  `docs/*.md` set is written to be AI-readable, but the package only published `dist/`
+  (`files: ["dist", …]`, `svelte-package` emits `src/lib → dist`), so the docs never reached
+  consumers' `node_modules`.
+- **Decision**: Publish `docs/` with the package. Added `"docs"` to `package.json` `files`
+  (the docs ship from the repo root, not from `dist/`) and an `"./docs/*": "./docs/*"`
+  `exports` subpath so consumers can also resolve them by module path (e.g. a Vite `?raw`
+  import) — plain filesystem reads from `node_modules/@dxlbnl/ui/docs/` work regardless.
+- **Consequences**: A downstream agent/tool reads the **version-matched** API docs locally
+  instead of guessing or hitting a possibly-stale external site; docs and code stay in
+  lockstep per release. Tarball grew ~100kB (markdown only). `pnpm run prepack` →
+  `publint` **All good!** (no warning on the `.md` export). No code/test impact.
+- **Amends**: none superseded
