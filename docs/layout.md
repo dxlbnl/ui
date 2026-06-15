@@ -111,15 +111,22 @@ Renders a flex row with `justify-content: space-between`, pushing children to op
 
 ## Grid
 
-Renders a CSS grid container. Supports fixed column counts or an auto-fill responsive layout.
+Renders a CSS grid container. Supports equal column counts, auto-fill, raw
+asymmetric track lists (`template`), cross-axis alignment (`align`), and
+container-query-driven collapse — both a built-in schedule and an opt-in
+`stackBelow` breakpoint. All responsive behaviour is **pure CSS** (no JavaScript),
+so it is SSR-safe with no hydration flash.
 
 ### Props
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `as` | `string` | `'div'` | HTML element to render as the root. |
-| `cols` | `1 \| 2 \| 3 \| 4 \| 'auto'` | `3` | Number of columns, or `'auto'` for responsive auto-fill. |
-| `gap` | `'none' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Grid gap. Same token mapping as Stack. |
+| `cols` | `1 \| 2 \| 3 \| 4 \| 'auto'` | `3` | Number of equal columns, or `'auto'` for responsive auto-fill. Ignored when `template` is set. |
+| `template` | `string` | `undefined` | Raw `grid-template-columns` value for asymmetric/explicit tracks (e.g. `'minmax(0, 0.9fr) minmax(0, 1.1fr)'` or `'60px 1fr'`). Overrides `cols`. A `template` grid is exempt from the built-in collapse schedule — it collapses only if you also set `stackBelow`. |
+| `stackBelow` | `'sm' \| 'md' \| 'lg'` | `undefined` | Collapse the grid to a single column when the **parent container** is at or below this width: `sm`=480px, `md`=720px, `lg`=900px. Applies to both `cols` and `template` grids and takes precedence over the built-in schedule. |
+| `align` | `'start' \| 'center' \| 'end' \| 'stretch'` | `'stretch'` | `align-items` — cross-axis alignment of the items in each row. |
+| `gap` | `'none' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Grid gap. Token scale matches Stack/Inline: none=0, xs=8px, sm=16px, md=24px, lg=32px, xl=40px. |
 | `minColWidth` | `string` | `'240px'` | Minimum column width used when `cols='auto'`. Passed to `minmax()`. |
 | `children` | `Snippet` | `undefined` | Slot content. |
 | `...rest` | `HTMLAttributes<HTMLDivElement>` | — | All native HTML div attributes forwarded. |
@@ -128,7 +135,7 @@ Renders a CSS grid container. Supports fixed column counts or an auto-fill respo
 
 ```svelte
 <script>
-  import { Grid, Card } from '@dxlbnl/ui'
+  import { Grid, Container, Card } from '@dxlbnl/ui'
 </script>
 
 <Grid cols={3} gap="md">
@@ -142,13 +149,38 @@ Renders a CSS grid container. Supports fixed column counts or an auto-fill respo
   <Card>One</Card>
   <Card>Two</Card>
 </Grid>
+
+<!-- Asymmetric tracks; collapses to one column when the container is ≤720px -->
+<Container>
+  <Grid template="minmax(0, 0.9fr) minmax(0, 1.1fr)" stackBelow="md" align="start">
+    <Card>Main</Card>
+    <aside>Sidebar</aside>
+  </Grid>
+</Container>
 ```
 
 ### Notable behaviour
 
-- `cols='auto'` produces `repeat(auto-fill, minmax(minColWidth, 1fr))`.
-- `cols=1` produces `1fr` (single column); other numeric values produce `repeat(n, 1fr)`.
-- `grid-template-columns` and `gap` are set as inline styles on the root element; no scoped CSS class is involved.
+- The column template is exposed as the `--grid-cols` custom property on a
+  `.grid-layout` root; `cols` grids also carry a `data-cols` attribute, and the gap
+  is exposed as `--grid-gap`. (`template` grids omit `data-cols` — see below.)
+- **Responsive collapse tracks the parent `<Container>`, not the viewport.** It is
+  implemented with CSS `@container (max-width: …)` rules; `<Container>` sets
+  `container-type: inline-size`. A grid nested in a narrow column collapses even when
+  the viewport is wide. Wrap the grid in a `<Container>` (or any inline-size container
+  ancestor) for collapse to engage.
+- **Built-in schedule** (when `stackBelow` is not set): `cols=3` and `cols=4` collapse
+  to 2 columns at container width ≤900px; `cols=2`/`3`/`4` collapse to 1 column at
+  ≤720px. `cols=1` and `cols='auto'` never collapse.
+- **`stackBelow`** adds an opt-in collapse-to-one-column point (sm=480px / md=720px /
+  lg=900px) keyed on the parent container. It works for `template` grids too — which
+  are otherwise exempt from the built-in schedule — and wins over the built-in schedule
+  when both could apply.
+- `cols='auto'` produces `repeat(auto-fill, minmax(minColWidth, 1fr))`; `cols=1`
+  produces `1fr`; other numeric values produce `repeat(n, 1fr)`. `template` is emitted
+  verbatim and overrides `cols`.
+- `align` is applied via a `data-align` attribute resolved by scoped CSS; the default
+  `stretch` leaves existing grids unchanged.
 
 ---
 
