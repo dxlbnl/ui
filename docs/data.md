@@ -4,12 +4,14 @@ Data display components for structured content: collapsible sections, tabbed pan
 
 ## Accordion
 
-Thin wrapper that adds a shared border around a group of `AccordionItem` children.
+Thin wrapper that adds a shared border around a group of `AccordionItem` children. Optionally coordinates **sticky section headers** across its items.
 
 ### Props
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
+| `sticky` | `boolean` | `false` | Enable sticky section headers. Each `AccordionItem` summary sticks below the headers above it and above the headers below it. |
+| `fallbackHeaderHeight` | `number` | `46` | Per-header height (px) used for offset maths before live measurement / during SSR. |
 | `children` | `Snippet` | — | One or more `AccordionItem` components. |
 | `...rest` | `HTMLAttributes<HTMLDivElement>` | — | All native HTML div attributes forwarded to the root element. |
 
@@ -20,6 +22,7 @@ Thin wrapper that adds a shared border around a group of `AccordionItem` childre
   import { Accordion, AccordionItem } from 'dxlb-design'
 </script>
 
+<!-- Default -->
 <Accordion>
   <AccordionItem label="Specifications">
     <p>4HP, 40mm depth, +12V 35mA / -12V 10mA</p>
@@ -28,12 +31,19 @@ Thin wrapper that adds a shared border around a group of `AccordionItem` childre
     <p>Schematic and panel files available on GitHub.</p>
   </AccordionItem>
 </Accordion>
+
+<!-- Sticky headers — summaries pin while their section scrolls -->
+<Accordion sticky>
+  <AccordionItem label="Overview"><p>…</p></AccordionItem>
+  <AccordionItem label="Details"><p>…</p></AccordionItem>
+</Accordion>
 ```
 
 ### Notable behaviour
 
 - Renders as a `Stack gap="none"` with `border: 1px solid var(--rule)` wrapping all items.
 - Does not manage open/closed state across items — multiple items can be open simultaneously (native `<details>` behaviour).
+- **Sticky mode (`sticky`):** the Accordion provides a shared registry over context that `AccordionItem`s register with. Each item's `<summary>` becomes `position: sticky` with a computed `top` (sum of header heights above it) and `bottom` (sum of header heights below it), plus a tiered `z-index` so earlier headers stack above later ones. Header heights are measured live with a `ResizeObserver`; `fallbackHeaderHeight` is used until measured and during SSR. When `sticky` is false (default), summaries are plain and no context/observer is created.
 
 ---
 

@@ -124,6 +124,7 @@ A horizontal progress bar with ARIA progressbar role, optional label row, and co
 | `value` | `number` | — | Progress percentage. Clamped to 0–100. |
 | `label` | `string` | `undefined` | Optional label shown above the bar. When set, a header row also shows the percentage. |
 | `color` | `'ok' \| 'amber' \| 'danger'` | `'ok'` | Fill colour of the progress bar. |
+| `overflow` | `boolean` | `false` | Opt in to over-budget rendering when `value` exceeds 100. |
 | `...rest` | `[key: string]: unknown` | — | All additional attributes forwarded to the root element. |
 
 ### Usage
@@ -136,6 +137,9 @@ A horizontal progress bar with ARIA progressbar role, optional label row, and co
 <ProgressBar value={72} label="Storage" color="amber" />
 <ProgressBar value={95} color="danger" />
 <ProgressBar value={42} label="Upload progress" />
+
+<!-- Over-budget: shows the real percentage in danger with an end notch -->
+<ProgressBar value={128} label="Budget" overflow />
 ```
 
 ### Notable behaviour
@@ -145,6 +149,7 @@ A horizontal progress bar with ARIA progressbar role, optional label row, and co
 - The header row (label + percentage) is only rendered when `label` is provided; it is `aria-hidden="true"` since the ARIA attributes on the track already convey the value.
 - Track height is 5px with `--bg-sunken` background and `--rule` border.
 - Fill width transitions with `transition: width 0.3s`.
+- **Over-budget (`overflow`):** by default `value` is clamped to 0–100 and the percentage readout caps at `100%`. With `overflow` set and `value > 100`, the readout instead shows the real rounded percentage (e.g. `128%`) in `--danger`, the fill switches to the danger colour, and a `--danger` notch is drawn at the right edge of the track. The fill width itself still caps at 100% (the bar is full). When `value ≤ 100`, `overflow` has no effect.
 
 ---
 

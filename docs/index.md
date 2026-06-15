@@ -85,26 +85,26 @@ import { Card, ProductCard, ProjectCard, NoteCard } from 'dxlb-design'
 ### Navigation
 
 ```ts
-import { Nav, Breadcrumb } from 'dxlb-design'
+import { Nav, Breadcrumb, Pager, AppShell } from 'dxlb-design'
 ```
 
 ### Forms
 
 ```ts
-import { Input, Textarea, Select, InputWrap, Field, Checkbox, Radio, RadioGroup, Switch } from 'dxlb-design'
+import { Input, Textarea, Select, InputWrap, Field, Checkbox, Radio, RadioGroup, Switch, SegmentedControl } from 'dxlb-design'
 ```
 
 ### Feedback
 
 ```ts
-import { Modal, Toast, ToastRegion } from 'dxlb-design'
+import { Alert, Modal, Toast, ToastRegion, Popover, StatusPill, Inbox, Gauge, ProportionBar, CompareBars } from 'dxlb-design'
 import { toast } from 'dxlb-design'
 ```
 
 ### Patterns
 
 ```ts
-import { Alert, CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero } from 'dxlb-design'
+import { CtaBlock, StatCard, KvList, ProgressBar, ActivityRow, SectionHead, SectionFoot, PageHero } from 'dxlb-design'
 ```
 
 ### Data

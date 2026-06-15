@@ -367,3 +367,56 @@ Toggle switch rendered as a `role="switch"` button. Amber track when on. SSR-saf
 - `aria-label` is set to the `label` prop value; a separate visible `<span>` also renders the label text beside the switch.
 - `Field` context integration: `aria-describedby` and `aria-invalid` are injected when nested inside a `Field`. Unlike `Input`/`Checkbox`, the Switch does not receive an `id` from context since it is a `<button>` not an `<input>`.
 - The disabled state sets `aria-disabled` on the button and applies 0.4 opacity via the wrapper span.
+
+---
+
+## SegmentedControl
+
+A joined group of mutually-exclusive options, rendered as a `role="radiogroup"` of `role="radio"` buttons with roving tabindex and arrow-key navigation. The active segment fills amber.
+
+### Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `options` | `(string \| { value: string; label: string })[]` | — | Options as plain strings (value === label) or `{ value, label }` objects. |
+| `value` | `string` | `undefined` | Currently selected value. Controlled / bindable. |
+| `label` | `string` | — | Accessible name for the radiogroup, applied as `aria-label`. |
+| `size` | `'sm' \| 'md'` | `'md'` | Padding + font-size scale. |
+| `as` | `string` | `'div'` | Polymorphic root element. |
+| `onchange` | `(value: string) => void` | `undefined` | Called with the newly selected value when a segment is activated. |
+| `...rest` | `Omit<HTMLAttributes<HTMLDivElement>, 'onchange'>` | — | All native HTML attributes (except `onchange`) forwarded to the root element. |
+
+### Usage
+
+```svelte
+<script>
+  import { SegmentedControl } from 'dxlb-design'
+
+  let view = $state('grid')
+</script>
+
+<SegmentedControl
+  label="View mode"
+  bind:value={view}
+  options={['grid', 'list', 'map']}
+  onchange={(v) => console.log('selected', v)}
+/>
+
+<!-- Object options with distinct labels -->
+<SegmentedControl
+  label="Range"
+  size="sm"
+  options={[
+    { value: '7d', label: 'Week' },
+    { value: '30d', label: 'Month' },
+    { value: '1y', label: 'Year' },
+  ]}
+/>
+```
+
+### Notable behaviour
+
+- Keyboard: `ArrowRight`/`ArrowDown` move to the next segment, `ArrowLeft`/`ArrowUp` to the previous (both wrap), `Home`/`End` jump to first/last. Arrow navigation selects and focuses the target segment (automatic activation).
+- Roving tabindex: only the selected segment is tab-focusable (`tabindex="0"`); when nothing is selected, the first segment is focusable.
+- Keeps an internal committed value, so the active state reflects the last choice even when the caller does not feed `value` back — but passing `value` keeps it controlled.
+- `aria-checked` reflects selection on each `role="radio"` button.
