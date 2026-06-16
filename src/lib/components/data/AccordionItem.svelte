@@ -8,7 +8,7 @@
     label: string
     /** Whether the item starts expanded. @default false */
     open?: boolean
-    /** Optional inline controls rendered in the summary header, between the title and chevron. */
+    /** Optional inline controls rendered as the trailing element of the summary header, after the title. */
     actions?: Snippet
     children: Snippet
   }
@@ -47,6 +47,7 @@
       data-sticky="true"
       style="top:{top}px;bottom:{bottom}px;z-index:{zIndex};"
     >
+      <span class="acc-icon" aria-hidden="true"></span>
       <span class="acc-title">{label}</span>
       {#if actions}
         <!-- The wrapper's only handler is a preventDefault guard cancelling the
@@ -59,10 +60,10 @@
           {@render actions()}
         </span>
       {/if}
-      <span class="acc-icon" aria-hidden="true">›</span>
     </summary>
   {:else}
     <summary class="acc-trigger">
+      <span class="acc-icon" aria-hidden="true"></span>
       <span class="acc-title">{label}</span>
       {#if actions}
         <!-- The wrapper's only handler is a preventDefault guard cancelling the
@@ -75,7 +76,6 @@
           {@render actions()}
         </span>
       {/if}
-      <span class="acc-icon" aria-hidden="true">›</span>
     </summary>
   {/if}
   <div class="acc-body">
@@ -104,7 +104,7 @@
   .acc-trigger {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 12px;
     padding: 12px 16px;
     cursor: pointer;
     background: var(--bg-rail);
@@ -137,13 +137,16 @@
   }
 
   .acc-title {
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
     font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.08em;
+    font-size: 13px;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .acc-actions {
@@ -155,15 +158,22 @@
 
   .acc-icon {
     font-family: var(--mono);
-    font-size: 14px;
+    font-size: 12px;
+    width: 12px;
     color: var(--ink-faint);
-    transition: transform var(--transition);
     flex-shrink: 0;
   }
 
+  .acc-icon::before {
+    content: "▸";
+  }
+
   details[open] .acc-icon {
-    transform: rotate(90deg);
     color: var(--amber);
+  }
+
+  details[open] .acc-icon::before {
+    content: "▾";
   }
 
   .acc-body {

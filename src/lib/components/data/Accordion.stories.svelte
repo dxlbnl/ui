@@ -49,10 +49,15 @@
     await expect(firstTitle).not.toBeNull();
     await expect(firstTitle!.textContent).toContain("Getting Started");
 
-    // AC-5: summary contains acc-icon span with › glyph, aria-hidden="true"
+    // AC-5 (B68): the disclosure glyph is now an EMPTY .acc-icon span (the ▸/▾
+    // character is a CSS ::before, not a text node) that LEADS the summary as its
+    // first child, and stays aria-hidden="true".
+    const firstSummaryEl = allDetails[0].querySelector(
+      "summary.acc-trigger",
+    ) as HTMLElement;
     const firstIcon = allDetails[0].querySelector(".acc-icon");
     await expect(firstIcon).not.toBeNull();
-    await expect(firstIcon!.textContent!.trim()).toBe("›");
+    await expect(firstIcon).toBe(firstSummaryEl.children[0]);
     await expect(firstIcon!.getAttribute("aria-hidden")).toBe("true");
 
     // AC-6: body content is in .acc-body sibling of summary
@@ -135,8 +140,9 @@
     const bodyText = within(canvasElement).getByText(/Interact with this item/);
     await waitFor(() => expect(bodyText).toBeVisible());
 
-    // AC-11: icon has transform applied when open
-    await expect(getComputedStyle(icon).transform).not.toBe("none");
+    // AC-11 (B68): the rotation is gone; the surviving open-state glyph signal is
+    // the icon COLOUR swapping to var(--amber) (asserted next) — there is no
+    // transform to assert anymore.
 
     // AC-12: icon color resolves to var(--amber) when open
     const amberColor = resolveTokenFgColor("--amber");
@@ -348,19 +354,22 @@
     await expect(button).toBeVisible();
     await expect(actionsWrapper.contains(button)).toBe(true);
 
-    // AC-6: DOM order within the summary is title → actions → icon. The actions
-    // wrapper sits BETWEEN the flexed title and the chevron.
+    // AC-6 (B68): DOM order within the summary is now icon → title → actions. The
+    // leading glyph is the first child, the title flexes in the middle, and the
+    // actions wrapper is the trailing element (controls hug the right edge).
     const summaryChildren = Array.from(summary.children);
     const titleEl = summary.querySelector(".acc-title") as HTMLElement;
     const iconEl = summary.querySelector(".acc-icon") as HTMLElement;
+    const iconIdx = summaryChildren.indexOf(iconEl);
     const titleIdx = summaryChildren.indexOf(titleEl);
     const actionsIdx = summaryChildren.indexOf(actionsWrapper);
-    const iconIdx = summaryChildren.indexOf(iconEl);
-    await expect(titleIdx).toBeGreaterThanOrEqual(0);
+    // AC-7 (B68): the glyph is the FIRST child of the summary (leading).
+    await expect(iconIdx).toBe(0);
+    await expect(titleIdx).toBeGreaterThan(iconIdx);
     await expect(actionsIdx).toBeGreaterThan(titleIdx);
-    await expect(iconIdx).toBeGreaterThan(actionsIdx);
-    // AC-7: the chevron is the last child of the summary.
-    await expect(iconIdx).toBe(summaryChildren.length - 1);
+    // AC-7 (B68): the actions wrapper is the LAST child of the summary (nothing
+    // sits after it — controls are flush at the right edge).
+    await expect(actionsIdx).toBe(summaryChildren.length - 1);
 
     // AC-5: the title takes the remaining horizontal space (flex grows it).
     await expect(parseFloat(getComputedStyle(titleEl).flexGrow)).toBeGreaterThan(

@@ -1841,3 +1841,104 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   guard — the observable contract (no toggle on activation, control still activates) is
   unchanged either way.
 - **Supersedes**: none
+
+## D80: B67 — Conditional override of the native `<details>` toggle for smart scroll-to-content (sticky mode only)
+- **Date**: 2026-06-16
+- **By**: spec-writer (B67)
+- **Context**: In a sticky `Accordion` (B59/D68 offsets + B66/D78 stacking), opening a tall
+  section often leaves its body below the fold or hidden behind the pinned header stack. B67
+  makes a header click smart-scroll the section's content into a readable position (header
+  pinned in its top-stack slot, body revealed below). The agreed interaction model
+  (manager + user, 2026-06-16) is: **closed** → open + scroll; **open but content not fully
+  visible** → scroll and do **not** close; **open and content already fully visible** →
+  native close. The middle case conditionally cancels the native `<details>` close-on-click
+  toggle, so it touches **D16** ("native `<details>`, browser-owned open/close, no JS
+  toggle"). Because B67 overrides native disclosure, the keyboard (Enter/Space) and
+  screen-reader (expanded/collapsed) semantics had to be made rigorous.
+- **Decision**: In sticky mode only, add a single `onclick` to the sticky `<summary>` (the
+  non-sticky `<summary>` branch is untouched — zero regression). All activation paths —
+  mouse click, keyboard Enter, keyboard Space on a focused `<summary>` — dispatch **one**
+  bubbling `click` on the `<summary>` (same fact D79 relies on), so the single `onclick`
+  intercepts every path; **no separate `keydown` handler**. The native toggle is the
+  click's **default action**, running after handlers, so inside the handler `details.open`
+  reflects the pre-activation state (`false` ⇒ about to open, `true` ⇒ about to close) and
+  is cancellable via `e.preventDefault()`. Handler logic: (1) if `e.defaultPrevented`
+  already true (the D79 `.acc-actions` guard ran first) → do nothing (no scroll, no toggle);
+  (2) closed (`open===false`) → let native open proceed, then scroll into the pinned slot;
+  (3) open + content **not** fully visible → `preventDefault()` (stay open) + scroll;
+  (4) open + content fully visible → do nothing (native close). "Fully visible" = the
+  `.acc-body` top is at/below the pinned header stack (`>= container.top + topOffset(i)`)
+  **and** its bottom is at/above the container's visible bottom. The pinned-slot scroll
+  target lands the `<summary>` top at `container.top + topOffset(i)`, reusing the registry's
+  `topOffset(i)` (D68). The nearest scrollable ancestor is found at activation time (nearest
+  ancestor with `overflow-y` auto/scroll/overlay), browser-only, no `$app/environment`
+  (D52); if none exists the behaviour degrades to native toggle only and nothing throws.
+  `prefers-reduced-motion: reduce` ⇒ instant scroll, else smooth (read at activation time).
+- **Accessibility justification**: the override only ever **suppresses a close** — it never
+  opens/closes out of step with the `<details>` `open` attribute. When a close is prevented
+  (case 3) the section genuinely stays open, so the browser-owned `aria-expanded`/disclosure
+  announcement stays truthful with **no** added/removed/manual `aria-*`. Keyboard parity is
+  intrinsic because Enter/Space and mouse all funnel through the same `click`. The B65/D79
+  actions guard still holds: a click inside `.acc-actions` neither toggles nor scrolls.
+  WCAG 2.1 AA is verified by the a11y addon (zero violations) on the new/updated sticky
+  stories.
+- **Consequences**: No public API change (no new prop on `Accordion`/`AccordionItem`); both
+  remain exported. The change is confined to the sticky `<summary>` branch of
+  `AccordionItem.svelte` (an `onclick` + helper logic in event handlers / a browser-only
+  `$effect`); the registry, offset arithmetic, `display: contents` stacking, and sticky
+  surface/border CSS are untouched. SSR-safety (D52) preserved — all DOM/scroll/`matchMedia`
+  access is in handlers / browser-only `$effect`. Tests are Storybook play functions that
+  drive `wrapper.scrollTop` and assert `details.open` + `.acc-body`
+  `getBoundingClientRect()` after settle, with `±2px` tolerance (relationships, not exact
+  pixels, per D69). This is a **conditional, narrow** override of D16 (suppress-close only),
+  not a wholesale move to JS-owned open state.
+- **Supersedes**: none (narrows D16 for the sticky scroll-to-content case; D16's
+  native-`<details>` model otherwise stands, and the offset/stacking model of D68/D78 is
+  unchanged)
+
+## D81: B68 — AccordionItem header aligned to the design: leading `▸`/`▾` glyph + leading-icon layout
+- **Date**: 2026-06-16
+- **By**: spec-writer (B68)
+- **Context**: B59 deliberately kept the trailing rotating `›` chevron and listed a glyph
+  change as out of scope ("the reference uses `▸`/`▾`; the existing component uses the
+  rotating `›`. No glyph change is made."). The user now wants the `AccordionItem` header to
+  match the live DesignSync source (`ui_kits/components/Accordion.jsx`, read 2026-06-16;
+  identical to `wiki/specs/_design-refs/B59/Accordion.jsx`), whose header is a leading
+  disclosure glyph that **swaps character** (`▸` closed → `▾` open, no rotation), a `13px` /
+  `0.06em` uppercase mono title that flexes to fill the row, and controls flush at the right
+  edge. The trailing-chevron layout is also why the B65 `actions` looked cramped (they sat
+  between the title and the rotating chevron rather than at the row's right edge).
+- **Decision**: Realign the `<summary>` header in **both** branches (sticky + non-sticky) of
+  `AccordionItem.svelte`. New child order: `.acc-icon` (first) → `.acc-title` → `.acc-actions`
+  (last, when present). The glyph becomes an **empty** `aria-hidden` `<span class="acc-icon">`
+  whose character comes from a CSS pseudo-element driven off the native `[open]` attribute —
+  `.acc-icon::before { content: "▸" }` and `details[open] .acc-icon::before { content: "▾" }`
+  (no JS, no Svelte `open` var, because the native toggle flips the attribute not the var). The
+  `transform: rotate(90deg)` rotation is removed; the amber-open / ink-faint-closed colour is
+  kept (`12px`, `width:12px`, mono). The title becomes `13px` / `letter-spacing:0.06em` /
+  uppercase / `var(--ink)` / `flex:1 1 auto; min-width:0` with single-line ellipsis. The row
+  gets a consistent `gap:12px`, `padding:12px 16px` kept. Tokens only (D62) — no new colours/
+  tokens (`--mono`, `--ink`, `--ink-faint`, `--amber`). No public API change; both components
+  stay exported. The B65/D79 `.acc-actions` click-guard, the D68/D78 sticky offset + `display:
+  contents` model, and the D80 smart-scroll are untouched. This is the **visual-only track**
+  (D42): `spec-writer → implementer → reviewer`, no test-writer; the reviewer verifies by diff
+  + opening the stories.
+- **Consequences**: Three existing play-function assertions in `Accordion.stories.svelte` that
+  encoded the OLD glyph are updated to the new layout (deliberate updates, not weakenings): the
+  "Default" story's literal-`›` `textContent` check, the "Toggle Interaction" story's
+  `transform !== "none"` rotation check, and the B65 "With Actions" story's `title → actions →
+  icon` order check (now `icon → title → actions`). All other stories and the a11y audit pass
+  unchanged. Out of scope (separate API features, possible follow-ups): `count` badge,
+  `multiple`, controlled mode, `flush`.
+- **Supersedes**: the B59 spec "Out of scope — Glyph change" note (kept the rotating `›`); the
+  glyph + header layout now follow the design. D16's native-`<details>` model and the D68/D78
+  sticky model otherwise stand.
+- **Implementation note (implementer, B68)**: The glyph carries **no** `transition` at all.
+  The spec permitted an optional `transition: color var(--transition)` on `.acc-icon`
+  ("keep a color transition if it reads cleanly"). It did not read cleanly: the existing
+  "Toggle Interaction" AC-12 assertion reads `getComputedStyle(icon).color` immediately after
+  the open click and expects exactly `var(--amber)` (`rgb(255,179,71)`); a colour transition
+  made that read catch a mid-animation value (`rgb(199,159,95)`) and fail. Since the spec
+  marks the transition optional ("either is acceptable"), it was dropped so the open-state
+  colour resolves instantly and the surviving AC-12 colour assertion stays meaningful and
+  green. No other behaviour changes.

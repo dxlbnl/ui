@@ -44,6 +44,20 @@ it records the reason here AND states it in chat.
 - reviewer: PASS — all ACs met, 341/341 green, check 0 errors, click-guard + keyboard genuinely exercised, no scope creep, D79 logged
 - result: done
 
+## 2026-06-16 20:40 — B67: Accordion smart scroll-to-content on header click
+- manager: triaged from user request; default in sticky mode (no new prop); interaction model = closed→open+scroll, open+not-visible→scroll (override toggle), open+visible→close. Overrides D16 conditionally → significant, but user prefers run-straight-through; spec-writer to log ADR + handle keyboard/SR a11y. start, track: feature; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B67-accordion-scroll-to-content.md (D80 logged); no blocking questions
+- manager: PAUSED B67 → parked in ready/. User reported (1) B65 actions look cramped beside the chevron, (2) accordion diverges from the design. Both root to a trailing-vs-leading icon. Read the live design via DesignSync (project 019e2ba0…, ui_kits/components/Accordion.jsx). Filed B68 (header alignment) to do first; B67 resumes after.
+
+## 2026-06-16 20:55 — B68: Align AccordionItem header with the design
+- manager: start, track: feature (visual-only). Authoritative design = live DesignSync Accordion.jsx (leading ▸/▾ glyph, title 13px/0.06em ellipsis, actions rightmost). Subsumes the B65 actions-cramped report. delegating to spec-writer
+- spec-writer: wrote wiki/specs/B68-accordion-header-design-alignment.md (icon→title→actions order, ▸/▾ pseudo-element swap, no rotation; D81 logged, supersedes B59 glyph note); flagged 3 existing story assertions to update (Default ›-textContent, Toggle transform, With Actions order); no blocking questions
+- manager: delegating to implementer (visual-only track, no test-writer)
+- implementer: reordered to icon→title→actions in both branches; ▸/▾ glyph via `.acc-icon::before` swapped off `details[open]` (no rotation); title 13px/0.06em ellipsis flex:1; row gap:12px. Updated 3 invalidated story assertions (Default, Toggle Interaction, With Actions) per AC-8. B68 green (341/341), check 0 errors. Dropped glyph color transition (broke Toggle's immediate amber read) — noted under D81.
+- manager: implementer flagged a stray uncommitted edit in Accordion.sticky.stories.svelte (user IDE experiment: Prettier reflow + wrapper heights 160/200→300px) that breaks StickyHeadersStackWhileScrolling. Not B68's. Stashed it (stash@{0}, preserved) to isolate B68; will restore + surface to user. delegating to reviewer
+- reviewer: PASS — all 14 ACs met, 341/341 green, check 0 errors, glyph swap CSS-only (works on native toggle), icon-leading/actions-right matches design, 3 assertion updates track (not weaken) the redesign, no scope creep, D81 supersedes B59 glyph note
+- result: done (note: D80 + B67 progress ride along in shared wiki files; B67 spec/card remain parked/untracked until B67 completes)
+
 ## 2026-05-21 — B49: Navmenu should close when clicking outside of it
 - manager: start, track: bug; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B49-navmenu-close-on-outside-click.md (17 ACs incl. Escape, SSR-safe lifecycle); D51 logged; no blocking questions
