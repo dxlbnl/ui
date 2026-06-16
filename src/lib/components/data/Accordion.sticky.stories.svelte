@@ -1,6 +1,6 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import { expect, waitFor } from "storybook/test";
+  import { expect, waitFor, within } from "storybook/test";
   import { resolveTokenColor } from "$lib/storybook-utils.js";
   import Accordion from "./Accordion.svelte";
   import AccordionItem from "./AccordionItem.svelte";
@@ -239,6 +239,163 @@
       </AccordionItem>
       <AccordionItem label="Plain Two" open={true}>
         <p style="height:300px;margin:0;">Default, non-sticky body two.</p>
+      </AccordionItem>
+    </Accordion>
+  </div>
+</Story>
+
+<!-- Story 4 — "Sticky Headers Stack While Scrolling": the B66 regression. The headers must
+     stay pinned (top + bottom stacks) under real programmatic scrolling, which only works
+     once the per-item <details> shares a single containing block with .accordion via
+     display:contents (AC-5). Today each <summary> is trapped in its own <details> block, so
+     the first header un-sticks and scrolls out at the bottom scroll position — AC-1 fails.
+     Covers AC-1..AC-5, AC-7. Relationships, not exact pixel positions (D69). -->
+<Story
+  name="Sticky Headers Stack While Scrolling"
+  play={async ({ canvasElement, userEvent }) => {
+    const summaries = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>("summary.acc-trigger"),
+    );
+    // 3 open + 1 closed item.
+    await expect(summaries.length).toBe(4);
+
+    const allDetails = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>("details.acc-item"),
+    );
+    await expect(allDetails.length).toBe(4);
+
+    // The scroll wrapper is the nearest overflow ancestor of the first summary.
+    const wrapper = summaries[0].closest<HTMLElement>('[style*="overflow"]');
+    await expect(wrapper).not.toBeNull();
+    const scroll = wrapper as HTMLElement;
+
+    // AC-5: in sticky mode each <details class="acc-item"> is laid out as display:contents,
+    // so its <summary> and .acc-body become layout children of .accordion (one shared
+    // containing block). On today's code the <details> are display:block — this fails.
+    for (const d of allDetails) {
+      await expect(getComputedStyle(d).display).toBe("contents");
+    }
+
+    // Wait for the sticky inline offsets to be present (measurement + render settles) so the
+    // scroll-position assertions run against settled layout.
+    await waitFor(async () => {
+      for (const s of summaries) {
+        await expect(Number.isNaN(parseFloat(s.style.top))).toBe(false);
+        await expect(Number.isNaN(parseFloat(s.style.bottom))).toBe(false);
+      }
+    });
+
+    // Sanity: the content is taller than the wrapper, so there is something to scroll.
+    await expect(scroll.scrollHeight).toBeGreaterThan(scroll.clientHeight);
+
+    const TOL = 2;
+
+    // --- Scroll to the BOTTOM and let sticky layout + ResizeObserver offsets settle. ---
+    scroll.scrollTop = scroll.scrollHeight;
+    await waitFor(async () => {
+      await expect(
+        Math.abs(scroll.scrollTop - (scroll.scrollHeight - scroll.clientHeight)),
+      ).toBeLessThanOrEqual(TOL);
+    });
+
+    // Re-read the wrapper rect AFTER scrolling (its viewport position can shift).
+    let wrapperRect = scroll.getBoundingClientRect();
+
+    // AC-1 (PRIMARY REGRESSION — fails on today's code): at the bottom scroll position the
+    // FIRST header is still pinned to the top stack, i.e. still in view. Its rect bottom is
+    // below the wrapper's top edge. Today the first <summary> is trapped in its own <details>
+    // and has scrolled out, so its rect.bottom <= wrapperRect.top and this assertion fails.
+    await waitFor(async () => {
+      const firstRect = summaries[0].getBoundingClientRect();
+      await expect(firstRect.bottom).toBeGreaterThan(wrapperRect.top - TOL);
+      // Pinned to the TOP stack: its top edge sits at/near the wrapper's top edge, not below.
+      await expect(firstRect.top).toBeLessThanOrEqual(wrapperRect.top + TOL + 1);
+    });
+
+    // AC-2: at the bottom scroll position every header is within the wrapper's visible rect —
+    // no header has fully left the viewport while the accordion is in view.
+    wrapperRect = scroll.getBoundingClientRect();
+    for (const s of summaries) {
+      const rect = s.getBoundingClientRect();
+      await expect(rect.bottom).toBeGreaterThan(wrapperRect.top - TOL);
+      await expect(rect.top).toBeLessThan(wrapperRect.bottom + TOL);
+    }
+
+    // AC-4: the top-stack headers tile edge-to-edge using their cumulative `top` offsets —
+    // NOT all collapsed at `top: 0`. At the bottom scroll position headers 0 and 1 are
+    // deterministically pinned to the top stack (their 400px bodies guarantee it), so we
+    // assert the tiling on that pair: header 0 sits at the wrapper top, and header 1 sits
+    // exactly at header 0's bottom edge (contiguous, non-overlapping). The bottom-pinned
+    // last header is NOT part of this top-stack run and is covered by AC-3.
+    const header0 = summaries[0].getBoundingClientRect();
+    const header1 = summaries[1].getBoundingClientRect();
+    // Header 0 is pinned to the top stack: its top edge is at the wrapper's top edge.
+    await expect(Math.abs(header0.top - wrapperRect.top)).toBeLessThanOrEqual(TOL);
+    // Header 0 occupies a full header band (it has not collapsed): its bottom is well below
+    // the wrapper top by roughly its own height — reinforces "not all at top:0".
+    await expect(header0.bottom).toBeGreaterThan(
+      wrapperRect.top + (summaries[0].offsetHeight - TOL),
+    );
+    // Header 1 tiles directly below header 0 — its top sits at header 0's bottom edge. This
+    // proves the two are NOT both at top:0 AND do not overlap (edge-to-edge cumulative tiling).
+    await expect(Math.abs(header1.top - header0.bottom)).toBeLessThanOrEqual(TOL);
+
+    // --- Scroll back to the TOP and settle. ---
+    scroll.scrollTop = 0;
+    await waitFor(async () => {
+      await expect(scroll.scrollTop).toBeLessThanOrEqual(TOL);
+    });
+
+    // AC-3: at the top scroll position the LAST header is still within view / pinned to the
+    // bottom stack — it has not been pushed entirely below the fold.
+    wrapperRect = scroll.getBoundingClientRect();
+    await waitFor(async () => {
+      const lastRect = summaries[summaries.length - 1].getBoundingClientRect();
+      await expect(lastRect.top).toBeLessThan(wrapperRect.bottom + TOL);
+      await expect(lastRect.bottom).toBeGreaterThan(wrapperRect.top - TOL);
+    });
+
+    // AC-7: native open/close still hides/shows the body under display:contents. The 4th item
+    // is rendered CLOSED — its body is not visible. Opening it (click the <summary>) makes the
+    // body visible. This proves the native <details> disclosure survives display:contents.
+    const closedDetails = allDetails[3];
+    await expect(closedDetails.hasAttribute("open")).toBe(false);
+
+    const closedBody = within(closedDetails).getByText(
+      /Closed section body — hidden until opened/,
+    );
+    await expect(closedBody).not.toBeVisible();
+
+    await userEvent.click(summaries[3]);
+    await expect(closedDetails.hasAttribute("open")).toBe(true);
+    await waitFor(() => expect(closedBody).toBeVisible());
+  }}
+>
+  <div style="height:160px;overflow:auto;">
+    <Accordion sticky>
+      <AccordionItem label="Section One" open={true}>
+        <div style="height:400px;">
+          Tall body one — long enough that scrolling past it would un-stick a
+          header trapped in its own &lt;details&gt; block.
+        </div>
+      </AccordionItem>
+      <AccordionItem label="Section Two" open={true}>
+        <div style="height:400px;">
+          Tall body two — long enough that scrolling past it would un-stick a
+          header trapped in its own &lt;details&gt; block.
+        </div>
+      </AccordionItem>
+      <AccordionItem label="Section Three" open={true}>
+        <div style="height:400px;">
+          Tall body three — long enough that scrolling past it would un-stick a
+          header trapped in its own &lt;details&gt; block.
+        </div>
+      </AccordionItem>
+      <AccordionItem label="Section Four (closed)">
+        <div style="height:400px;">
+          Closed section body — hidden until opened. Proves native open/close
+          still works under display:contents.
+        </div>
       </AccordionItem>
     </Accordion>
   </div>

@@ -19,6 +19,20 @@ it records the reason here AND states it in chat.
 
 <!-- entries start here -->
 
+## 2026-06-16 19:56 — B66: Accordion sticky headers don't stack
+- manager: triaged 2 new inbox items (B66 bug high, B65 feature medium); user approved order (B66 first) + no review checkpoints
+- manager: root cause — native `<details>` per section traps each sticky `<summary>` in its own containing block; reference uses flat sibling structure. start, track: bug; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B66-accordion-sticky-stacking.md (14 ACs; fix = `display:contents` on `.acc-item` in sticky mode only, shared containing block; D78 logged); no blocking questions
+- manager: delegating to test-writer
+- test-writer: appended "Sticky Headers Stack While Scrolling" story to Accordion.sticky.stories.svelte; 339 pass, 1 new fail at AC-5 (display is 'block', expected 'contents') — right reason; check baseline green
+- manager: delegating to implementer
+- implementer: added scoped `.acc-item:has(> [data-sticky="true"]) { display: contents }` (D45 nesting, no API change); pnpm check 0 errors; verified fix structurally correct empirically. 339 pass, 1 fail at AC-4 line 333 — `pinnedTop` predicate (`rect.top <= wrapperTop+3`) is self-contradictory with spec AC-4 (tile, not all at top:0). Refused to weaken test; routed back.
+- manager: confirmed the assertion bug by reading the test + tracing layout (also: 4 headers ≈188px don't fit 160px wrapper). Routing to test-writer to fix AC-4 predicate; AC-1/AC-5 remain the regression guards.
+- test-writer: fixed AC-4 assertion (header0 pinned at wrapper top + header1 tiles at header0.bottom; dropped contradictory pinnedTop filter); 340/340 green; regression intact (still fails on pre-fix code via AC-1/AC-5)
+- manager: delegating to reviewer
+- reviewer: PASS — all 14 ACs met, 340/340 green, check 0 errors, regression story present & meaningful, no scope creep, no leftover debug files, D78 logged
+- result: done
+
 ## 2026-05-21 — B49: Navmenu should close when clicking outside of it
 - manager: start, track: bug; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B49-navmenu-close-on-outside-click.md (17 ACs incl. Escape, SSR-safe lifecycle); D51 logged; no blocking questions

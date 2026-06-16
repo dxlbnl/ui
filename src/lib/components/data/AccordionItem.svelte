@@ -62,10 +62,19 @@
 <style>
   .acc-item {
     border-bottom: 1px solid var(--rule);
-  }
 
-  .acc-item:last-child {
-    border-bottom: none;
+    &:last-child {
+      border-bottom: none;
+    }
+
+    /* Sticky mode only: drop the <details> box so its <summary> and .acc-body
+       become layout children of .accordion — one shared containing block — so
+       the B59 top/bottom offsets tile the headers into a top + bottom stack
+       (B66 / D78). Keyed on the sticky <summary>, so it never fires in default
+       mode (the border-bottom above stays intact there). */
+    &:has(> [data-sticky="true"]) {
+      display: contents;
+    }
   }
 
   .acc-trigger {

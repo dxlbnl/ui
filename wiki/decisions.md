@@ -1767,3 +1767,46 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   lockstep per release. Tarball grew ~100kB (markdown only). `pnpm run prepack` →
   `publint` **All good!** (no warning on the `.md` export). No code/test impact.
 - **Amends**: none superseded
+
+## D78: B66 — Accordion sticky headers stack via `display: contents` on `.acc-item` (sticky mode only)
+- **Date**: 2026-06-16
+- **By**: spec-writer (B66)
+- **Context**: B59 (D68) shipped correct sticky offset arithmetic (`top` = Σ heights above,
+  `bottom` = Σ heights below, `z-index = 10 + (n - i)`) but the headers do not stack: scrolling
+  a tall open list down pins the first header, then un-sticks it the instant the second header
+  arrives. **Root cause**: B59 wraps each `AccordionItem` in its own native
+  `<details class="acc-item">`, so each sticky `<summary>`'s **containing block** is its own
+  `<details>` — `position: sticky` is constrained to the containing block, so a header can only
+  stay pinned while its own `<details>` is on screen and un-sticks when that `<details>` scrolls
+  fully past. The design reference (`_design-refs/B59/Accordion.jsx`) renders a **flat**
+  structure (header `<div>` and body `<div>` are direct siblings of the single accordion
+  container), so all sticky headers share **one** containing block and tile into a top + bottom
+  stack. The bug is **structural, not arithmetic** — the B59 offset math is untouched.
+- **Decision**: In sticky mode only, give the per-item `<details class="acc-item">`
+  **`display: contents`** via a scoped, sticky-keyed rule (e.g.
+  `.acc-item:has(> [data-sticky="true"])`, or an item-level `data-sticky` mirror on the
+  `<details>` keyed as `.acc-item[data-sticky="true"]`), using native CSS nesting (D45). With
+  `display: contents` the `<details>` generates no box of its own and its children
+  (`<summary class="acc-trigger">` + `<div class="acc-body">`) become layout children of
+  `.accordion` — reproducing the reference's flat-sibling structure so every sticky `<summary>`
+  shares `.accordion` as its single containing block and the existing offsets tile the headers
+  into a top + bottom stack. The selector must **not** fire in non-sticky mode, so default-mode
+  rendering stays byte-for-byte identical (zero regression). This preserves **D16** (native
+  `<details>`, browser-owned open/close, no ARIA change) with a one-rule surface. Section
+  separators in sticky mode are already provided by the `<summary>`'s top/bottom
+  `--rule-strong` borders (B59 AC-12); the `.acc-item` `border-bottom` (which does not paint
+  under `display: contents`) stays scoped to non-sticky mode. The B17/B59 height-animation
+  `@supports (interpolate-size)` block is unaffected by the `<details>` display value and
+  continues to hide closed bodies (and provides an explicit body-hide independent of UA
+  `<details>` slot rendering).
+- **Consequences**: No public API change (no new prop on `Accordion`/`AccordionItem`).
+  The fix is pure scoped CSS — no render-path browser access added, SSR-safety (D52) unchanged.
+  A new regression story scrolls a fixed-height `overflow:auto` wrapper and asserts (via
+  `getBoundingClientRect()`) that the first header stays pinned in view at the bottom scroll
+  position and headers tile rather than overlap. **Risk**: browser rendering of a `<details>`
+  with `display: contents` (closed-body hide + open/close) is verified directly by AC-7/AC-8 in
+  the Playwright test browser (OQ-1). If it proves unsound, the specified fallback is a flat
+  sibling restructure that drops native `<details>` and drives open/close from `$state` —
+  heavier, hence the second choice only. `:has()` is supported in the evergreen/Playwright
+  target (OQ-2).
+- **Supersedes**: none (refines D68's structure; D68's offset/registry model is unchanged)
