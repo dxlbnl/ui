@@ -1,17 +1,3 @@
-<script module lang="ts">
-  // A single in-flight smart-scroll animation across all AccordionItems. A fresh activation
-  // cancels any prior one, so a stale loop (e.g. a header that cannot reach its slot) never
-  // fights the current scroll by mutating the shared container's scrollTop. Browser-only.
-  let activeScrollRaf = 0
-
-  function cancelActiveScroll(): void {
-    if (activeScrollRaf) {
-      cancelAnimationFrame(activeScrollRaf)
-      activeScrollRaf = 0
-    }
-  }
-</script>
-
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { getContext } from 'svelte'
@@ -67,47 +53,81 @@
     return null
   }
 
-  function pinnedDelta(
+  // Viewport-px distance to move so the section's flow-top reaches its pinned slot. Anchored
+  // on the NON-sticky .acc-body (whose rect tracks the real scroll position) rather than the
+  // <summary>: a pinned sticky <summary> sits at its slot regardless of scroll, so reading its
+  // rect reports a ~0 delta and a header already in the top stack would never scroll to its
+  // content. The body sits directly below the summary in flow, so the section's flow-top is
+  // `body.top - summary.offsetHeight`. Falls back to the summary rect if no body is present.
+  function sectionDelta(
     container: HTMLElement,
     summary: HTMLElement,
+    body: HTMLElement | null,
     offset: number,
   ): number {
-    return (
-      summary.getBoundingClientRect().top -
-      container.getBoundingClientRect().top -
-      offset
-    )
+    const flowTop = body
+      ? body.getBoundingClientRect().top - summary.offsetHeight
+      : summary.getBoundingClientRect().top
+    return flowTop - container.getBoundingClientRect().top - offset
+  }
+
+  // Distance the container's scrollTop must change to bring this section to its pinned slot,
+  // clamped to the scroll range.
+  function pinnedScrollTarget(
+    container: HTMLElement,
+    summary: HTMLElement,
+    body: HTMLElement | null,
+    offset: number,
+  ): number {
+    const delta = sectionDelta(container, summary, body, offset)
+    const max = container.scrollHeight - container.clientHeight
+    return Math.min(Math.max(container.scrollTop + delta, 0), max)
   }
 
   function scrollIntoPinnedSlot(
     container: HTMLElement,
     summary: HTMLElement,
+    body: HTMLElement | null,
     offset: number,
   ): void {
-    cancelActiveScroll()
+    // Native scroll: the layout-anchored target (sectionDelta uses the non-sticky body, so it
+    // is stable as the section pins) lands in one call. Native scrolling is automatically
+    // superseded by any later scroll — a user scroll, a programmatic scroll, or another
+    // section's smart-scroll — so it never fights an external scroll, and needs no re-measuring
+    // loop.
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduced) {
-      container.scrollTop += pinnedDelta(container, summary, offset)
+    container.scrollTo({
+      top: pinnedScrollTarget(container, summary, body, offset),
+      behavior: reduced ? 'auto' : 'smooth',
+    })
+  }
+
+  // Closed → open then scroll: scrolling while the body's height animation (interpolate-size) is
+  // still running lands off-slot, because the browser's scroll anchoring adjusts scrollTop as the
+  // body grows. So scroll once the height transition has finished (with a timeout fallback for
+  // when no transition fires — reduced motion / no interpolate-size support).
+  function scrollAfterOpen(
+    container: HTMLElement,
+    summary: HTMLElement,
+    body: HTMLElement | null,
+    offset: number,
+  ): void {
+    if (!body) {
+      requestAnimationFrame(() => scrollIntoPinnedSlot(container, summary, body, offset))
       return
     }
-    // The summary is position:sticky and the open-body height animation (interpolate-size)
-    // shifts layout over several frames, so a single scroll can land off-target. Re-apply
-    // each frame until the summary settles at its pinned slot, stopping once it lands, once
-    // the container can no longer scroll toward the target (clamped), or after a budget.
-    let frames = 0
-    const step = () => {
-      const delta = pinnedDelta(container, summary, offset)
-      const before = container.scrollTop
-      container.scrollTop += delta
-      const moved = container.scrollTop - before
-      frames += 1
-      if (Math.abs(delta) <= 0.5 || moved === 0 || frames >= 60) {
-        activeScrollRaf = 0
-        return
-      }
-      activeScrollRaf = requestAnimationFrame(step)
+    let done = false
+    const finish = () => {
+      if (done) return
+      done = true
+      body.removeEventListener('transitionend', onEnd)
+      scrollIntoPinnedSlot(container, summary, body, offset)
     }
-    activeScrollRaf = requestAnimationFrame(step)
+    const onEnd = (ev: TransitionEvent) => {
+      if (ev.target === body && ev.propertyName === 'height') finish()
+    }
+    body.addEventListener('transitionend', onEnd)
+    setTimeout(finish, 350)
   }
 
   function handleStickySummaryClick(e: MouseEvent): void {
@@ -126,34 +146,35 @@
     if (!container) return
 
     const offset = registry.topOffset(index)
+    const body = details.querySelector<HTMLElement>('.acc-body')
     // `details.open` still reflects the pre-activation state: the native toggle is the
     // click's default action and runs after this handler.
     const wasOpen = details.open
 
     if (!wasOpen) {
-      // Closed → let the native open proceed, then scroll once it has taken effect (AC-3).
-      requestAnimationFrame(() => {
-        scrollIntoPinnedSlot(container, summary, offset)
-      })
+      // Closed → let the native open proceed, then scroll once the body has finished opening.
+      scrollAfterOpen(container, summary, body, offset)
       return
     }
 
-    // Open: decide between scroll-no-close and native close based on full visibility.
-    const body = details.querySelector<HTMLElement>('.acc-body')
+    // Open: scroll the section to its readable slot, unless it is already there. We decide on
+    // whether a click would actually MOVE the scroll (after clamping to the scroll range), not
+    // on whether the whole body fits in the viewport — a body taller than the viewport never
+    // "fully fits", so the old fits-check made tall sections impossible to close. If the click
+    // would move the scroll (the section is off its slot, e.g. pinned in the top stack with its
+    // body scrolled away), scroll to it and keep it open. If it would not move (already at the
+    // readable slot, or the container cannot scroll any closer), let the native toggle collapse
+    // it — so a section can always be closed once you are looking at it.
     const TOL = 2
-    const c = container.getBoundingClientRect()
-    let fullyVisible = false
-    if (body) {
-      const b = body.getBoundingClientRect()
-      fullyVisible = b.top >= c.top + offset - TOL && b.bottom <= c.bottom + TOL
-    }
+    const reachableMove =
+      pinnedScrollTarget(container, summary, body, offset) - container.scrollTop
 
-    if (!fullyVisible) {
-      // Content not fully visible → cancel the native collapse, stay open, scroll (AC-4).
+    if (Math.abs(reachableMove) > TOL) {
+      // Not at its readable slot → cancel the native collapse, stay open, scroll to it.
       e.preventDefault()
-      scrollIntoPinnedSlot(container, summary, offset)
+      scrollIntoPinnedSlot(container, summary, body, offset)
     }
-    // Fully visible → do nothing; the native toggle collapses the section (AC-5).
+    // Already at its readable slot → do nothing; the native toggle collapses the section.
   }
 </script>
 

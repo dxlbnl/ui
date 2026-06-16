@@ -44,6 +44,14 @@ either component; no public API changes.
 
 ## Mechanism (informative — the ACs below are the contract)
 
+> **Updated by D84 (2026-06-16 follow-up).** The shipped mechanism differs from the original
+> sketch below in three ways: the scroll target is anchored on the non-sticky `.acc-body` (not
+> the pinned `<summary>` rect, which never scrolls a top-stack header); the scroll is a single
+> native `scrollTo` (no rAF convergence loop / module token — D83 superseded), with closed→open
+> scrolling on the body's `transitionend`; and the **scroll-vs-close** decision is "would the
+> click move the scroll" rather than "is the body fully visible" (so tall sections can be
+> closed). The three-case interaction model is unchanged. See **D84**.
+
 The current state at the moment the user activates a `<summary>`:
 
 - The browser fires **one** `click` event on the `<summary>` for **all** activation

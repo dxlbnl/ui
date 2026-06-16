@@ -2006,3 +2006,36 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   user activation happens at a time). No public API, registry, offset math, `display: contents`
   rule, sticky CSS, or the non-sticky branch changed; the D79 `.acc-actions` guard is intact.
 - **Supersedes**: none (implements D80/OQ-2's left-open scheduling choice)
+- **Superseded by**: D84
+
+## D84: B67 follow-up — body-anchored scroll target + native `scrollTo`, and a "would-the-click-move-the-scroll" close test
+- **Date**: 2026-06-16
+- **By**: top-level session (direct fix at the user's request — "just write tests and fix it yourself", no backlog item)
+- **Context**: Live review found two bugs the B67 stories missed. (1) Clicking a header pinned
+  in the **top stack** (scrolled past) did not scroll to it: D80/D83 computed the target from the
+  pinned `<summary>`'s rect, which sits at its slot regardless of scroll → delta ≈ 0 → no move.
+  (2) An open section with a body **taller than the viewport** could never be closed: the close
+  path required the whole body to be "fully visible", which a tall body never is, so every click
+  scrolled instead of collapsing. Separately, D83's module-level re-measuring rAF loop fought the
+  browser's **scroll anchoring** (a ~2px nudge during the open-body animation) and could linger
+  across rapid scroll changes.
+- **Decision**: (a) Compute the scroll target from the **non-sticky `.acc-body`** flow position
+  (`sectionDelta = (body.top − summary.offsetHeight) − container.top − offset`), which tracks the
+  real scroll position even when the `<summary>` is pinned. (b) Replace the rAF convergence loop
+  (and the module-level `activeScrollRaf` single-flight token) with a **single native
+  `container.scrollTo({ top, behavior })`** — native scrolling is superseded by any later scroll,
+  so it never fights an external scroll and needs no re-measuring. (c) For **closed→open**, scroll
+  on the body's `transitionend` (height) with a 350ms timeout fallback, so the open-body animation
+  has settled (no scroll-anchoring drift) before the one scroll. (d) Decide **scroll vs native
+  close** by whether the click would actually move the scroll: `|clamp(scrollTop+delta) −
+  scrollTop| > 2px` → preventDefault + scroll (stay open); otherwise let the native toggle close
+  it — so a section is always closable once it is at its readable slot, regardless of body height.
+- **Consequences**: clicking a scrolled-past header scrolls to it; tall sections can be closed;
+  `prefers-reduced-motion` → `behavior:'auto'`. New regression story "Scroll Up To A Pinned
+  Header, Then Close" covers both bugs. 344/344 green (stable ×2), `pnpm check` clean. No public
+  API / registry / offset / `display:contents` / non-sticky / D79-guard change. D80's three-case
+  interaction model is unchanged; only the target math, the scheduling primitive, and the close
+  test are revised.
+- **Supersedes**: D83 (the rAF convergence loop + module-level single-flight token are removed);
+  refines D80 (the close decision is now "would the click move the scroll", not "is the body
+  fully visible").

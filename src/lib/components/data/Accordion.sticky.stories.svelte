@@ -755,3 +755,120 @@
     </AccordionItem>
   </Accordion>
 </Story>
+
+<!-- Story 7 (regression — bugs found in live review of B67) — "Scroll Up To A Pinned Header,
+     Then Close". Two defects the earlier B67 stories did not catch:
+       Bug 1: clicking a header pinned in the TOP stack (you have scrolled past it) did NOT
+         scroll to it. The scroll target was read from the pinned <summary>'s rect, which sits
+         at its slot regardless of scroll -> delta ~0 -> no scroll. Fix: derive the target from
+         the section's layout position via the NON-sticky .acc-body, so a pinned header still
+         scrolls up to reveal its content.
+       Bug 2: an open section with a body taller than the viewport could never be closed,
+         because the close path required the whole body to be "fully visible". Fix: clicking a
+         section that is already AT its readable slot (a click would not move the scroll) lets
+         the native collapse run.
+     RED on the pre-fix handler: clicking the pinned header leaves scrollTop unchanged (Bug 1);
+     clicking the tall section at its slot keeps it open (Bug 2). -->
+<Story
+  name="Scroll Up To A Pinned Header, Then Close"
+  play={async ({ canvasElement, userEvent }) => {
+    const TOL = 2;
+
+    const summaries = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>("summary.acc-trigger"),
+    );
+    await expect(summaries.length).toBe(4);
+    const allDetails = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>("details.acc-item"),
+    );
+
+    const wrapper = summaries[0].closest<HTMLElement>('[style*="overflow"]');
+    await expect(wrapper).not.toBeNull();
+    const scroll = wrapper as HTMLElement;
+
+    // Offsets settle + content overflows so a top stack can form.
+    await waitFor(async () => {
+      for (const s of summaries) {
+        await expect(Number.isNaN(parseFloat(s.style.top))).toBe(false);
+      }
+      await expect(scroll.scrollHeight).toBeGreaterThan(scroll.clientHeight);
+    });
+
+    const section0 = allDetails[0];
+    const summary0 = summaries[0];
+    const body0 = () => section0.querySelector(".acc-body") as HTMLElement;
+    await expect(section0.hasAttribute("open")).toBe(true);
+
+    // ---- Bug 1: scroll DOWN so section 0's header pins in the top stack and its body is
+    // scrolled out of view above. Clicking the pinned header must scroll UP to reveal it. ----
+    // First wait for the open bodies to finish their interpolate-size expansion so the scroll
+    // range is real, then scroll to the bottom (section 0's header is then pinned in the top
+    // stack with its body scrolled out above).
+    await waitFor(async () => {
+      await expect(body0().getBoundingClientRect().height).toBeGreaterThan(250);
+    });
+    scroll.scrollTop = scroll.scrollHeight;
+    await waitFor(async () => {
+      const wRect = scroll.getBoundingClientRect();
+      // Section 0's summary is pinned at slot 0 (topOffset(0) = 0)...
+      await expect(
+        Math.abs(summary0.getBoundingClientRect().top - wRect.top),
+      ).toBeLessThanOrEqual(TOL + 1);
+      // ...while its body has scrolled out above the container's visible top.
+      await expect(body0().getBoundingClientRect().bottom).toBeLessThan(
+        wRect.top + TOL,
+      );
+    });
+
+    const scrollBeforeClick = scroll.scrollTop;
+    await userEvent.click(summary0);
+
+    // RED (Bug 1): the pre-fix handler reads the pinned summary rect -> delta ~0 -> no scroll,
+    // so scrollTop stays at `down`. After the fix it scrolls UP toward section 0's slot.
+    await waitFor(async () => {
+      await expect(scroll.scrollTop).toBeLessThan(scrollBeforeClick - TOL);
+    });
+    // Section 0 stays open and its body is now within the visible rect (revealed below slot 0).
+    await expect(section0.hasAttribute("open")).toBe(true);
+    await waitFor(async () => {
+      const wRect = scroll.getBoundingClientRect();
+      const bRect = body0().getBoundingClientRect();
+      await expect(bRect.top).toBeGreaterThanOrEqual(wRect.top - TOL);
+      await expect(bRect.top).toBeLessThan(wRect.bottom);
+    });
+
+    // ---- Bug 2: section 0 is now an OPEN, TALL section parked at its slot (scrollTop ~0).
+    // Clicking it must CLOSE it — native close stays reachable once you are looking at it. ----
+    await waitFor(async () => {
+      await expect(scroll.scrollTop).toBeLessThanOrEqual(TOL);
+    });
+    // Sanity: its body is taller than the viewport region, so the pre-fix "fully visible"
+    // close path could never fire.
+    await expect(body0().getBoundingClientRect().height).toBeGreaterThan(
+      scroll.getBoundingClientRect().height,
+    );
+    await expect(section0.hasAttribute("open")).toBe(true);
+
+    await userEvent.click(summary0);
+    // RED (Bug 2): pre-fix, the tall body is never "fully visible" -> the click scrolls
+    // instead of closing -> stays open. After the fix, a click at the readable slot closes it.
+    await expect(section0.hasAttribute("open")).toBe(false);
+  }}
+>
+  <div style="height:200px;overflow:auto;">
+    <Accordion sticky>
+      <AccordionItem label="Alpha" open={true}>
+        <div style="height:300px;">Alpha body — tall.</div>
+      </AccordionItem>
+      <AccordionItem label="Beta" open={true}>
+        <div style="height:300px;">Beta body — tall.</div>
+      </AccordionItem>
+      <AccordionItem label="Gamma" open={true}>
+        <div style="height:300px;">Gamma body — tall.</div>
+      </AccordionItem>
+      <AccordionItem label="Delta" open={true}>
+        <div style="height:300px;">Delta body — tall.</div>
+      </AccordionItem>
+    </Accordion>
+  </div>
+</Story>
