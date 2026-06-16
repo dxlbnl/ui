@@ -60,12 +60,8 @@
     const n = summaries.length;
 
     for (let i = 0; i < n; i++) {
-      const expectedTop = heights
-        .slice(0, i)
-        .reduce((a, b) => a + b, 0);
-      const expectedBottom = heights
-        .slice(i + 1)
-        .reduce((a, b) => a + b, 0);
+      const expectedTop = heights.slice(0, i).reduce((a, b) => a + b, 0);
+      const expectedBottom = heights.slice(i + 1).reduce((a, b) => a + b, 0);
 
       const actualTop = parsePx(summaries[i].style.top);
       const actualBottom = parsePx(summaries[i].style.bottom);
@@ -73,9 +69,9 @@
       // AC-7: top = cumulative height of headers ABOVE.
       await expect(Math.abs(actualTop - expectedTop)).toBeLessThanOrEqual(1);
       // AC-8: bottom = cumulative height of headers BELOW.
-      await expect(
-        Math.abs(actualBottom - expectedBottom),
-      ).toBeLessThanOrEqual(1);
+      await expect(Math.abs(actualBottom - expectedBottom)).toBeLessThanOrEqual(
+        1,
+      );
     }
 
     // Independent of measurement: offsets are monotonic — top grows top→bottom, bottom shrinks.
@@ -114,7 +110,7 @@
     }
   }}
 >
-  <div style="height:200px;overflow:auto;">
+  <div style="height:300px;overflow:auto;">
     <Accordion sticky>
       <AccordionItem label="Section One" open={true}>
         <p style="height:300px;margin:0;">
@@ -175,7 +171,9 @@
       const expectedTop = heights.slice(0, i).reduce((a, b) => a + b, 0);
       const expectedBottom = heights.slice(i + 1).reduce((a, b) => a + b, 0);
       await expect(Math.abs(tops[i] - expectedTop)).toBeLessThanOrEqual(1);
-      await expect(Math.abs(bottoms[i] - expectedBottom)).toBeLessThanOrEqual(1);
+      await expect(Math.abs(bottoms[i] - expectedBottom)).toBeLessThanOrEqual(
+        1,
+      );
     }
 
     // The per-header step must reflect fallbackHeaderHeight (60) when the rendered header
@@ -195,7 +193,7 @@
     await expect(bottoms[n - 1]).toBe(0);
   }}
 >
-  <div style="height:200px;overflow:auto;">
+  <div style="height:300px;overflow:auto;">
     <Accordion sticky fallbackHeaderHeight={60}>
       <AccordionItem label="Alpha" open={true}>
         <p style="height:300px;margin:0;">Tall body alpha.</p>
@@ -232,7 +230,7 @@
     }
   }}
 >
-  <div style="height:200px;overflow:auto;">
+  <div style="height:300px;overflow:auto;">
     <Accordion>
       <AccordionItem label="Plain One" open={true}>
         <p style="height:300px;margin:0;">Default, non-sticky body one.</p>
@@ -286,15 +284,23 @@
     });
 
     // Sanity: the content is taller than the wrapper, so there is something to scroll.
-    await expect(scroll.scrollHeight).toBeGreaterThan(scroll.clientHeight);
+    // Wait for the open-body height animation (interpolate-size: 0 -> auto with
+    // @starting-style) to settle before asserting overflow — at the 300px wrapper the
+    // partially-expanded content does not yet overflow at the first paint.
+    await waitFor(async () => {
+      await expect(scroll.scrollHeight).toBeGreaterThan(scroll.clientHeight);
+    });
 
     const TOL = 2;
 
     // --- Scroll to the BOTTOM and let sticky layout + ResizeObserver offsets settle. ---
+    // Read scrollHeight at the point of use (after the bodies have settled above).
     scroll.scrollTop = scroll.scrollHeight;
     await waitFor(async () => {
       await expect(
-        Math.abs(scroll.scrollTop - (scroll.scrollHeight - scroll.clientHeight)),
+        Math.abs(
+          scroll.scrollTop - (scroll.scrollHeight - scroll.clientHeight),
+        ),
       ).toBeLessThanOrEqual(TOL);
     });
 
@@ -309,7 +315,9 @@
       const firstRect = summaries[0].getBoundingClientRect();
       await expect(firstRect.bottom).toBeGreaterThan(wrapperRect.top - TOL);
       // Pinned to the TOP stack: its top edge sits at/near the wrapper's top edge, not below.
-      await expect(firstRect.top).toBeLessThanOrEqual(wrapperRect.top + TOL + 1);
+      await expect(firstRect.top).toBeLessThanOrEqual(
+        wrapperRect.top + TOL + 1,
+      );
     });
 
     // AC-2: at the bottom scroll position every header is within the wrapper's visible rect —
@@ -330,7 +338,9 @@
     const header0 = summaries[0].getBoundingClientRect();
     const header1 = summaries[1].getBoundingClientRect();
     // Header 0 is pinned to the top stack: its top edge is at the wrapper's top edge.
-    await expect(Math.abs(header0.top - wrapperRect.top)).toBeLessThanOrEqual(TOL);
+    await expect(Math.abs(header0.top - wrapperRect.top)).toBeLessThanOrEqual(
+      TOL,
+    );
     // Header 0 occupies a full header band (it has not collapsed): its bottom is well below
     // the wrapper top by roughly its own height — reinforces "not all at top:0".
     await expect(header0.bottom).toBeGreaterThan(
@@ -338,7 +348,9 @@
     );
     // Header 1 tiles directly below header 0 — its top sits at header 0's bottom edge. This
     // proves the two are NOT both at top:0 AND do not overlap (edge-to-edge cumulative tiling).
-    await expect(Math.abs(header1.top - header0.bottom)).toBeLessThanOrEqual(TOL);
+    await expect(Math.abs(header1.top - header0.bottom)).toBeLessThanOrEqual(
+      TOL,
+    );
 
     // --- Scroll back to the TOP and settle. ---
     scroll.scrollTop = 0;
@@ -371,7 +383,7 @@
     await waitFor(() => expect(closedBody).toBeVisible());
   }}
 >
-  <div style="height:160px;overflow:auto;">
+  <div style="height:300px;overflow:auto;">
     <Accordion sticky>
       <AccordionItem label="Section One" open={true}>
         <div style="height:400px;">

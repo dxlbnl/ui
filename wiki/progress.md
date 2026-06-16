@@ -58,6 +58,13 @@ it records the reason here AND states it in chat.
 - reviewer: PASS — all 14 ACs met, 341/341 green, check 0 errors, glyph swap CSS-only (works on native toggle), icon-leading/actions-right matches design, 3 assertion updates track (not weaken) the redesign, no scope creep, D81 supersedes B59 glyph note
 - result: done (note: D80 + B67 progress ride along in shared wiki files; B67 spec/card remain parked/untracked until B67 completes)
 
+## 2026-06-16 21:20 — B69: Taller sticky accordion demo wrappers (keep tests valid)
+- manager: user intentionally raised sticky story wrappers to 300px (show more stacking). Suite red: StickyHeadersStackWhileScrolling scrollHeight>clientHeight precondition fails before open-body animation settles. start, track: chore (implementer → reviewer); delegating to implementer
+- implementer: wrapped the scrollHeight>clientHeight precondition in waitFor (settles open-body interpolate-size animation); kept all 300px wrappers; stacking assertions unchanged. 341/341 green, check 0 errors. No project formatter exists (no prettier config/script) — left user reflow as-is, check clean.
+- manager: delegating to reviewer
+- reviewer: PASS — 341/341 green, check 0 errors, all four 300px wrappers retained, only the scrollHeight precondition wrapped in waitFor (stacking assertions intact), component untouched, no scope creep
+- result: done
+
 ## 2026-05-21 — B49: Navmenu should close when clicking outside of it
 - manager: start, track: bug; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B49-navmenu-close-on-outside-click.md (17 ACs incl. Escape, SSR-safe lifecycle); D51 logged; no blocking questions
