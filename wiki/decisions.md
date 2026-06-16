@@ -1942,3 +1942,67 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   marks the transition optional ("either is acceptable"), it was dropped so the open-state
   colour resolves instantly and the surviving AC-12 colour assertion stays meaningful and
   green. No other behaviour changes.
+
+## D82: B67 — Keyboard activation of a `<summary>` is not driveable in the Vitest/Playwright harness; AC-6 rides the click path
+- **Date**: 2026-06-16
+- **By**: test-writer (B67)
+- **Context**: B67's AC-6 requires keyboard parity — Enter and Space on a focused
+  `<summary>` must reproduce the same three smart-scroll outcomes as a mouse click. The
+  spec's mechanism (D79/D80) is that a single `<summary>` `onclick` intercepts **all**
+  activation paths because Enter/Space on a `<summary>` synthesise a bubbling `click`. I
+  probed this in the actual harness (a throwaway `Probe.stories.svelte`): for a focused
+  native `<summary>`, `userEvent.keyboard('{Enter}')` → no toggle, `userEvent.keyboard(' ')`
+  → no toggle, `userEvent.click(...)` → toggles. Result: **`enter=false space=false
+  click=true`**. So in this Vitest browser-mode / Playwright runner, keyboard activation
+  does **not** synthesise the `<summary>`'s native disclosure click (unlike a real browser,
+  and unlike a real `<button>`, which *does* get keyboard activation here — the B65 "With
+  Actions" story drives its actions `<button>` via Enter/Space and passes).
+- **Decision**: Do **not** drive `<summary>` Enter/Space in the B67 stories — those drives
+  produce no event in the harness and would assert nothing meaningful (they'd false-fail
+  regardless of the feature). AC-6's three cases are covered by the **mouse-click** path in
+  the "Smart Scroll On Header Click" story; because the production handler is a single
+  `onclick` that every activation path funnels through (D79/D80), the click outcome IS the
+  keyboard outcome. The harness gap is documented inline in the story. AC-8's keyboard
+  portion (Enter/Space on the actions `<button>`) **is** driven, because real `<button>`
+  keyboard activation works in the harness. The graceful-degradation story (AC-9) likewise
+  uses clicks only for the same reason.
+- **Consequences**: The reviewer/implementer should not read a "missing summary-keyboard
+  toggle" as a feature bug — it is a runner limitation. If true keyboard parity ever needs
+  asserting end-to-end, it must be done outside this harness (e.g. a real-browser Playwright
+  spec or `dispatchEvent` of a synthetic `click`), which is out of scope for B67's story
+  set. The two B67 stories appended to `Accordion.sticky.stories.svelte` are "Smart Scroll
+  On Header Click" (AC-3/4/5/6-via-click/8/10) and "Smart Scroll Degrades Without A Scroll
+  Ancestor" (AC-9).
+
+## D83: B67 — Smart-scroll uses a single module-level rAF convergence loop, not a one-shot scroll
+- **Date**: 2026-06-16
+- **By**: implementer (B67)
+- **Context**: D80 specified the smart-scroll math (`container.scrollTop += summary.rect.top
+  − container.rect.top − topOffset(i)`) and left the post-open scheduling primitive open
+  (OQ-2). A single one-shot scroll landed the closed→open (AC-3) and open-off-screen (AC-4)
+  cases ~12.5px short of the pinned slot, so the test's `waitFor` never settled. Two causes:
+  (1) the `<summary>` is `position: sticky`, so once it pins at its slot its
+  `getBoundingClientRect().top` no longer moves linearly with `scrollTop` — a single delta
+  under-corrects; (2) the open-body `interpolate-size` height animation shifts layout over
+  several frames after the click, moving the target. A naive per-item rAF loop then exposed a
+  second bug: a stale loop from a *previously* activated header whose slot is physically
+  unreachable (e.g. the last/bottom-pinned section, delta permanently ≈ −138px) kept mutating
+  the shared container `scrollTop` every frame, fighting the current header's loop so neither
+  converged.
+- **Decision**: `scrollIntoPinnedSlot` (in `AccordionItem.svelte`) runs a re-measuring rAF
+  loop that re-applies the delta each frame until the summary lands (`|delta| ≤ 0.5px`), the
+  container clamps (a delta was requested but `scrollTop` did not change → target outside the
+  scrollable range), or a 60-frame budget elapses. Only **one** such loop runs at a time across
+  *all* `AccordionItem`s, tracked by a module-level `activeScrollRaf` in a `<script module>`
+  block; every new activation calls `cancelActiveScroll()` first, so a stale unreachable-target
+  loop can never fight the current scroll. `prefers-reduced-motion: reduce` takes the instant
+  branch (single `scrollTop +=` delta, no loop), read at activation time (D52). The closed→open
+  case schedules the first `scrollIntoPinnedSlot` via one `requestAnimationFrame` so the native
+  open has applied before measuring.
+- **Consequences**: AC-2/AC-3/AC-4 land the summary within the ±2px tolerance reliably in the
+  Playwright/Vitest harness despite sticky pinning + the body-open animation. The loop is
+  self-terminating (no leaked rAF). The module-level single-flight token means concurrent
+  programmatic scrolls of *different* containers would serialise, which is acceptable (only one
+  user activation happens at a time). No public API, registry, offset math, `display: contents`
+  rule, sticky CSS, or the non-sticky branch changed; the D79 `.acc-actions` guard is intact.
+- **Supersedes**: none (implements D80/OQ-2's left-open scheduling choice)

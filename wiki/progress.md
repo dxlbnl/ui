@@ -48,6 +48,13 @@ it records the reason here AND states it in chat.
 - manager: triaged from user request; default in sticky mode (no new prop); interaction model = closed→open+scroll, open+not-visible→scroll (override toggle), open+visible→close. Overrides D16 conditionally → significant, but user prefers run-straight-through; spec-writer to log ADR + handle keyboard/SR a11y. start, track: feature; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B67-accordion-scroll-to-content.md (D80 logged); no blocking questions
 - manager: PAUSED B67 → parked in ready/. User reported (1) B65 actions look cramped beside the chevron, (2) accordion diverges from the design. Both root to a trailing-vs-leading icon. Read the live design via DesignSync (project 019e2ba0…, ui_kits/components/Accordion.jsx). Filed B68 (header alignment) to do first; B67 resumes after.
+- manager: RESUMED B67 after B68 + B69 shipped (spec still consistent — header redesign doesn't touch the summary onclick / registry / D79 guard). user confirmed "do the B67". delegating to test-writer
+- test-writer: added "Smart Scroll On Header Click" + "Smart Scroll Degrades Without A Scroll Ancestor" stories. AC-3 (no scroll, 12.5px off) + AC-4 (closes instead of stays-open) fail for right reason; AC-5/8/9 pass as guards; 342/343 (1 new fail). Harness caveat: <summary> keyboard activation doesn't fire in Vitest browser mode (only real buttons) → AC-6 keyboard rides the single-onclick click path (D82 logged). check 0 errors.
+- manager: delegating to implementer
+- implementer: added sticky-summary onclick (three-case model, defers to D79, scroll-ancestor lookup, reduced-motion, rAF). Needed a re-measuring rAF convergence loop + module-level single-flight token (`activeScrollRaf`) because sticky summary rect stops tracking scrollTop once pinned + interpolate-size body anim shifts layout (D83 logged). 343/343 green, check 0 errors; non-sticky branch untouched, D79 guard intact, no API change.
+- manager: delegating to reviewer (scrutinize the added rAF/module-state complexity)
+- reviewer: PASS — all 15 ACs met, 343/343 green (stable x2), check 0 errors, three-case model + actions guard + graceful degradation exercised, D83 module scroll state SSR-safe/terminating/non-leaking, non-sticky untouched, no scope creep, no leftover debug. D80/D82/D83 coherent.
+- result: done
 
 ## 2026-06-16 20:55 — B68: Align AccordionItem header with the design
 - manager: start, track: feature (visual-only). Authoritative design = live DesignSync Accordion.jsx (leading ▸/▾ glyph, title 13px/0.06em ellipsis, actions rightmost). Subsumes the B65 actions-cramped report. delegating to spec-writer

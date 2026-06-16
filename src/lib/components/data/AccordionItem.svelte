@@ -1,3 +1,17 @@
+<script module lang="ts">
+  // A single in-flight smart-scroll animation across all AccordionItems. A fresh activation
+  // cancels any prior one, so a stale loop (e.g. a header that cannot reach its slot) never
+  // fights the current scroll by mutating the shared container's scrollTop. Browser-only.
+  let activeScrollRaf = 0
+
+  function cancelActiveScroll(): void {
+    if (activeScrollRaf) {
+      cancelAnimationFrame(activeScrollRaf)
+      activeScrollRaf = 0
+    }
+  }
+</script>
+
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { getContext } from 'svelte'
@@ -37,6 +51,110 @@
       registry!.unregister(index)
     }
   })
+
+  // B67 (D80): the sticky <summary> onclick. Smart-scroll the section's content into its
+  // pinned slot rather than merely toggle. All DOM/scroll access lives in this handler
+  // (browser-only), never the render path (D52). The non-sticky branch carries no handler.
+  function findScrollAncestor(el: HTMLElement): HTMLElement | null {
+    let node: HTMLElement | null = el.parentElement
+    while (node) {
+      const overflowY = getComputedStyle(node).overflowY
+      if (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay') {
+        return node
+      }
+      node = node.parentElement
+    }
+    return null
+  }
+
+  function pinnedDelta(
+    container: HTMLElement,
+    summary: HTMLElement,
+    offset: number,
+  ): number {
+    return (
+      summary.getBoundingClientRect().top -
+      container.getBoundingClientRect().top -
+      offset
+    )
+  }
+
+  function scrollIntoPinnedSlot(
+    container: HTMLElement,
+    summary: HTMLElement,
+    offset: number,
+  ): void {
+    cancelActiveScroll()
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      container.scrollTop += pinnedDelta(container, summary, offset)
+      return
+    }
+    // The summary is position:sticky and the open-body height animation (interpolate-size)
+    // shifts layout over several frames, so a single scroll can land off-target. Re-apply
+    // each frame until the summary settles at its pinned slot, stopping once it lands, once
+    // the container can no longer scroll toward the target (clamped), or after a budget.
+    let frames = 0
+    const step = () => {
+      const delta = pinnedDelta(container, summary, offset)
+      const before = container.scrollTop
+      container.scrollTop += delta
+      const moved = container.scrollTop - before
+      frames += 1
+      if (Math.abs(delta) <= 0.5 || moved === 0 || frames >= 60) {
+        activeScrollRaf = 0
+        return
+      }
+      activeScrollRaf = requestAnimationFrame(step)
+    }
+    activeScrollRaf = requestAnimationFrame(step)
+  }
+
+  function handleStickySummaryClick(e: MouseEvent): void {
+    // Defer to the D79 actions guard: if the inner .acc-actions onclick already
+    // cancelled the toggle, do nothing — no scroll, no toggle (AC-8).
+    if (e.defaultPrevented) return
+
+    const summary = summaryEl
+    if (!summary || !sticky || !registry) return
+
+    const details = summary.closest('details')
+    if (!details) return
+
+    const container = findScrollAncestor(summary)
+    // No scrollable ancestor → degrade to native toggle only, nothing throws (AC-9).
+    if (!container) return
+
+    const offset = registry.topOffset(index)
+    // `details.open` still reflects the pre-activation state: the native toggle is the
+    // click's default action and runs after this handler.
+    const wasOpen = details.open
+
+    if (!wasOpen) {
+      // Closed → let the native open proceed, then scroll once it has taken effect (AC-3).
+      requestAnimationFrame(() => {
+        scrollIntoPinnedSlot(container, summary, offset)
+      })
+      return
+    }
+
+    // Open: decide between scroll-no-close and native close based on full visibility.
+    const body = details.querySelector<HTMLElement>('.acc-body')
+    const TOL = 2
+    const c = container.getBoundingClientRect()
+    let fullyVisible = false
+    if (body) {
+      const b = body.getBoundingClientRect()
+      fullyVisible = b.top >= c.top + offset - TOL && b.bottom <= c.bottom + TOL
+    }
+
+    if (!fullyVisible) {
+      // Content not fully visible → cancel the native collapse, stay open, scroll (AC-4).
+      e.preventDefault()
+      scrollIntoPinnedSlot(container, summary, offset)
+    }
+    // Fully visible → do nothing; the native toggle collapses the section (AC-5).
+  }
 </script>
 
 <details class="acc-item" {open}>
@@ -46,6 +164,7 @@
       bind:this={summaryEl}
       data-sticky="true"
       style="top:{top}px;bottom:{bottom}px;z-index:{zIndex};"
+      onclick={handleStickySummaryClick}
     >
       <span class="acc-icon" aria-hidden="true"></span>
       <span class="acc-title">{label}</span>
