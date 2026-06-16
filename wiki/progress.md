@@ -33,6 +33,17 @@ it records the reason here AND states it in chat.
 - reviewer: PASS — all 14 ACs met, 340/340 green, check 0 errors, regression story present & meaningful, no scope creep, no leftover debug files, D78 logged
 - result: done
 
+## 2026-06-16 20:24 — B65: AccordionItem actions snippet
+- manager: start, track: feature; delegating to spec-writer
+- spec-writer: wrote wiki/specs/B65-accordionitem-actions-snippet.md (actions?: Snippet in both summary branches, flex:1 title, onclick preventDefault click-guard covers mouse+keyboard; D79 logged); no blocking questions
+- manager: delegating to test-writer
+- test-writer: added "With Actions" story to Accordion.stories.svelte (click-guard, title-toggles, keyboard, omitted-prop cases); 340 pass, 1 new fail at `.acc-actions` missing — right reason
+- manager: delegating to implementer
+- implementer: added actions?: Snippet rendered in both summary branches (`.acc-actions` span w/ onclick preventDefault), `.acc-title` flex:1; single onclick guard covered mouse+keyboard. 341/341 green, check 0 errors (D75 a11y suppress on guard span)
+- manager: delegating to reviewer
+- reviewer: PASS — all ACs met, 341/341 green, check 0 errors, click-guard + keyboard genuinely exercised, no scope creep, D79 logged
+- result: done
+
 ## 2026-05-21 — B49: Navmenu should close when clicking outside of it
 - manager: start, track: bug; delegating to spec-writer
 - spec-writer: wrote wiki/specs/B49-navmenu-close-on-outside-click.md (17 ACs incl. Escape, SSR-safe lifecycle); D51 logged; no blocking questions

@@ -1810,3 +1810,34 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
   heavier, hence the second choice only. `:has()` is supported in the evergreen/Playwright
   target (OQ-2).
 - **Supersedes**: none (refines D68's structure; D68's offset/registry model is unchanged)
+
+## D79: B65 — AccordionItem `actions` click-guard uses `onclick` preventDefault, not stopPropagation
+- **Date**: 2026-06-16
+- **By**: spec-writer (B65)
+- **Context**: B65 adds an optional `actions?: Snippet` to `AccordionItem`, rendered inside
+  the `<summary>` next to the chevron (`title … [actions] ›`). Clicking inside the actions
+  area must NOT toggle the `<details>`. The design reference
+  (`_design-refs/B59/Accordion.jsx`) guards its `s.controls` wrapper with
+  `onClick={(e) => e.stopPropagation()}` — which works there because the reference toggles
+  via a `<button>` click handler on an ancestor. Our component uses a native `<summary>`,
+  where toggling is the summary's **own default action**, not an ancestor click side effect.
+  `stopPropagation` stops the click from bubbling but does NOT cancel the summary's default
+  toggle, so it is the wrong tool here.
+- **Decision**: The actions wrapper (`<span class="acc-actions">`) carries
+  `onclick={(e) => e.preventDefault()}`. `preventDefault()` cancels the `<summary>`'s default
+  toggle for any click originating inside the actions subtree, so an interactive control in
+  `actions` does not open/close the accordion while its own handler still fires. The same
+  single `onclick` guard also covers **keyboard** activation: pressing Enter/Space on a focused
+  button dispatches a bubbling synthetic `click`, which the wrapper's `onclick` intercepts — no
+  separate `keydown` guard is specified. The guard is scoped to the actions wrapper only, so a
+  click on the title/summary area outside it still toggles normally. `actions` renders inside
+  both `<summary>` branches (sticky + non-sticky); because it is extra content in the same
+  measured `<summary>`, the D68/D78 sticky offset math is untouched.
+- **Consequences**: No change to `Accordion.svelte`, the sticky registry, or the offset
+  arithmetic. The B65 test asserts both a mouse click and a keyboard activation leave
+  `details.open` unchanged while the control's handler fires, AND that a title-area click still
+  toggles (proving the guard is scoped). Risk: if the single `onclick` guard proves insufficient
+  for keyboard activation in the Playwright test browser, the implementer may add a `keydown`
+  guard — the observable contract (no toggle on activation, control still activates) is
+  unchanged either way.
+- **Supersedes**: none

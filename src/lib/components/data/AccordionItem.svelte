@@ -8,10 +8,12 @@
     label: string
     /** Whether the item starts expanded. @default false */
     open?: boolean
+    /** Optional inline controls rendered in the summary header, between the title and chevron. */
+    actions?: Snippet
     children: Snippet
   }
 
-  let { label, open = false, children }: AccordionItemProps = $props()
+  let { label, open = false, actions, children }: AccordionItemProps = $props()
 
   const registry = getContext<StickyRegistry | null>(STICKY_CONTEXT_KEY)
   const sticky = registry != null
@@ -46,11 +48,33 @@
       style="top:{top}px;bottom:{bottom}px;z-index:{zIndex};"
     >
       <span class="acc-title">{label}</span>
+      {#if actions}
+        <!-- The wrapper's only handler is a preventDefault guard cancelling the
+             native <summary> toggle (covers mouse + keyboard via the synthetic
+             bubbling click); it is not an interactive control — the caller's
+             controls inside the snippet carry their own roles/handlers (D75). -->
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
+        <span class="acc-actions" onclick={(e) => e.preventDefault()}>
+          {@render actions()}
+        </span>
+      {/if}
       <span class="acc-icon" aria-hidden="true">›</span>
     </summary>
   {:else}
     <summary class="acc-trigger">
       <span class="acc-title">{label}</span>
+      {#if actions}
+        <!-- The wrapper's only handler is a preventDefault guard cancelling the
+             native <summary> toggle (covers mouse + keyboard via the synthetic
+             bubbling click); it is not an interactive control — the caller's
+             controls inside the snippet carry their own roles/handlers (D75). -->
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
+        <span class="acc-actions" onclick={(e) => e.preventDefault()}>
+          {@render actions()}
+        </span>
+      {/if}
       <span class="acc-icon" aria-hidden="true">›</span>
     </summary>
   {/if}
@@ -113,11 +137,20 @@
   }
 
   .acc-title {
+    flex: 1;
+    min-width: 0;
     font-family: var(--mono);
     font-size: 12px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink);
+  }
+
+  .acc-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
   }
 
   .acc-icon {

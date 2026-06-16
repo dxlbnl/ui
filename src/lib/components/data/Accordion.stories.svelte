@@ -314,3 +314,125 @@
     <p>The wrapper must forward id and aria-label.</p>
   </AccordionItem>
 </Story>
+
+<!-- B65: AccordionItem actions snippet — inline controls in the summary header.
+     One lean story carrying the full click-guard contract (AC-3, 6, 8, 9, 10, 11)
+     plus the omitted-prop regression (AC-4). The first item renders an `actions`
+     snippet with a real <button> whose onclick increments a counter recorded in a
+     data-count attribute (so the play function can prove the control's own handler
+     fired). The second item has NO actions, proving no .acc-actions wrapper exists
+     when the prop is omitted. Item starts open so the "click does not close it" and
+     "title click toggles (to closed)" assertions run from a known state. -->
+<Story
+  name="With Actions"
+  play={async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+
+    const allDetails = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>("details.acc-item"),
+    );
+    await expect(allDetails.length).toBe(2);
+
+    const actionsItem = allDetails[0];
+    const plainItem = allDetails[1];
+
+    const summary = actionsItem.querySelector(
+      "summary.acc-trigger",
+    ) as HTMLElement;
+
+    // AC-3: the actions content renders inside the <summary>, wrapped in a single
+    // .acc-actions element, and the interactive control is queryable by role + name.
+    const actionsWrapper = summary.querySelector(".acc-actions") as HTMLElement;
+    await expect(actionsWrapper).not.toBeNull();
+    const button = canvas.getByRole("button", { name: "Delete section" });
+    await expect(button).toBeVisible();
+    await expect(actionsWrapper.contains(button)).toBe(true);
+
+    // AC-6: DOM order within the summary is title → actions → icon. The actions
+    // wrapper sits BETWEEN the flexed title and the chevron.
+    const summaryChildren = Array.from(summary.children);
+    const titleEl = summary.querySelector(".acc-title") as HTMLElement;
+    const iconEl = summary.querySelector(".acc-icon") as HTMLElement;
+    const titleIdx = summaryChildren.indexOf(titleEl);
+    const actionsIdx = summaryChildren.indexOf(actionsWrapper);
+    const iconIdx = summaryChildren.indexOf(iconEl);
+    await expect(titleIdx).toBeGreaterThanOrEqual(0);
+    await expect(actionsIdx).toBeGreaterThan(titleIdx);
+    await expect(iconIdx).toBeGreaterThan(actionsIdx);
+    // AC-7: the chevron is the last child of the summary.
+    await expect(iconIdx).toBe(summaryChildren.length - 1);
+
+    // AC-5: the title takes the remaining horizontal space (flex grows it).
+    await expect(parseFloat(getComputedStyle(titleEl).flexGrow)).toBeGreaterThan(
+      0,
+    );
+
+    // The item starts open; record the start state and prove it is UNCHANGED by the
+    // actions click (whatever it was — here open).
+    const openBeforeClick = actionsItem.hasAttribute("open");
+    await expect(openBeforeClick).toBe(true);
+
+    // AC-8 + AC-9: clicking the actions button does NOT toggle the <details>
+    // (preventDefault on the wrapper cancels the summary's default toggle), AND the
+    // control's own handler still fires (the counter increments).
+    await expect(button.getAttribute("data-count")).toBe("0");
+    await userEvent.click(button);
+    await expect(actionsItem.hasAttribute("open")).toBe(openBeforeClick);
+    await expect(button.getAttribute("data-count")).toBe("1");
+
+    // AC-11 + AC-9: keyboard activation of the control does NOT toggle the
+    // <details>, and the control's handler still fires. Focus the button, then
+    // activate via Enter and Space.
+    button.focus();
+    await expect(button).toHaveFocus();
+    await userEvent.keyboard("{Enter}");
+    await expect(actionsItem.hasAttribute("open")).toBe(openBeforeClick);
+    await expect(button.getAttribute("data-count")).toBe("2");
+
+    button.focus();
+    await userEvent.keyboard(" ");
+    await expect(actionsItem.hasAttribute("open")).toBe(openBeforeClick);
+    await expect(button.getAttribute("data-count")).toBe("3");
+
+    // AC-10: the guard is scoped to .acc-actions only — a click on the title area
+    // (outside the actions wrapper) DOES toggle the <details> normally. The item
+    // started open, so this title click closes it.
+    await userEvent.click(titleEl);
+    await expect(actionsItem.hasAttribute("open")).toBe(!openBeforeClick);
+
+    // AC-4: the second item has NO actions prop → no .acc-actions wrapper exists,
+    // and it behaves exactly as today (summary still has title + icon only).
+    const plainSummary = plainItem.querySelector(
+      "summary.acc-trigger",
+    ) as HTMLElement;
+    await expect(plainSummary.querySelector(".acc-actions")).toBeNull();
+    await expect(plainSummary.querySelector(".acc-title")).not.toBeNull();
+    await expect(plainSummary.querySelector(".acc-icon")).not.toBeNull();
+  }}
+>
+  <AccordionItem label="With Controls" open={true}>
+    {#snippet actions()}
+      <button
+        type="button"
+        data-count="0"
+        aria-label="Delete section"
+        onclick={(e) => {
+          const b = e.currentTarget as HTMLButtonElement;
+          b.setAttribute(
+            "data-count",
+            String(Number(b.getAttribute("data-count")) + 1),
+          );
+        }}
+      >
+        ✕
+      </button>
+    {/snippet}
+    <p>
+      This row has inline controls in its header. Clicking a control must not
+      toggle the accordion.
+    </p>
+  </AccordionItem>
+  <AccordionItem label="No Controls">
+    <p>This row has no actions snippet and behaves as before.</p>
+  </AccordionItem>
+</Story>
