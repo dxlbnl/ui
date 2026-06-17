@@ -47,7 +47,9 @@
   // Unique per-instance name so multiple Selects on a page don't share an anchor.
   const anchorName = `--sel-${Math.random().toString(36).slice(2, 9)}`;
   const cssAnchorSupported =
-    typeof CSS !== "undefined" && CSS.supports("anchor-name", "--x");
+    typeof CSS !== "undefined" &&
+    typeof CSS.supports === "function" &&
+    CSS.supports("anchor-name", "--x");
 
   // keep internalValue in sync when the value prop changes from outside
   $effect(() => {
