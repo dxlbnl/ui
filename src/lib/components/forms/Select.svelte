@@ -36,12 +36,18 @@
 
   let open = $state(false);
   let rootEl: HTMLDivElement | undefined = $state(undefined);
+  let panelEl: HTMLUListElement | undefined = $state(undefined);
   let highlightedIndex = $state(-1);
   // internal committed value — tracks the last selection so displayLabel
   // reflects the user's choice even when the caller doesn't update the value prop.
   // Intentional one-time read of the initial `value`; the $effect below keeps it
   // in sync afterward, so untrack() to silence the state_referenced_locally hint.
   let internalValue = $state(untrack(() => value));
+
+  // Unique per-instance name so multiple Selects on a page don't share an anchor.
+  const anchorName = `--sel-${Math.random().toString(36).slice(2, 9)}`;
+  const cssAnchorSupported =
+    typeof CSS !== "undefined" && CSS.supports("anchor-name", "--x");
 
   // keep internalValue in sync when the value prop changes from outside
   $effect(() => {
@@ -51,6 +57,20 @@
   let displayLabel = $derived(
     options?.find((o) => o.value === internalValue)?.label ?? placeholder,
   );
+
+  // Promote panel to top layer and position it once it mounts.
+  // showPopover() runs after the DOM update that created the element,
+  // so panelEl is always set when this effect fires with a non-null value.
+  $effect(() => {
+    if (!panelEl) return;
+    panelEl.showPopover();
+    if (!cssAnchorSupported && rootEl) {
+      const rect = rootEl.getBoundingClientRect();
+      panelEl.style.top = `${rect.bottom}px`;
+      panelEl.style.left = `${rect.left}px`;
+      panelEl.style.width = `${rect.width}px`;
+    }
+  });
 
   function handleTriggerClick() {
     if (disabled) return;
@@ -105,6 +125,8 @@
     }
   }
 
+  // showPopover() does not move the element in the DOM — the panel stays inside
+  // rootEl, so rootEl.contains() correctly excludes panel clicks from outside-close.
   $effect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
@@ -137,13 +159,21 @@
       : undefined}
     {disabled}
     onclick={handleTriggerClick}
+    style={cssAnchorSupported ? `anchor-name: ${anchorName}` : undefined}
   >
     <span class="select-value">{displayLabel}</span>
     <span class="select-chevron" aria-hidden="true">›</span>
   </Button>
   {#if open}
-    <ul class="select-panel" role="listbox" aria-label="Options">
-      {#each options as option, i}
+    <ul
+      class="select-panel"
+      popover="manual"
+      role="listbox"
+      aria-label="Options"
+      bind:this={panelEl}
+      style={cssAnchorSupported ? `position-anchor: ${anchorName}` : undefined}
+    >
+      {#each options as option, i (option.value)}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- Listbox keyboard nav is handled on the container via aria-activedescendant
              (Arrow/Home/End/Enter); options are not individually focusable by design. -->
@@ -217,16 +247,18 @@
   }
 
   .select-panel {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 50;
-    background: var(--bg-elev);
-    border-top: none;
-    list-style: none;
-    margin: 0;
+    /* Top layer via popover API — escapes overflow/scroll ancestors */
+    position: fixed;
+    /* CSS anchor positioning (Chrome 125+); JS fallback sets inline top/left/width */
+    top: anchor(bottom);
+    left: anchor(left);
+    width: anchor-size(width);
+    /* Reset popover UA styles */
+    border: none;
     padding: 0;
+    margin: 0;
+    background: var(--bg-elev);
+    list-style: none;
   }
 
   .select-option {

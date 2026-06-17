@@ -2039,3 +2039,13 @@ Append-only. Newest at the bottom. Never edit past entries — supersede with a 
 - **Supersedes**: D83 (the rAF convergence loop + module-level single-flight token are removed);
   refines D80 (the close decision is now "would the click move the scroll", not "is the body
   fully visible").
+
+
+## D85: Select panel rendered in the top layer via native Popover API
+
+- **Date**: 2026-06-17
+- **By**: Claude (inline implementation, user-directed)
+- **Context**: `.select-panel` was `position: absolute` inside `.select` (which has `position: relative`). This caused the panel to be clipped by `overflow: hidden` / `overflow: scroll` ancestor elements — notably inside `<dialog>` and scrollable modal containers. The panel also couldn't layer above a `<dialog>` because `z-index: 50` is below the top layer.
+- **Decision**: The `<ul class="select-panel">` is now rendered with `popover="manual"`. On open, `showPopover()` is called in a `$effect` after the element mounts, promoting it to the browser's top layer. The element stays in its original DOM position (inside `.select`) — `showPopover()` does not move the element in the tree; it only changes the painting layer. Positioning uses CSS anchor positioning (`anchor-name` on the trigger, `position-anchor` + `anchor(bottom)` / `anchor(left)` / `anchor-size(width)` on the panel) with a JS `getBoundingClientRect` fallback that sets `position: fixed` inline styles for browsers lacking CSS anchor positioning support. `{#if open}` conditional rendering is preserved so `queryByRole("listbox")` returns null when closed, keeping all Storybook stories green. The outside-click handler is unchanged — `rootEl.contains(target)` still works because the DOM tree position is unchanged.
+- **Consequences**: Panel always escapes overflow/scroll ancestors. Panel layers correctly above `<dialog>` (both in the top layer). No consumer API change — `options`, `value`, `onchange`, etc. are untouched. `position: relative` on `.select` is now unused for panel positioning but harmless. CSS anchor positioning requires Chrome 125+ for the CSS path; the JS fallback covers older browsers and repositions only on open (no scroll-tracking). One unique `--sel-<random>` anchor name is generated per component instance to avoid cross-instance collisions.
+- **Supersedes**: none (extends D10 — fully custom listbox).
