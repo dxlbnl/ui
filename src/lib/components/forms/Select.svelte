@@ -68,9 +68,19 @@
     panelEl.showPopover();
     if (!cssAnchorSupported && rootEl) {
       const rect = rootEl.getBoundingClientRect();
-      panelEl.style.top = `${rect.bottom}px`;
+      const spaceBelow = window.innerHeight - rect.bottom - 8;
+      const spaceAbove = rect.top - 8;
       panelEl.style.left = `${rect.left}px`;
       panelEl.style.width = `${rect.width}px`;
+      if (spaceBelow >= spaceAbove) {
+        panelEl.style.top = `${rect.bottom}px`;
+        panelEl.style.bottom = "";
+        panelEl.style.maxHeight = `${spaceBelow}px`;
+      } else {
+        panelEl.style.top = "";
+        panelEl.style.bottom = `${window.innerHeight - rect.top}px`;
+        panelEl.style.maxHeight = `${spaceAbove}px`;
+      }
     }
   });
 
@@ -248,6 +258,12 @@
     transition: transform var(--transition);
   }
 
+  @position-try --panel-above {
+    bottom: anchor(top);
+    top: auto;
+    max-height: min(calc(anchor(top) - 8px), 60dvh);
+  }
+
   .select-panel {
     /* Top layer via popover API — escapes overflow/scroll ancestors */
     position: fixed;
@@ -255,6 +271,9 @@
     top: anchor(bottom);
     left: anchor(left);
     width: anchor-size(width);
+    max-height: min(calc(100dvh - anchor(bottom) - 8px), 60dvh);
+    overflow-y: auto;
+    position-try-fallbacks: --panel-above;
     /* Reset popover UA styles */
     border: none;
     padding: 0;
