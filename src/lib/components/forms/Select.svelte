@@ -66,20 +66,22 @@
   $effect(() => {
     if (!panelEl) return;
     panelEl.showPopover();
-    if (!cssAnchorSupported && rootEl) {
+    if (rootEl) {
       const rect = rootEl.getBoundingClientRect();
       const spaceBelow = window.innerHeight - rect.bottom - 8;
       const spaceAbove = rect.top - 8;
-      panelEl.style.left = `${rect.left}px`;
-      panelEl.style.width = `${rect.width}px`;
-      if (spaceBelow >= spaceAbove) {
-        panelEl.style.top = `${rect.bottom}px`;
-        panelEl.style.bottom = "";
-        panelEl.style.maxHeight = `${spaceBelow}px`;
-      } else {
-        panelEl.style.top = "";
-        panelEl.style.bottom = `${window.innerHeight - rect.top}px`;
-        panelEl.style.maxHeight = `${spaceAbove}px`;
+      // anchor() is invalid in max-height, so always set it via JS
+      panelEl.style.maxHeight = `${Math.max(spaceBelow, spaceAbove)}px`;
+      if (!cssAnchorSupported) {
+        panelEl.style.left = `${rect.left}px`;
+        panelEl.style.width = `${rect.width}px`;
+        if (spaceBelow >= spaceAbove) {
+          panelEl.style.top = `${rect.bottom}px`;
+          panelEl.style.bottom = "";
+        } else {
+          panelEl.style.top = "";
+          panelEl.style.bottom = `${window.innerHeight - rect.top}px`;
+        }
       }
     }
   });
@@ -261,7 +263,6 @@
   @position-try --panel-above {
     bottom: anchor(top);
     top: auto;
-    max-height: min(calc(anchor(top) - 8px), 60dvh);
   }
 
   .select-panel {
@@ -271,7 +272,8 @@
     top: anchor(bottom);
     left: anchor(left);
     width: anchor-size(width);
-    max-height: min(calc(100dvh - anchor(bottom) - 8px), 60dvh);
+    /* anchor() is invalid in max-height; JS always sets it inline. 60dvh is a backstop. */
+    max-height: 60dvh;
     overflow-y: auto;
     position-try-fallbacks: --panel-above;
     /* Reset popover UA styles */
